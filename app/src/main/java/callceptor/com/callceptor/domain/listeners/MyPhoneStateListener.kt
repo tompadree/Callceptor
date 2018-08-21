@@ -1,14 +1,9 @@
-package callceptor.com.callceptor;
+package callceptor.com.callceptor.domain.listeners;
 
 import android.content.Context
 import android.telephony.*
 import android.util.Log
 import android.telephony.TelephonyManager
-import callceptor.com.callceptor.MyPhoneStateListener.ITelephony
-import java.lang.reflect.AccessibleObject.setAccessible
-
-
-
 
 
 /**
