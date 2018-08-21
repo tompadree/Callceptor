@@ -8,10 +8,10 @@ import android.os.Bundle
 import android.telephony.PhoneStateListener
 import android.telephony.TelephonyManager
 import android.widget.Toast
-import callceptor.com.callceptor.domain.listeners.MyPhoneStateListener
+import callceptor.com.callceptor.telephony.MyPhoneStateListener
 import callceptor.com.callceptor.R
 
-class MainActivity : BaseActivity() {
+class HomeActivity : BaseActivity() {
 
     lateinit var myPhoneStateListener: MyPhoneStateListener
     lateinit var telephonyManager: TelephonyManager
@@ -22,7 +22,7 @@ class MainActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_home)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (checkSelfPermission(Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_DENIED || checkSelfPermission(Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_DENIED) {

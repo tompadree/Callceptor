@@ -15,4 +15,12 @@
         <item name="colorAccent">@color/white</item>
     </style>
 
+    <style name="HintColor" parent="TextAppearance.AppCompat">
+        <item name="android:textColor">@color/app_black</item>
+    </style>
+
+    <style name="BlackAcccent" parent="ThemeOverlay.AppCompat.Light">
+        <item name="colorAccent">#000000</item>
+    </style>
+
 </resources>
