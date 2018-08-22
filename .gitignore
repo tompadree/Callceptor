@@ -1,6 +1,6 @@
-<<<<<<< HEAD
 *.iml
 .gradle
+.idea/misc.xml
 /local.properties
 /.idea/workspace.xml
 /.idea/libraries
@@ -74,4 +74,3 @@ fastlane/Preview.html
 fastlane/screenshots
 fastlane/test_output
 fastlane/readme.md
->>>>>>> 7549089d45bbd72106e3a74792012393ced6eab2

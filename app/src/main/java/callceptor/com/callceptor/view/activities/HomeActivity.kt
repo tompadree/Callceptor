@@ -2,31 +2,45 @@ package callceptor.com.callceptor.view.activities
 
 import android.Manifest
 import android.content.Context
+import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.telephony.PhoneStateListener
 import android.telephony.TelephonyManager
 import android.widget.Toast
-import callceptor.com.callceptor.telephony.MyPhoneStateListener
 import callceptor.com.callceptor.R
+import callceptor.com.callceptor.telephony.MyPhoneStateManager
 
 class HomeActivity : BaseActivity() {
 
-    lateinit var myPhoneStateListener: MyPhoneStateListener
+    // lateinit var myPhoneStateListener: MyPhoneStateListener
     lateinit var telephonyManager: TelephonyManager
+    lateinit var phoneStateManager: MyPhoneStateManager
 
     val PERMISSION_REQ_CODE = 1234
-    //    val PERMISSIONS_STORAGE = arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-    val PERMISSIONS_PHONE = arrayOf(Manifest.permission.READ_PHONE_STATE, Manifest.permission.CALL_PHONE)
+    val PERMISSIONS_PHONE_BEFORE_P = arrayOf(Manifest.permission.READ_PHONE_STATE, Manifest.permission.CALL_PHONE)
+    val PERMISSIONS_AFTER_P = arrayOf(Manifest.permission.ANSWER_PHONE_CALLS, Manifest.permission.READ_PHONE_STATE, Manifest.permission.READ_CALL_LOG, Manifest.permission.CALL_PHONE)
+
+//
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (checkSelfPermission(Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_DENIED || checkSelfPermission(Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_DENIED) {
-                requestPermissions(PERMISSIONS_PHONE, PERMISSION_REQ_CODE)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && Build.VERSION.SDK_INT <= Build.VERSION_CODES.O_MR1) {
+
+            if (checkSelfPermission(Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_DENIED
+                    || checkSelfPermission(Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_DENIED) {
+                requestPermissions(PERMISSIONS_PHONE_BEFORE_P, PERMISSION_REQ_CODE)
+
+            }
+
+        } else if (Build.VERSION.SDK_INT > Build.VERSION_CODES.O_MR1) {
+
+            if (checkSelfPermission(Manifest.permission.READ_CALL_LOG) == PackageManager.PERMISSION_DENIED
+                    || checkSelfPermission(Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_DENIED) {
+                requestPermissions(PERMISSIONS_AFTER_P, PERMISSION_REQ_CODE)
             }
         }
 
@@ -41,14 +55,19 @@ class HomeActivity : BaseActivity() {
 
                 if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-                    telephonyManager = getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
-                    myPhoneStateListener = MyPhoneStateListener(this)
+                        phoneStateManager = MyPhoneStateManager()
+                        this.registerReceiver(phoneStateManager, IntentFilter("android.intent.action.PHONE_STATE"))
 
-                    telephonyManager.listen(myPhoneStateListener, PhoneStateListener.LISTEN_CALL_STATE)
+//                    telephonyManager = getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
+//                    myPhoneStateListener = MyPhoneStateListener(this)
+//
+//                    telephonyManager.listen(myPhoneStateListener, PhoneStateListener.LISTEN_CALL_STATE)
+//
+//                    phoneStateManager.
 
-                    Toast.makeText(this, "Permission granted: " + PERMISSIONS_PHONE, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Permission granted: " /*+ PERMISSIONS_PHONE*/, Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(this, "Permission NOT granted: " + PERMISSIONS_PHONE, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Permission NOT granted: "/* + PERMISSIONS_PHONE*/, Toast.LENGTH_SHORT).show();
                 }
 
 
