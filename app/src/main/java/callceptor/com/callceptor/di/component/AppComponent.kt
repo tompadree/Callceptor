@@ -7,7 +7,8 @@ import callceptor.com.callceptor.di.module.DataModule
 import callceptor.com.callceptor.di.module.ThreadModule
 import callceptor.com.callceptor.di.module.ThreadModule.Companion.OBSERVE_SCHEDULER
 import callceptor.com.callceptor.di.module.ThreadModule.Companion.SUBSCRIBE_SCHEDULER
-import callceptor.com.callceptor.view.activities.BaseActivity
+import callceptor.com.callceptor.view.BaseActivity
+import callceptor.com.callceptor.view.BaseFragment
 import dagger.Component
 import io.reactivex.Scheduler
 import javax.inject.Named
@@ -33,5 +34,8 @@ interface AppComponent {
     fun provideSchedulersIo(): Scheduler
 
     fun inject(baseActivity: BaseActivity)
+
+    fun inject(baseFragment: BaseFragment)
+
 
 }

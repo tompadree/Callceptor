@@ -2,6 +2,7 @@ package callceptor.com.callceptor
 
 import android.app.Application
 import callceptor.com.callceptor.di.component.AppComponent
+import callceptor.com.callceptor.di.component.DaggerAppComponent
 import callceptor.com.callceptor.di.module.AppModule
 
 /**
@@ -16,10 +17,9 @@ class App : Application() {
 
         instance = this
 
-//        this.appComponent = DaggerAppComponent.builder()
-//                .appModule(AppModule(this))
-//                .build()
-
+        this.appComponent = DaggerAppComponent.builder()
+                .appModule(AppModule(this))
+                .build()
 
     }
 

@@ -1,17 +1,16 @@
 package callceptor.com.callceptor.view.activities
 
 import android.Manifest
-import android.content.Context
 import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.telephony.PhoneStateListener
-import android.telephony.TelephonyManager
 import android.widget.Toast
 import callceptor.com.callceptor.R
+import callceptor.com.callceptor.common.enums.FragmentTag
 import callceptor.com.callceptor.telephony.MyPhoneStateManager
+import callceptor.com.callceptor.view.BaseActivity
 import callceptor.com.callceptor.view.fragments.CallsFragment
 import callceptor.com.callceptor.view.fragments.MessagesFragment
 import callceptor.com.callceptor.view.fragments.SettingsFragment
@@ -19,19 +18,17 @@ import kotlinx.android.synthetic.main.activity_home.*
 
 class HomeActivity : BaseActivity() {
 
-    // lateinit var myPhoneStateListener: MyPhoneStateListener
-    lateinit var telephonyManager: TelephonyManager
     lateinit var phoneStateManager: MyPhoneStateManager
 
     val PERMISSION_REQ_CODE = 1234
-    val PERMISSIONS_PHONE_BEFORE_P = arrayOf(Manifest.permission.READ_PHONE_STATE, Manifest.permission.CALL_PHONE)
+    val PERMISSIONS_PHONE_BEFORE_P = arrayOf(Manifest.permission.READ_PHONE_STATE, Manifest.permission.CALL_PHONE, Manifest.permission.READ_CALL_LOG)
     val PERMISSIONS_AFTER_P = arrayOf(Manifest.permission.ANSWER_PHONE_CALLS, Manifest.permission.READ_PHONE_STATE, Manifest.permission.READ_CALL_LOG, Manifest.permission.CALL_PHONE)
-
-//
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
+
+        setBottomMenu()
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && Build.VERSION.SDK_INT <= Build.VERSION_CODES.O_MR1) {
 
@@ -39,33 +36,39 @@ class HomeActivity : BaseActivity() {
                     || checkSelfPermission(Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_DENIED) {
                 requestPermissions(PERMISSIONS_PHONE_BEFORE_P, PERMISSION_REQ_CODE)
 
-            }
-            else
+            } else
                 registerReceiver()
 
-        } else if (Build.VERSION.SDK_INT > Build.VERSION_CODES.O_MR1) {
+        } else if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M && Build.VERSION.SDK_INT > Build.VERSION_CODES.O_MR1) {
 
             if (checkSelfPermission(Manifest.permission.READ_CALL_LOG) == PackageManager.PERMISSION_DENIED
                     || checkSelfPermission(Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_DENIED) {
                 requestPermissions(PERMISSIONS_AFTER_P, PERMISSION_REQ_CODE)
-            }
-            else registerReceiver()
+            } else registerReceiver()
         }
 
+    }
 
-        /*TODO*/
+    private fun setBottomMenu() {
 
+        homeActivityBottomNavigation.enableAnimation(false)
+        homeActivityBottomNavigation.enableShiftingMode(false)
+        homeActivityBottomNavigation.enableItemShiftingMode(false)
+        homeActivityBottomNavigation.setTextVisibility(false)
 
         homeActivityBottomNavigation.setOnNavigationItemSelectedListener { item ->
-           // lastItem = menuBottomNavigation.currentItem
+            // lastItem = homeActivityBottomNavigation.currentItem
             when (item.itemId) {
-                R.id.action_messages -> setFragment(MessagesFragment.newInstance(), "")
-                R.id.action_calls -> setFragment(CallsFragment.newInstance(), "")
-                R.id.action_settings -> setFragment(SettingsFragment.newInstance(), "")
-              //  R.id.action_profile -> profileClicked()
+                R.id.action_messages -> messagesClicked()
+                R.id.action_calls -> callsClicked()
+                R.id.action_settings -> settingsClicked()
             }
             true
         }
+
+        callsClicked()
+        homeActivityBottomNavigation.selectedItemId = R.id.action_calls
+
     }
 
     override fun onDestroy() {
@@ -74,12 +77,37 @@ class HomeActivity : BaseActivity() {
         unregisterReceiver()
     }
 
-    fun unregisterReceiver(){
+    private fun unregisterReceiver() {
 
         this.unregisterReceiver()
     }
 
-    fun registerReceiver(){
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        //Clear the Activity's bundle of the subsidiary fragments' bundles.
+        outState.clear()
+    }
+
+    private fun messagesClicked() {
+        setFragment(MessagesFragment.newInstance(), FragmentTag.MessagesFragment.getTag())
+    }
+
+    private fun callsClicked() {
+        setFragment(CallsFragment.newInstance(), FragmentTag.CallsFragment.getTag())
+    }
+
+    private fun settingsClicked() {
+        setFragment(SettingsFragment.newInstance(), FragmentTag.SettingsFragment.getTag())
+    }
+
+    private fun setFragment(currentFragment: Fragment, fragmentTag: String) {
+        supportFragmentManager
+                .beginTransaction()
+                .replace(R.id.homeActivityContainer, currentFragment, fragmentTag)
+                .commit()
+    }
+
+    private fun registerReceiver() {
         phoneStateManager = MyPhoneStateManager()
         this.registerReceiver(phoneStateManager, IntentFilter("android.intent.action.PHONE_STATE"))
     }
@@ -95,43 +123,12 @@ class HomeActivity : BaseActivity() {
 
                     registerReceiver()
 
-//                    telephonyManager = getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
-//                    myPhoneStateListener = MyPhoneStateListener(this)
-//
-//                    telephonyManager.listen(myPhoneStateListener, PhoneStateListener.LISTEN_CALL_STATE)
-//
-//                    phoneStateManager.
-
                     Toast.makeText(this, "Permission granted: " /*+ PERMISSIONS_PHONE*/, Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(this, "Permission NOT granted: "/* + PERMISSIONS_PHONE*/, Toast.LENGTH_SHORT).show();
                 }
 
-
             }
         }
     }
-
-    private fun setFragment(currentFragment: Fragment, fragmentTag: String) {
-        supportFragmentManager
-                .beginTransaction()
-                .replace(R.id.homeActivityContainer, currentFragment, fragmentTag)
-                .commit()
-    }
 }
-
-//    http://www.nikola-breznjak.com/blog/android/make-native-android-app-can-block-phone-calls/
-
-//    https://stackoverflow.com/questions/24580508/how-to-import-com-android-internal-telephony-itelephony-to-the-android-applicati
-
-//    https://stackoverflow.com/questions/44650941/how-to-terminate-an-incoming-call-within-itelephony
-
-//    https://stackoverflow.com/questions/19343028/intercepting-call-in-android?lq=1
-
-//    https://www.truiton.com/2014/08/android-phonestatelistener-example/
-//
-//    https://stackoverflow.com/questions/13395633/add-phonestatelistener
-//
-//    https://stackoverflow.com/questions/1083527/how-to-block-calls-in-android
-
-

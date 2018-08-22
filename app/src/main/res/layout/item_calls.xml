@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/itemCallsMainRelativeLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <com.makeramen.roundedimageview.RoundedImageView
+        android:id="@+id/itemCallsImageView"
+        android:layout_width="59dp"
+        android:layout_height="66dp"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="11dp"
+        android:layout_marginRight="11dp"
+        android:src="@mipmap/ic_launcher" />
+
+    <RelativeLayout
+        android:id="@+id/itemCallsRelativeLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15dp"
+        android:layout_marginTop="15dp"
+        android:layout_toEndOf="@+id/itemCallsImageView">
+
+        <TextView
+            android:id="@+id/itemCallsTvName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="IME"
+            android:textColor="@color/object_text_color_black"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/itemCallsTvNumber"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/itemCallsTvName"
+            android:layout_marginTop="4dp"
+            android:text="0989451231"
+            android:textColor="@color/object_text_color_black"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/itemCallsTvTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/itemCallsTvNumber"
+            android:layout_marginTop="4dp"
+            android:text="21:31" />
+
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/repo_item_separator_view"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_alignStart="@+id/itemCallsRelativeLayout"
+        android:layout_below="@+id/itemCallsRelativeLayout"
+        android:background="@color/separator_grey" />
+
+
+</RelativeLayout>
