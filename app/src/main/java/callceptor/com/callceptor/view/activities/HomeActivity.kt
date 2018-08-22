@@ -35,6 +35,8 @@ class HomeActivity : BaseActivity() {
                 requestPermissions(PERMISSIONS_PHONE_BEFORE_P, PERMISSION_REQ_CODE)
 
             }
+            else
+                registerReceiver()
 
         } else if (Build.VERSION.SDK_INT > Build.VERSION_CODES.O_MR1) {
 
@@ -42,8 +44,25 @@ class HomeActivity : BaseActivity() {
                     || checkSelfPermission(Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_DENIED) {
                 requestPermissions(PERMISSIONS_AFTER_P, PERMISSION_REQ_CODE)
             }
+            else registerReceiver()
         }
 
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        unregisterReceiver()
+    }
+
+    fun unregisterReceiver(){
+
+        this.unregisterReceiver()
+    }
+
+    fun registerReceiver(){
+        phoneStateManager = MyPhoneStateManager()
+        this.registerReceiver(phoneStateManager, IntentFilter("android.intent.action.PHONE_STATE"))
     }
 
     override fun onRequestPermissionsResult(requestCode: Int,
@@ -55,8 +74,7 @@ class HomeActivity : BaseActivity() {
 
                 if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-                        phoneStateManager = MyPhoneStateManager()
-                        this.registerReceiver(phoneStateManager, IntentFilter("android.intent.action.PHONE_STATE"))
+                    registerReceiver()
 
 //                    telephonyManager = getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
 //                    myPhoneStateListener = MyPhoneStateListener(this)
