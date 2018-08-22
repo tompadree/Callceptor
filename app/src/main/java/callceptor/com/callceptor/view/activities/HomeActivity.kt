@@ -6,11 +6,16 @@ import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.support.v4.app.Fragment
 import android.telephony.PhoneStateListener
 import android.telephony.TelephonyManager
 import android.widget.Toast
 import callceptor.com.callceptor.R
 import callceptor.com.callceptor.telephony.MyPhoneStateManager
+import callceptor.com.callceptor.view.fragments.CallsFragment
+import callceptor.com.callceptor.view.fragments.MessagesFragment
+import callceptor.com.callceptor.view.fragments.SettingsFragment
+import kotlinx.android.synthetic.main.activity_home.*
 
 class HomeActivity : BaseActivity() {
 
@@ -47,6 +52,20 @@ class HomeActivity : BaseActivity() {
             else registerReceiver()
         }
 
+
+        /*TODO*/
+
+
+        homeActivityBottomNavigation.setOnNavigationItemSelectedListener { item ->
+           // lastItem = menuBottomNavigation.currentItem
+            when (item.itemId) {
+                R.id.action_messages -> setFragment(MessagesFragment.newInstance(), "")
+                R.id.action_calls -> setFragment(CallsFragment.newInstance(), "")
+                R.id.action_settings -> setFragment(SettingsFragment.newInstance(), "")
+              //  R.id.action_profile -> profileClicked()
+            }
+            true
+        }
     }
 
     override fun onDestroy() {
@@ -91,6 +110,13 @@ class HomeActivity : BaseActivity() {
 
             }
         }
+    }
+
+    private fun setFragment(currentFragment: Fragment, fragmentTag: String) {
+        supportFragmentManager
+                .beginTransaction()
+                .replace(R.id.homeActivityContainer, currentFragment, fragmentTag)
+                .commit()
     }
 }
 

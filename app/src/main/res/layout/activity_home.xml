@@ -17,10 +17,39 @@
         android:theme="@style/BlackAcccent"
         android:visibility="invisible" />
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/homeActivityRv"
+
+    <FrameLayout
+        android:id="@+id/homeActivityContainer"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="match_parent"
+        android:layout_marginBottom="49dp">
+
+    </FrameLayout>
+
+    <RelativeLayout
+        android:id="@+id/tabIndicatorRelativeLayout"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true">
+
+
+        <View
+            android:id="@+id/separatorView"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/separator_grey" />
+
+        <com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx
+            android:id="@+id/homeActivityBottomNavigation"
+            android:layout_width="match_parent"
+            android:layout_height="49dp"
+
+            android:layout_alignParentBottom="true"
+            app:itemIconTint="@color/bottom_items_color"
+            app:itemTextColor="@color/bottom_items_color"
+            app:menu="@menu/home_menu_bottom" />
+
+    </RelativeLayout>
 
 </RelativeLayout>
 
