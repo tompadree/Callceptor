@@ -53,10 +53,10 @@ class CallsInteractorImpl
                 call.name = cur.getString(cur.getColumnIndex(CallLog.Calls.CACHED_NAME))
 //                call.name = cur.getString(cur.getColumnIndex(CallLog.Calls.PHONE_ACCOUNT_COMPONENT_NAME))
                 call.number = cur.getString(cur.getColumnIndex(CallLog.Calls.NUMBER))
-                call.type = cur.getString(cur.getColumnIndex(CallLog.Calls.TYPE))
+                call.type = cur.getInt(cur.getColumnIndex(CallLog.Calls.TYPE))
                 call.photo_uri = cur.getString(cur.getColumnIndex(CallLog.Calls.CACHED_PHOTO_URI))
 
-                if(call.type == "1")
+                if(call.type != 5) // 1 for Incoming(1), Outgoing(2) and Missed(3), 4 (VoiceMail), 5 (Rejected) and 6 (Refused List)
                     list.add(call)
             }
 

@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/itemCallsMainRelativeLayout"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/itemCallsMainRelativeLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
     <com.makeramen.roundedimageview.RoundedImageView
         android:id="@+id/itemCallsImageView"
         android:layout_width="59dp"
         android:layout_height="66dp"
+        app:riv_corner_radius="30dip"
         android:layout_centerVertical="true"
         android:layout_marginLeft="11dp"
         android:layout_marginRight="11dp"

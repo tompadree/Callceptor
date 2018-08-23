@@ -1,6 +1,8 @@
 package callceptor.com.callceptor.view.adapters
 
 import android.content.Context
+import android.graphics.BitmapFactory
+import android.net.Uri
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -14,6 +16,7 @@ import callceptor.com.callceptor.data.models.Call
 import com.makeramen.roundedimageview.RoundedImageView
 import com.squareup.picasso.Picasso
 import callceptor.com.callceptor.R
+import java.io.File
 
 /**
  * Created by Tom on 22.8.2018..
@@ -54,14 +57,17 @@ class CallsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
 //            holder.callsItem.setOnClickListener { onListItemClicked.onItemClicked(position) }
 
+
         if (calls[position].photo_uri != null)
             Picasso.get()
-                    .load(calls[position].photo_uri)
+                    .load(Uri.parse(calls[position].photo_uri))
                     .placeholder(R.mipmap.ic_launcher)
                     .tag(context)
-                    .fit().centerCrop()
+                    .resize(200, 200)
+//                    .fit()
+                    .centerCrop()
                     .into(holder.itemCallsImageView)
-//        }
+
     }
 
 //    override fun getItemViewType(position: Int): Int {

@@ -6,7 +6,7 @@ package callceptor.com.callceptor.data.models
 class Call {
 
     var date: String? = null
-    var type : String? = null
+    var type : Int? = null
     var duration : String? = null
     var number : String? =null
     var photo_uri : String? = null
