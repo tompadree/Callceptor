@@ -13,7 +13,7 @@
         android:layout_centerVertical="true"
         android:layout_marginLeft="11dp"
         android:layout_marginRight="11dp"
-        android:src="@mipmap/ic_launcher" />
+        android:src="@mipmap/ic_contact_placeholder" />
 
     <RelativeLayout
         android:id="@+id/itemCallsRelativeLayout"

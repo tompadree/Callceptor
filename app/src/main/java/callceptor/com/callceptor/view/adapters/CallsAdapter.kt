@@ -61,7 +61,7 @@ class CallsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder> {
         if (calls[position].photo_uri != null)
             Picasso.get()
                     .load(Uri.parse(calls[position].photo_uri))
-                    .placeholder(R.mipmap.ic_launcher)
+                    .placeholder(R.mipmap.ic_contact_placeholder)
                     .tag(context)
                     .resize(200, 200)
 //                    .fit()
