@@ -1,6 +1,7 @@
 package callceptor.com.callceptor.view.activities
 
 import android.Manifest
+import android.content.Context
 import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.os.Build
@@ -10,20 +11,28 @@ import android.widget.Toast
 import callceptor.com.callceptor.R
 import callceptor.com.callceptor.common.enums.FragmentTag
 import callceptor.com.callceptor.telephony.MyPhoneStateManager
+import callceptor.com.callceptor.telephony.MySMSStateManager
 import callceptor.com.callceptor.view.BaseActivity
 import callceptor.com.callceptor.view.fragments.CallsFragment
 import callceptor.com.callceptor.view.fragments.MessagesFragment
 import callceptor.com.callceptor.view.fragments.SettingsFragment
 import kotlinx.android.synthetic.main.activity_home.*
+import android.view.View
+import android.content.Intent
+import android.net.Uri
+import android.provider.Settings
+import callceptor.com.callceptor.telephony.HarmfulCallAlertService
+
 
 class HomeActivity : BaseActivity() {
 
     lateinit var phoneStateManager: MyPhoneStateManager
 
     val PERMISSION_REQ_CODE = 1234
-    val PERMISSIONS_PHONE_BEFORE_P = arrayOf(Manifest.permission.READ_PHONE_STATE, Manifest.permission.CALL_PHONE, Manifest.permission.READ_CALL_LOG,  Manifest.permission.READ_CONTACTS)
-    val PERMISSIONS_AFTER_P = arrayOf(Manifest.permission.ANSWER_PHONE_CALLS, Manifest.permission.READ_PHONE_STATE, Manifest.permission.READ_CALL_LOG, Manifest.permission.CALL_PHONE, Manifest.permission.READ_CONTACTS)
+    val PERMISSIONS_PHONE_BEFORE_P = arrayOf(Manifest.permission.READ_PHONE_STATE, Manifest.permission.CALL_PHONE, Manifest.permission.READ_CALL_LOG,  Manifest.permission.READ_CONTACTS, Manifest.permission.RECEIVE_SMS, Manifest.permission.SEND_SMS, Manifest.permission.READ_SMS, Manifest.permission.SYSTEM_ALERT_WINDOW)
+    val PERMISSIONS_AFTER_P = arrayOf(Manifest.permission.ANSWER_PHONE_CALLS, Manifest.permission.READ_PHONE_STATE, Manifest.permission.READ_CALL_LOG, Manifest.permission.CALL_PHONE, Manifest.permission.READ_CONTACTS, Manifest.permission.RECEIVE_SMS, Manifest.permission.SEND_SMS, Manifest.permission.READ_SMS, Manifest.permission.SYSTEM_ALERT_WINDOW, Settings.ACTION_MANAGE_OVERLAY_PERMISSION)
 
+    lateinit var mTestView : View
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
@@ -37,11 +46,12 @@ class HomeActivity : BaseActivity() {
                     || checkSelfPermission(Manifest.permission.READ_CALL_LOG) == PackageManager.PERMISSION_DENIED
                     || checkSelfPermission(Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_DENIED) {
                 requestPermissions(PERMISSIONS_PHONE_BEFORE_P, PERMISSION_REQ_CODE)
-
+                checkDrawOverlayPermission()
             } else {
 //                homeActivityBottomNavigation.selectedItemId = R.id.action_calls
 //                callsClicked()
                 registerReceiver()
+                checkDrawOverlayPermission()
             }
 
         } else if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M && Build.VERSION.SDK_INT > Build.VERSION_CODES.O_MR1) {
@@ -52,15 +62,38 @@ class HomeActivity : BaseActivity() {
                     || checkSelfPermission(Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_DENIED
                     || checkSelfPermission(Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_DENIED) {
                 requestPermissions(PERMISSIONS_AFTER_P, PERMISSION_REQ_CODE)
+                checkDrawOverlayPermission()
             } else {
 //                homeActivityBottomNavigation.selectedItemId = R.id.action_calls
 //                callsClicked()
+                checkDrawOverlayPermission()
                 registerReceiver()
             }
         }
 
+
     }
 
+    fun checkDrawOverlayPermission() {
+        /** check if we already  have permission to draw over other apps  */
+        if (!Settings.canDrawOverlays(this)) {
+            /** if not construct intent to request permission  */
+            val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                    Uri.parse("package:$packageName"))
+            /** request permission via start activity for result  */
+            startActivityForResult(intent, 12345)
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == 12345) {
+            if (Settings.canDrawOverlays(this)) {
+                startService(Intent(this, HarmfulCallAlertService::class.java))
+            }
+        }
+    }
     private fun setBottomMenu() {
 
         homeActivityBottomNavigation.enableAnimation(false)
@@ -85,11 +118,12 @@ class HomeActivity : BaseActivity() {
     override fun onDestroy() {
         super.onDestroy()
 
+
+
         unregisterReceiver()
     }
 
     private fun unregisterReceiver() {
-
         this.unregisterReceiver()
     }
 
@@ -120,7 +154,11 @@ class HomeActivity : BaseActivity() {
 
     private fun registerReceiver() {
         phoneStateManager = MyPhoneStateManager()
+        val mySMSStateManager = MySMSStateManager()
         this.registerReceiver(phoneStateManager, IntentFilter("android.intent.action.PHONE_STATE"))
+        var intFilter = IntentFilter("android.provider.Telephony.SMS_RECEIVED")
+        intFilter.priority = 1000
+        this.registerReceiver(mySMSStateManager, intFilter)
     }
 
     override fun onRequestPermissionsResult(requestCode: Int,

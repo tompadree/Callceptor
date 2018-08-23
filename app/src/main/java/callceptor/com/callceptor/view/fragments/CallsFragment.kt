@@ -23,6 +23,10 @@ import callceptor.com.callceptor.view.views.CallsView
 import kotlinx.android.synthetic.main.fragment_calls.*
 import java.util.ArrayList
 import javax.inject.Inject
+import android.app.Activity
+import android.widget.TextView
+
+
 
 class CallsFragment : BaseFragment(), CallsView {
 
@@ -45,8 +49,6 @@ class CallsFragment : BaseFragment(), CallsView {
                 .appComponent(getApplicationComponent())
                 .callsModule(CallsModule(this))
                 .build().inject(this)
-
-
 
     }
 

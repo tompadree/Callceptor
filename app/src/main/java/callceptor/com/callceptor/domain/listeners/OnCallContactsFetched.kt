@@ -6,9 +6,11 @@ import java.util.ArrayList
 /**
  * Created by Tom on 22.8.2018..
  */
-interface OnCallLogsFetched {
+interface OnCallContactsFetched {
 
     fun callLogsFetched(list : ArrayList<Call>)
+
+    fun contactsFetched(list : ArrayList<String>)
 
     fun onFetchingError(e : Throwable)
 

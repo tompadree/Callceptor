@@ -3,7 +3,7 @@ package callceptor.com.callceptor.presenter.impl
 import android.content.Context
 import callceptor.com.callceptor.data.models.Call
 import callceptor.com.callceptor.domain.interactors.CallsInteractor
-import callceptor.com.callceptor.domain.listeners.OnCallLogsFetched
+import callceptor.com.callceptor.domain.listeners.OnCallContactsFetched
 import callceptor.com.callceptor.presenter.CallsPresenter
 import callceptor.com.callceptor.view.views.CallsView
 import java.util.ArrayList
@@ -14,7 +14,7 @@ import javax.inject.Inject
  */
 class CallsPresenterImpl
 @Inject constructor(private val context: Context, private val callsInteractor: CallsInteractor,
-                    private val callsView: CallsView) : CallsPresenter, OnCallLogsFetched {
+                    private val callsView: CallsView) : CallsPresenter, OnCallContactsFetched {
 
     override fun fetchCallLogs() {
         callsView.showLoading()
@@ -23,6 +23,10 @@ class CallsPresenterImpl
 
     override fun callLogsFetched(list : ArrayList<Call>) {
         callsView.callLogsFetched(list)
+    }
+
+    override fun contactsFetched(list: ArrayList<String>) {
+
     }
 
     override fun onFetchingError(e: Throwable) {

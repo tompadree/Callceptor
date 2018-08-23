@@ -55,6 +55,15 @@ class CallsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder> {
         holder.itemCallsTvNumber.text = calls[position].number
         holder.itemCallsTvTime.text = calls[position].date
 
+        when(calls[position].type){
+
+            1 -> holder.itemCallsType.setImageResource(R.mipmap.ic_call_incoming)
+            3 -> holder.itemCallsType.setImageResource(R.mipmap.ic_call_missed)
+            4,5,6 -> holder.itemCallsType.setImageResource(R.mipmap.ic_call_blocked)
+
+
+        }
+
 //            holder.callsItem.setOnClickListener { onListItemClicked.onItemClicked(position) }
 
 
@@ -67,6 +76,8 @@ class CallsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder> {
 //                    .fit()
                     .centerCrop()
                     .into(holder.itemCallsImageView)
+        else
+            holder.itemCallsImageView.setImageResource(R.mipmap.ic_contact_placeholder)
 
     }
 
@@ -98,6 +109,9 @@ class CallsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         @BindView(R.id.itemCallsTvTime)
         lateinit var itemCallsTvTime: TextView
+
+        @BindView(R.id.itemCallsType)
+        lateinit var itemCallsType: ImageView
 
         init {
             ButterKnife.bind(this, itemView)
