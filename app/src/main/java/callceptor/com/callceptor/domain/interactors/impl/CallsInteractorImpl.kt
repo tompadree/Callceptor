@@ -10,10 +10,8 @@ import javax.inject.Inject
 import android.provider.CallLog
 import android.provider.ContactsContract
 import android.support.v4.content.ContextCompat.checkSelfPermission
-import android.util.Log
 import callceptor.com.callceptor.data.models.Call
 import callceptor.com.callceptor.domain.listeners.OnCallContactsFetched
-import java.lang.reflect.Array
 import java.sql.Timestamp
 import java.text.SimpleDateFormat
 import java.util.*

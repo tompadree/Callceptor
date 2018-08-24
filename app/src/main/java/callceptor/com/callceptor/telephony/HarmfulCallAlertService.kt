@@ -5,15 +5,11 @@ import android.content.Context
 import android.content.Intent
 import android.os.IBinder
 import android.view.WindowManager
-import android.widget.ImageView
 import android.graphics.PixelFormat
 import callceptor.com.callceptor.R
-import android.R.attr.y
-import android.R.attr.x
 import android.view.Gravity
-import android.R.attr.gravity
-
-
+import android.view.LayoutInflater
+import android.view.View
 
 
 /**
@@ -22,7 +18,7 @@ import android.R.attr.gravity
 class HarmfulCallAlertService : Service() {
 
     lateinit var windowManager: WindowManager
-    lateinit var chatHead : ImageView
+    lateinit var alertView: View
 
     override fun onBind(intent: Intent?): IBinder {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
@@ -33,26 +29,26 @@ class HarmfulCallAlertService : Service() {
 
         windowManager = getSystemService(Context.WINDOW_SERVICE) as WindowManager
 
-        chatHead = ImageView(this)
-        chatHead.setImageResource(R.mipmap.ic_contact_placeholder)
+        alertView = LayoutInflater.from(applicationContext).inflate(R.layout.item_float, null)
 
-        val params = WindowManager.LayoutParams(
+        val params = WindowManager.LayoutParams(WindowManager.LayoutParams.WRAP_CONTENT,
                 WindowManager.LayoutParams.WRAP_CONTENT,
-                WindowManager.LayoutParams.WRAP_CONTENT,
-                WindowManager.LayoutParams.TYPE_PHONE,
-                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+                WindowManager.LayoutParams.TYPE_SYSTEM_ALERT,
+                WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH or
+                        WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN or
+                        WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL or
+                        WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
+                        WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
                 PixelFormat.TRANSLUCENT)
 
-        params.gravity = Gravity.TOP or Gravity.LEFT
-        params.x = 0
-        params.y = 100
 
-        windowManager.addView(chatHead, params)
+
+        windowManager.addView(alertView, params)
 
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        if (chatHead != null) windowManager.removeView(chatHead)
+        if (alertView != null) windowManager.removeView(alertView)
     }
 }
