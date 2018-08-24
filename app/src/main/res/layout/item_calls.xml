@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/itemCallsMainRelativeLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/itemCallsMainRelativeLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
 
     <com.makeramen.roundedimageview.RoundedImageView
         android:id="@+id/itemCallsImageView"
         android:layout_width="59dp"
         android:layout_height="66dp"
-        app:riv_corner_radius="30dip"
         android:layout_centerVertical="true"
         android:layout_marginLeft="11dp"
         android:layout_marginRight="11dp"
-        android:src="@mipmap/ic_contact_placeholder" />
+        android:src="@mipmap/ic_contact_placeholder"
+        app:riv_corner_radius="30dip" />
 
     <RelativeLayout
         android:id="@+id/itemCallsRelativeLayout"
@@ -27,7 +27,7 @@
             android:id="@+id/itemCallsTvName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="IME"
+            android:text="@string/name_placeholder"
             android:textColor="@color/object_text_color_black"
             android:textStyle="bold" />
 
@@ -37,7 +37,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/itemCallsTvName"
             android:layout_marginTop="4dp"
-            android:text="0989451231"
+            android:text="@string/phone_number_placeholder"
             android:textColor="@color/object_text_color_black"
             android:textStyle="bold" />
 
@@ -47,7 +47,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/itemCallsTvNumber"
             android:layout_marginTop="4dp"
-            android:text="21:31" />
+            android:text="@string/time_placeholder" />
 
         <ImageView
             android:id="@+id/itemCallsType"
@@ -65,8 +65,6 @@
         android:layout_alignStart="@+id/itemCallsRelativeLayout"
         android:layout_below="@+id/itemCallsRelativeLayout"
         android:background="@color/separator_grey" />
-
-
 
 
 </RelativeLayout>

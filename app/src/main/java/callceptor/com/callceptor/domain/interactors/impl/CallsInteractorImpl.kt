@@ -35,11 +35,10 @@ class CallsInteractorImpl
                 if (!contactsNumberList.contains(number))
                     contactsNumberList.add(number)
             }
-
+            cur.close()
         }
 
         onCallContactsFetched.contactsFetched(contactsNumberList)
-
     }
 
     @SuppressLint("Recycle")
@@ -48,34 +47,44 @@ class CallsInteractorImpl
         var list: ArrayList<Call> = ArrayList()
 
 
-        val cr = context.contentResolver
-        val strOrder = CallLog.Calls.DATE + " DESC"
-        if (checkSelfPermission(context, Manifest.permission.READ_CALL_LOG) == PackageManager.PERMISSION_GRANTED) {
-            val cur: Cursor = cr.query(CallLog.Calls.CONTENT_URI, null, null, null, strOrder)
-            cur.moveToFirst()
+        try {
+            val cr = context.contentResolver
+            val strOrder = CallLog.Calls.DATE + " DESC"
+            if (checkSelfPermission(context, Manifest.permission.READ_CALL_LOG) == PackageManager.PERMISSION_GRANTED) {
+                val cur: Cursor = cr.query(CallLog.Calls.CONTENT_URI, null, null, null, strOrder)
+                cur.moveToFirst()
 
-            val cal = Calendar.getInstance()
-            while (cur.moveToNext()) {
+                val cal = Calendar.getInstance()
+                while (cur.moveToNext()) {
 
-                var call = Call()
-                val currentDay = SimpleDateFormat("ddMMyyyy", Locale.ITALY).format(cal.time)
-                val callDay = SimpleDateFormat("ddMMyyyy", Locale.ITALY).format(Timestamp(cur.getLong(cur.getColumnIndex(CallLog.Calls.DATE))))
-                if (currentDay != callDay)
-                    call.date = SimpleDateFormat("HH:mm dd.MM.yyyy.", Locale.ITALY).format(Timestamp(cur.getLong(cur.getColumnIndex(CallLog.Calls.DATE))))
-                else
-                    call.date = SimpleDateFormat("HH:mm", Locale.ITALY).format(Timestamp(cur.getLong(cur.getColumnIndex(CallLog.Calls.DATE))))
+                    var call = Call()
+                    val currentDay = SimpleDateFormat("ddMMyyyy", Locale.ITALY).format(cal.time)
+                    val callDay = SimpleDateFormat("ddMMyyyy", Locale.ITALY).format(Timestamp(cur.getLong(cur.getColumnIndex(CallLog.Calls.DATE))))
+                    if (currentDay != callDay)
+                        call.date = SimpleDateFormat("HH:mm dd.MM.yyyy.", Locale.ITALY).format(Timestamp(cur.getLong(cur.getColumnIndex(CallLog.Calls.DATE))))
+                    else
+                        call.date = SimpleDateFormat("HH:mm", Locale.ITALY).format(Timestamp(cur.getLong(cur.getColumnIndex(CallLog.Calls.DATE))))
 
-                call.name = cur.getString(cur.getColumnIndex(CallLog.Calls.CACHED_NAME))
-                call.number = cur.getString(cur.getColumnIndex(CallLog.Calls.NUMBER))
-                call.type = cur.getInt(cur.getColumnIndex(CallLog.Calls.TYPE))
-                call.photo_uri = cur.getString(cur.getColumnIndex(CallLog.Calls.CACHED_PHOTO_URI))
+                    call.name = cur.getString(cur.getColumnIndex(CallLog.Calls.CACHED_NAME))
+                    call.number = cur.getString(cur.getColumnIndex(CallLog.Calls.NUMBER))
+                    call.type = cur.getInt(cur.getColumnIndex(CallLog.Calls.TYPE))
+                    call.photo_uri = cur.getString(cur.getColumnIndex(CallLog.Calls.CACHED_PHOTO_URI))
 
-                if (call.type != 2) // 1 for Incoming(1), Outgoing(2) and Missed(3), 4 (VoiceMail), 5 (Rejected) and 6 (Refused List)
-                    list.add(call)
+                    if (call.type != 2) // 1 for Incoming(1), Outgoing(2) and Missed(3), 4 (VoiceMail), 5 (Rejected) and 6 (Refused List)
+                        list.add(call)
+                }
+
+                cur.close()
             }
 
+            onCallContactsFetched.callLogsFetched(list)
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+            onCallContactsFetched.onFetchingError(e)
         }
 
-        onCallContactsFetched.callLogsFetched(list)
     }
+
+
 }

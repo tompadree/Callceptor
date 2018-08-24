@@ -10,7 +10,6 @@ import android.widget.Toast
 import callceptor.com.callceptor.R
 import callceptor.com.callceptor.common.enums.FragmentTag
 import callceptor.com.callceptor.telephony.MyPhoneStateManager
-import callceptor.com.callceptor.telephony.MySMSStateManager
 import callceptor.com.callceptor.view.BaseActivity
 import callceptor.com.callceptor.view.fragments.CallsFragment
 import callceptor.com.callceptor.view.fragments.MessagesFragment
@@ -26,8 +25,8 @@ class HomeActivity : BaseActivity() {
     lateinit var phoneStateManager: MyPhoneStateManager
 
     val PERMISSION_REQ_CODE = 1234
-    val PERMISSIONS_PHONE_BEFORE_P = arrayOf(Manifest.permission.READ_PHONE_STATE, Manifest.permission.CALL_PHONE, Manifest.permission.READ_CALL_LOG, Manifest.permission.READ_CONTACTS) //, Manifest.permission.RECEIVE_SMS, Manifest.permission.SEND_SMS, Manifest.permission.READ_SMS, Manifest.permission.SYSTEM_ALERT_WINDOW)
-    val PERMISSIONS_AFTER_P = arrayOf(Manifest.permission.ANSWER_PHONE_CALLS, Manifest.permission.READ_PHONE_STATE, Manifest.permission.READ_CALL_LOG, Manifest.permission.CALL_PHONE, Manifest.permission.READ_CONTACTS, Manifest.permission.RECEIVE_SMS, Manifest.permission.SEND_SMS, Manifest.permission.READ_SMS, Manifest.permission.SYSTEM_ALERT_WINDOW, Settings.ACTION_MANAGE_OVERLAY_PERMISSION)
+    val PERMISSIONS_PHONE_BEFORE_P = arrayOf(Manifest.permission.READ_PHONE_STATE, Manifest.permission.CALL_PHONE, Manifest.permission.READ_CALL_LOG, Manifest.permission.READ_CONTACTS, Manifest.permission.RECEIVE_SMS, Manifest.permission.READ_SMS) //, Manifest.permission.SEND_SMS, Manifest.permission.READ_SMS, Manifest.permission.SYSTEM_ALERT_WINDOW)
+    val PERMISSIONS_AFTER_P = arrayOf(Manifest.permission.ANSWER_PHONE_CALLS, Manifest.permission.READ_PHONE_STATE, Manifest.permission.READ_CALL_LOG, Manifest.permission.CALL_PHONE, Manifest.permission.READ_CONTACTS, Manifest.permission.SYSTEM_ALERT_WINDOW, Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Manifest.permission.RECEIVE_SMS, Manifest.permission.READ_SMS) // Manifest.permission.RECEIVE_SMS, Manifest.permission.SEND_SMS,
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,10 +53,10 @@ class HomeActivity : BaseActivity() {
 
     private fun unregisterReceiver() {
         this.unregisterReceiver()
+        this.unregisterReceiver()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-
         super.onSaveInstanceState(outState)
         //Clear the Activity's bundle of the subsidiary fragments' bundles.
         outState.clear()
@@ -118,10 +117,10 @@ class HomeActivity : BaseActivity() {
         phoneStateManager = MyPhoneStateManager()
         this.registerReceiver(phoneStateManager, IntentFilter("android.intent.action.PHONE_STATE"))
 
-        val mySMSStateManager = MySMSStateManager()
+//        val mySMSStateManager = MySMSStateManager()
         val intFilter = IntentFilter("android.provider.Telephony.SMS_RECEIVED")
-        intFilter.priority = 1000
-        this.registerReceiver(mySMSStateManager, intFilter)
+        intFilter.priority = 100
+        this.registerReceiver(phoneStateManager, intFilter)
     }
 
     private fun checkPermissions() {
@@ -136,18 +135,21 @@ class HomeActivity : BaseActivity() {
             if (checkSelfPermission(Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_DENIED
                     || checkSelfPermission(Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_DENIED
                     || checkSelfPermission(Manifest.permission.READ_CALL_LOG) == PackageManager.PERMISSION_DENIED
-                    || checkSelfPermission(Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_DENIED)
+                    || checkSelfPermission(Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_DENIED
+                    || checkSelfPermission(Manifest.permission.READ_SMS) == PackageManager.PERMISSION_DENIED)
                 requestPermissions(PERMISSIONS_PHONE_BEFORE_P, PERMISSION_REQ_CODE)
             else
                 registerReceiver()
 
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && Build.VERSION.SDK_INT > Build.VERSION_CODES.O_MR1) {
 
             if (checkSelfPermission(Manifest.permission.ANSWER_PHONE_CALLS) == PackageManager.PERMISSION_DENIED
                     || checkSelfPermission(Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_DENIED
                     || checkSelfPermission(Manifest.permission.READ_CALL_LOG) == PackageManager.PERMISSION_DENIED
                     || checkSelfPermission(Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_DENIED
-                    || checkSelfPermission(Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_DENIED)
+                    || checkSelfPermission(Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_DENIED
+                    || checkSelfPermission(Manifest.permission.READ_SMS) == PackageManager.PERMISSION_DENIED
+                    || checkSelfPermission(Manifest.permission.RECEIVE_SMS) == PackageManager.PERMISSION_DENIED)
                 requestPermissions(PERMISSIONS_AFTER_P, PERMISSION_REQ_CODE)
             else
                 registerReceiver()

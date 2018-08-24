@@ -14,7 +14,11 @@ import java.util.ArrayList
 import android.provider.ContactsContract.CommonDataKinds
 import android.provider.ContactsContract.PhoneLookup
 import android.net.Uri
+import android.provider.BlockedNumberContract
 import android.provider.Settings
+import android.provider.Telephony
+import android.widget.Toast
+import callceptor.com.callceptor.utils.CheckNumberContacts
 
 
 /**
@@ -36,23 +40,33 @@ class MyPhoneStateManager : BroadcastReceiver(), OnCallContactsFetched {
     override fun onReceive(context: Context?, intent: Intent?) {
 
         try {
-//            if(intent?.action.equals("android.provider.Telephony.SMS_RECEIVED")) {
-//                if (intent?.extras != null) {
-//                    var test = intent.extras
-//                }
-//            }
+            if (intent?.action.equals(Telephony.Sms.Intents.SMS_RECEIVED_ACTION)) {
+
+
+                val smsMessages = Telephony.Sms.Intents.getMessagesFromIntent(intent)
+                for (message in smsMessages) {
+
+//                    if (!isFromContacts(context!!, message.displayOriginatingAddress))
+//                        abortBroadcast()
+//                    else
+                        Toast.makeText(context, message.displayMessageBody, Toast.LENGTH_SHORT).show()
+                }
+
+                abortBroadcast()
+            }
+
             when (intent?.getStringExtra(TelephonyManager.EXTRA_STATE)) {
                 TelephonyManager.EXTRA_STATE_RINGING -> {
-                    Log.i(LOG_TAG, "onCallStateChanged: RINGING");
+//                    Log.i(LOG_TAG, "onCallStateChanged: RINGING");
                     processNumber(context, intent?.extras?.getString(TelephonyManager.EXTRA_INCOMING_NUMBER))
                 }
                 TelephonyManager.EXTRA_STATE_OFFHOOK -> {
-                    Log.i(LOG_TAG, "onCallStateChanged: ANSWERED");
+//                    Log.i(LOG_TAG, "onCallStateChanged: ANSWERED");
                     if (Settings.canDrawOverlays(context))
                         context?.stopService(Intent(context, HarmfulCallAlertService::class.java))
                 }
                 TelephonyManager.EXTRA_STATE_IDLE -> {
-                    Log.i(LOG_TAG, "onCallStateChanged: IDLE");
+//                    Log.i(LOG_TAG, "onCallStateChanged: IDLE");
                     if (Settings.canDrawOverlays(context))
                         context?.stopService(Intent(context, HarmfulCallAlertService::class.java))
                 }
@@ -72,7 +86,7 @@ class MyPhoneStateManager : BroadcastReceiver(), OnCallContactsFetched {
                 val telecomManager = context?.getSystemService(Context.TELECOM_SERVICE) as TelecomManager
                 if (telecomManager != null && number != null) {
                     telecomManager.endCall()
-                    Log.i(LOG_TAG, "onCallStateChanged: CALL_ENDED PIE")
+//                    Log.i(LOG_TAG, "onCallStateChanged: CALL_ENDED PIE")
                 }
 
             } else {
@@ -87,9 +101,9 @@ class MyPhoneStateManager : BroadcastReceiver(), OnCallContactsFetched {
                 if (number.equals("4259501212") || number.equals("+38516043663") || number.equals("+385989436165")) {
                     if (Settings.canDrawOverlays(context))
                         context.startService(Intent(context, HarmfulCallAlertService::class.java))
-                } else if (telephonyService != null && number != null && !isFromContacts(context, number)) {
+                } else if (telephonyService != null && number != null && !CheckNumberContacts.isFromContacts(context, number)) {
                     telephonyService.endCall()
-                    Log.i(LOG_TAG, "onCallStateChanged: CALL_ENDED OTHERS")
+//                    Log.i(LOG_TAG, "onCallStateChanged: CALL_ENDED OTHERS")
                 }
 
             }
@@ -99,27 +113,5 @@ class MyPhoneStateManager : BroadcastReceiver(), OnCallContactsFetched {
         }
 
     }
-
-    fun isFromContacts(context: Context, number: String): Boolean {
-
-        var res: String? = null
-        try {
-            val resolver = context.contentResolver
-            val uri = Uri.withAppendedPath(PhoneLookup.CONTENT_FILTER_URI, Uri.encode(number))
-            val c = resolver.query(uri, arrayOf(PhoneLookup.DISPLAY_NAME), null, null, null)
-
-            if (c != null) {
-                if (c.moveToFirst()) {
-                    res = c.getString(c.getColumnIndex(CommonDataKinds.Phone.DISPLAY_NAME))
-                }
-                c.close()
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-
-        return res != null
-    }
-
 }
 

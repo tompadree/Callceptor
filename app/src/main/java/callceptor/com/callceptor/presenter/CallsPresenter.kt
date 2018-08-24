@@ -7,5 +7,5 @@ interface CallsPresenter : BasePresenter {
 
     fun fetchCallLogs()
 
-//    fun fetchNextPage()
+    fun fetchNextPage()
 }

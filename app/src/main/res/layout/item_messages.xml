@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/itemMessagesMainRelativeLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:id="@+id/itemMessagesRelativeLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="15dp">
+
+        <TextView
+            android:id="@+id/itemMessagesTvNumber"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/object_text_color_black"
+            android:text="@string/phone_number_placeholder"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/itemMessagesTvMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/itemMessagesTvNumber"
+            android:layout_marginEnd="15dp"
+            android:layout_marginTop="6dp"
+            android:maxLines="1"
+            android:text="@string/message_placeholder"
+            android:singleLine="true" />
+
+        <TextView
+            android:id="@+id/itemMessagesTvTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/time_placeholder"
+            android:layout_alignBottom="@+id/itemMessagesTvNumber"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="15dp" />
+
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/repo_item_separator_view"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/itemMessagesRelativeLayout"
+        android:background="@color/separator_grey" />
+
+
+</RelativeLayout>

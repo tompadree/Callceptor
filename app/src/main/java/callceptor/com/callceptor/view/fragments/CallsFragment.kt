@@ -87,7 +87,6 @@ class CallsFragment : BaseFragment(), CallsView {
             fragmentCallsRv.adapter.notifyDataSetChanged()
         }
         hideLoading()
-
     }
 
     fun setupRecyclerView() {

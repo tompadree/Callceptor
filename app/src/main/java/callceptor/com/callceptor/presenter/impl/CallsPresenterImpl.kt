@@ -29,6 +29,10 @@ class CallsPresenterImpl
 
     }
 
+    override fun fetchNextPage() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
     override fun onFetchingError(e: Throwable) {
         callsView.showError(e.localizedMessage)
         callsView.hideLoading()
