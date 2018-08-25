@@ -1,5 +1,6 @@
 package callceptor.com.callceptor.domain.interactors
 
+import callceptor.com.callceptor.data.models.Call
 import callceptor.com.callceptor.domain.listeners.OnCallContactsFetched
 
 
@@ -8,8 +9,13 @@ import callceptor.com.callceptor.domain.listeners.OnCallContactsFetched
  */
 interface CallsInteractor {
 
-    fun getCallLogs(onCallContactsFetched: OnCallContactsFetched)
+    fun getCallLogs(initonCallContactsFetched: OnCallContactsFetched)
 
     fun getContacts(onCallContactsFetched: OnCallContactsFetched)
-//    fun fetchNextPage()
+
+    fun saveLastCall(calls: ArrayList<Call>)
+
+    fun fetchNextPage()
+
+    fun destroyDisposable()
 }

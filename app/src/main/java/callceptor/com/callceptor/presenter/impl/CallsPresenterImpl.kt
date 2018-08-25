@@ -17,24 +17,41 @@ class CallsPresenterImpl
                     private val callsView: CallsView) : CallsPresenter, OnCallContactsFetched {
 
     override fun fetchCallLogs() {
-        callsView.showLoading()
-       // callsInteractor.getCallLogs(this)
+        showLoading()
+        callsInteractor.getCallLogs(this)
     }
 
-    override fun callLogsFetched(list : ArrayList<Call>) {
+    override fun fetchNextPage() {
+        callsInteractor.fetchNextPage()
+    }
+
+    override fun callLogsFetched(list: ArrayList<Call>) {
         callsView.callLogsFetched(list)
+        hideLoading()
     }
 
     override fun contactsFetched(list: ArrayList<String>) {
 
     }
 
-    override fun fetchNextPage() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
     override fun onFetchingError(e: Throwable) {
         callsView.showError(e.localizedMessage)
+        hideLoading()
+    }
+
+    override fun showLoadingFooter() {
+        callsView.showLoadingFooter()
+    }
+
+    override fun hideLoadingFooter() {
+        callsView.hideLoadingFooter()
+    }
+
+    override fun showLoading() {
+        callsView.showLoading()
+    }
+
+    override fun hideLoading() {
         callsView.hideLoading()
     }
 

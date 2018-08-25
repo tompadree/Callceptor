@@ -11,16 +11,16 @@ import javax.inject.Inject
  * Created by Tom on 25.8.2018..
  */
 class LocalCallsDataStore
-@Inject constructor(private val callceptorDatabase: CallceptorDatabase): CallsDataStore {
+@Inject constructor(private val callceptorDatabase: CallceptorDatabase) : CallsDataStore {
 
-    private val dao : CallceptorDAO = callceptorDatabase.getCallceptorDao()
+    private val dao: CallceptorDAO = callceptorDatabase.getCallceptorDao()
 
     override fun saveAllCalls(calls: ArrayList<Call>): Single<LongArray> {
-        return Single.fromCallable{dao.saveIncomingCalls(calls)}
+        return Single.fromCallable { dao.saveIncomingCalls(calls) }
     }
 
     override fun saveLastCall(call: Call): Single<Long> {
-        return Single.fromCallable{dao.saveIncomingCall(call)}
+        return Single.fromCallable { dao.saveIncomingCall(call) }
     }
 
     override fun fetchAllCallsFromSystem(): Single<ArrayList<Call>> {
@@ -28,6 +28,6 @@ class LocalCallsDataStore
     }
 
     override fun getCalls(page: Int, per_page: Int): Flowable<ArrayList<Call>> {
-        return Single.fromCallable { dao.getCalls(page, per_page) }.toFlowable()
+        return Single.fromCallable { ArrayList(dao.getCalls(((page - 1) * per_page), per_page)) }.toFlowable()
     }
 }

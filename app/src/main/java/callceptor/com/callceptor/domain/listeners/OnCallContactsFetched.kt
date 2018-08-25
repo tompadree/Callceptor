@@ -14,4 +14,12 @@ interface OnCallContactsFetched {
 
     fun onFetchingError(e : Throwable)
 
+    fun showLoadingFooter()
+
+    fun hideLoadingFooter()
+
+    fun showLoading()
+
+    fun hideLoading()
+
 }

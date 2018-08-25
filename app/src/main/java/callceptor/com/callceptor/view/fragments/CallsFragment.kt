@@ -27,14 +27,13 @@ import android.app.Activity
 import android.widget.TextView
 
 
-
 class CallsFragment : BaseFragment(), CallsView {
 
     @Inject
     lateinit var callsPresenter: CallsPresenter
 
     lateinit var localCalls: ArrayList<Call>
-    var callsAdapter : CallsAdapter? = null
+    var callsAdapter: CallsAdapter? = null
 
     companion object {
 
@@ -85,7 +84,7 @@ class CallsFragment : BaseFragment(), CallsView {
 //        if(savedInstanceState != null)
 //            localCalls = savedInstanceState.getParcelableArrayList("list")
 //        else
-            callsPresenter.fetchCallLogs()
+        callsPresenter.fetchCallLogs()
     }
 
 
@@ -98,7 +97,7 @@ class CallsFragment : BaseFragment(), CallsView {
         super.onDetach()
     }
 
-    override fun callLogsFetched(list : ArrayList<Call>) {
+    override fun callLogsFetched(list: ArrayList<Call>) {
 
         if (localCalls.size == 0) {
             localCalls = list
@@ -108,6 +107,7 @@ class CallsFragment : BaseFragment(), CallsView {
             fragmentCallsRv.adapter.notifyDataSetChanged()
         }
         hideLoading()
+
     }
 
     fun setupRecyclerView() {
@@ -123,21 +123,20 @@ class CallsFragment : BaseFragment(), CallsView {
                 super.onScrolled(recyclerView, dx, dy)
 
                 val totalItemCount = layoutManager.itemCount
-                val myTotalCount = totalItemCount - 34
+                val myTotalCount = totalItemCount - 84
                 val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
 
-//                if (dy > 0) { //dy scrolling down
-//                    if ((firstVisibleItemPosition >= myTotalCount) && firstVisibleItemPosition > 0
-//                            && myTotalCount > 0 && localCalls.size <= totalItemCount)
-////                        githubResultsPresenter.fetchNextPage()
-//                }
+                if (dy > 0) { //dy scrolling down
+                    if ((firstVisibleItemPosition >= myTotalCount) && firstVisibleItemPosition > 0
+                            && myTotalCount > 0 && localCalls.size <= totalItemCount)
+                        callsPresenter.fetchNextPage()
+                }
             }
         })
 
         hideLoading()
+
     }
-
-
 
     override fun showLoading() {
         fragmentCallsProgressBar.visibility = View.VISIBLE
@@ -148,9 +147,13 @@ class CallsFragment : BaseFragment(), CallsView {
     }
 
     override fun showLoadingFooter() {
+        if (callsAdapter != null && localCalls.size > 0)
+            callsAdapter?.addLoadingFooter()
     }
 
     override fun hideLoadingFooter() {
+        if (callsAdapter != null && localCalls.size > 0)
+            callsAdapter?.removeLoadingFooter()
     }
 
     override fun showError(message: String) {

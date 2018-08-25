@@ -11,4 +11,12 @@ interface OnMessagesFetched {
     fun messagesFetched(list : ArrayList<Message>)
 
     fun onFetchingError(e : Throwable)
+
+    fun showLoadingFooter()
+
+    fun hideLoadingFooter()
+
+    fun showLoading()
+
+    fun hideLoading()
 }

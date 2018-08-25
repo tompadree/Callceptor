@@ -74,8 +74,6 @@ class HomeActivity : BaseActivity() {
 //        addFragment(messagesFragmentInstance, FragmentTag.MessagesFragment.getTag())
 //        supportFragmentManager.beginTransaction().hide(messagesFragmentInstance).commit()
 
-        addFragment(callsFragmentInstance, FragmentTag.CallsFragment.getTag())
-        homeActivityBottomNavigation.selectedItemId = R.id.action_calls
 
 //        addFragment(settingsFragmentInstance, FragmentTag.SettingsFragment.getTag())
 //        supportFragmentManager.beginTransaction().hide(settingsFragmentInstance).commit()
@@ -95,13 +93,16 @@ class HomeActivity : BaseActivity() {
                 }// messagesClicked()
                 R.id.action_calls -> {
 
+                    if (!callsFragmentInstance.isAdded)
+                        addFragment(callsFragmentInstance, FragmentTag.CallsFragment.getTag())
+
                     if (activeFrag != callsFragmentInstance)
                         supportFragmentManager.beginTransaction().show(callsFragmentInstance).hide(activeFrag).commit()
                     else {
 //                        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M)
 //                            supportFragmentManager.beginTransaction().hide(activeFrag).show(callsFragmentInstance).commit()
 //                        else
-                            supportFragmentManager.beginTransaction().hide(activeFrag).show(callsFragmentInstance).commitAllowingStateLoss()
+                        supportFragmentManager.beginTransaction().hide(activeFrag).show(callsFragmentInstance).commitAllowingStateLoss()
                     }
                     activeFrag = callsFragmentInstance
 
@@ -123,40 +124,12 @@ class HomeActivity : BaseActivity() {
 
     }
 
-//    private fun messagesClicked() {
-//        setFragment(messagesFragmentInstance, FragmentTag.MessagesFragment.getTag())
-//    }
-//
-//    private fun callsClicked() {
-//        setFragment(callsFragmentInstance, FragmentTag.CallsFragment.getTag())
-//    }
-//
-//    private fun settingsClicked() {
-//        setFragment(settingsFragmentInstance, FragmentTag.SettingsFragment.getTag())
-//    }
-//
-//
-//    private fun setFragment(currentFragment: Fragment, fragmentTag: String) {
-//
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-//            supportFragmentManager
-//                    .beginTransaction()
-//                    .replace(R.id.homeActivityContainer, currentFragment, fragmentTag)
-//                    .commitAllowingStateLoss()
-//        else
-//            supportFragmentManager
-//                    .beginTransaction()
-//                    .replace(R.id.homeActivityContainer, currentFragment, fragmentTag)
-//                    .commit()
-//
-//    }
-
     private fun addFragment(currentFragment: Fragment, fragmentTag: String) {
 
         supportFragmentManager
                 .beginTransaction()
                 .add(R.id.homeActivityContainer, currentFragment, fragmentTag)
-                .commit()
+                .commitAllowingStateLoss()
 
     }
 
@@ -173,10 +146,10 @@ class HomeActivity : BaseActivity() {
 
     private fun checkPermissions() {
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-            if ((checkSelfPermission(Manifest.permission.SYSTEM_ALERT_WINDOW) == PackageManager.PERMISSION_DENIED)
-                    || (!Settings.canDrawOverlays(this)))
-                checkDrawOverlayPermission()
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+//            if ((checkSelfPermission(Manifest.permission.SYSTEM_ALERT_WINDOW) == PackageManager.PERMISSION_DENIED)
+//                    || (!Settings.canDrawOverlays(this)))
+//                checkDrawOverlayPermission()
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && Build.VERSION.SDK_INT <= Build.VERSION_CODES.O_MR1) {
 
@@ -186,8 +159,14 @@ class HomeActivity : BaseActivity() {
                     || checkSelfPermission(Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_DENIED
                     || checkSelfPermission(Manifest.permission.READ_SMS) == PackageManager.PERMISSION_DENIED)
                 requestPermissions(PERMISSIONS_PHONE_BEFORE_P, PERMISSION_REQ_CODE)
-            else
+            else if ((checkSelfPermission(Manifest.permission.SYSTEM_ALERT_WINDOW) == PackageManager.PERMISSION_DENIED)
+                    || (!Settings.canDrawOverlays(this)))
+                checkDrawOverlayPermission()
+            // addFragment(callsFragmentInstance, FragmentTag.CallsFragment.getTag())
+            else {
+                homeActivityBottomNavigation.selectedItemId = R.id.action_calls
                 registerReceiver()
+            }
 
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && Build.VERSION.SDK_INT > Build.VERSION_CODES.O_MR1) {
 
@@ -199,8 +178,15 @@ class HomeActivity : BaseActivity() {
                     || checkSelfPermission(Manifest.permission.READ_SMS) == PackageManager.PERMISSION_DENIED
                     || checkSelfPermission(Manifest.permission.RECEIVE_SMS) == PackageManager.PERMISSION_DENIED)
                 requestPermissions(PERMISSIONS_AFTER_P, PERMISSION_REQ_CODE)
-            else
+            else if ((checkSelfPermission(Manifest.permission.SYSTEM_ALERT_WINDOW) == PackageManager.PERMISSION_DENIED)
+                    || (!Settings.canDrawOverlays(this)))
+                checkDrawOverlayPermission()
+                // addFragment(callsFragmentInstance, FragmentTag.CallsFragment.getTag())
+            else {
+                homeActivityBottomNavigation.selectedItemId = R.id.action_calls
                 registerReceiver()
+
+            }
 
         }
 
@@ -221,7 +207,9 @@ class HomeActivity : BaseActivity() {
 
         if (requestCode == 12345) {
             if (Settings.canDrawOverlays(this)) {
-//                startService(Intent(this, HarmfulCallAlertService::class.java))
+
+                homeActivityBottomNavigation.selectedItemId = R.id.action_calls
+                registerReceiver()
             }
         }
     }
@@ -236,10 +224,12 @@ class HomeActivity : BaseActivity() {
 
                 if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-                    homeActivityBottomNavigation.selectedItemId = R.id.action_calls
-                    registerReceiver()
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+                        if ((checkSelfPermission(Manifest.permission.SYSTEM_ALERT_WINDOW) == PackageManager.PERMISSION_DENIED)
+                                || (!Settings.canDrawOverlays(this)))
+                            checkDrawOverlayPermission()
 
-                    Toast.makeText(this, "Permission granted" /*+ PERMISSIONS_PHONE*/, Toast.LENGTH_SHORT).show()
+//                    Toast.makeText(this, "Permission granted" /*+ PERMISSIONS_PHONE*/, Toast.LENGTH_SHORT).show()
 
                 } else {
                     Toast.makeText(this, "Permission NOT granted"/* + PERMISSIONS_PHONE*/, Toast.LENGTH_SHORT).show();

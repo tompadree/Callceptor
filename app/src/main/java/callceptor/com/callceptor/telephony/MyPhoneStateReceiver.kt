@@ -18,15 +18,29 @@ import android.provider.BlockedNumberContract
 import android.provider.Settings
 import android.provider.Telephony
 import android.widget.Toast
+import callceptor.com.callceptor.data.repositories.calls.LocalCallsDataStore
+import callceptor.com.callceptor.domain.interactors.CallsInteractor
+import callceptor.com.callceptor.domain.interactors.impl.CallsInteractorImpl
+import callceptor.com.callceptor.domain.listeners.SystemDataManager
 import callceptor.com.callceptor.utils.CheckNumberContacts
+import javax.inject.Inject
 
 
 /**
  * Created by Tomislav on 21,August,2018
  */
-class MyPhoneStateReceiver : BroadcastReceiver(), OnCallContactsFetched {
+class MyPhoneStateReceiver
+    : BroadcastReceiver(), OnCallContactsFetched {
+
+
+    @Inject
+    lateinit var interactor: CallsInteractor
+
+    @Inject
+    lateinit var systemDataManager: SystemDataManager
 
     var LOG_TAG = "PHONE_TAG"
+    var call = false
 
     var contactNumbers: ArrayList<String> = ArrayList()
     override fun callLogsFetched(list: ArrayList<Call>) {}
@@ -57,18 +71,27 @@ class MyPhoneStateReceiver : BroadcastReceiver(), OnCallContactsFetched {
 
             when (intent?.getStringExtra(TelephonyManager.EXTRA_STATE)) {
                 TelephonyManager.EXTRA_STATE_RINGING -> {
-//                    Log.i(LOG_TAG, "onCallStateChanged: RINGING");
+                    Log.i(LOG_TAG, "onCallStateChanged: RINGING");
                     processNumber(context, intent?.extras?.getString(TelephonyManager.EXTRA_INCOMING_NUMBER))
+                    call = true
                 }
                 TelephonyManager.EXTRA_STATE_OFFHOOK -> {
-//                    Log.i(LOG_TAG, "onCallStateChanged: ANSWERED");
+                    Log.i(LOG_TAG, "onCallStateChanged: ANSWERED");
                     if (Settings.canDrawOverlays(context))
                         context?.stopService(Intent(context, HarmfulCallAlertService::class.java))
+                    call = true
                 }
                 TelephonyManager.EXTRA_STATE_IDLE -> {
-//                    Log.i(LOG_TAG, "onCallStateChanged: IDLE");
+                    Log.i(LOG_TAG, "onCallStateChanged: IDLE");
+                    /*TODO LOLLIPOP ?*/
                     if (Settings.canDrawOverlays(context))
                         context?.stopService(Intent(context, HarmfulCallAlertService::class.java))
+
+//                    if(call) {
+//                        call = false
+//
+//                        interactor.saveLocalResults()
+//                    }
                 }
             }
 
@@ -101,17 +124,44 @@ class MyPhoneStateReceiver : BroadcastReceiver(), OnCallContactsFetched {
                 if (number.equals("4259501212") || number.equals("+38516043663") || number.equals("+385989436165")) {
                     if (Settings.canDrawOverlays(context))
                         context.startService(Intent(context, HarmfulCallAlertService::class.java))
+
                 } else if (telephonyService != null && number != null && !CheckNumberContacts.isFromContacts(context, number)) {
                     telephonyService.endCall()
+
+                    var calls : ArrayList<Call> = ArrayList()
+                    calls.add(systemDataManager.getLastCall())
+                    interactor.saveLastCall(calls)
+
 //                    Log.i(LOG_TAG, "onCallStateChanged: CALL_ENDED OTHERS")
                 }
 
             }
 
+            var calls : ArrayList<Call> = ArrayList()
+            calls.add(systemDataManager.getLastCall())
+            interactor.saveLastCall(calls)
+
+
         } catch (e: Exception) {
             e.printStackTrace()
         }
 
+    }
+
+    override fun showLoadingFooter() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun hideLoadingFooter() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun showLoading() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun hideLoading() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }
 

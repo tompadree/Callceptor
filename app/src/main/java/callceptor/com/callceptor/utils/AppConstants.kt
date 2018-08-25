@@ -8,5 +8,9 @@ interface AppConstants {
     companion object {
 
         const val SPLASH_DISPLAY_LENGTH: Long = 2000
+
+        const val PAGE_ENTRIES = 100
+        var ITEM = 0
+        var LOADING = 1
     }
 }

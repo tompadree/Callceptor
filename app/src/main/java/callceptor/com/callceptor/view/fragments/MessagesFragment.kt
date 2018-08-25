@@ -64,15 +64,6 @@ class MessagesFragment : BaseFragment(), MessagesView, OnMessagesItemClicked {
                               savedInstanceState: Bundle?): View? {
 
         localMessages = ArrayList()
-//        lateinit var view : View
-//        if (savedInstanceState != null)
-//            localMessages = savedInstanceState.getParcelableArrayList("list")
-//        view = fragmentManager.getFragment(savedInstanceState, "myFragmentName")
-//        else {
-//            messagesPresenter.fetchMessages()
-//
-//            view = inflater.inflate(R.layout.fragment_messages, container, false)
-//        }
 
         return inflater.inflate(R.layout.fragment_messages, container, false)
     }
@@ -126,14 +117,14 @@ class MessagesFragment : BaseFragment(), MessagesView, OnMessagesItemClicked {
                 super.onScrolled(recyclerView, dx, dy)
 
                 val totalItemCount = layoutManager.itemCount
-                val myTotalCount = totalItemCount - 34
+                val myTotalCount = totalItemCount - 84
                 val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
 
-//                if (dy > 0) { //dy scrolling down
-//                    if ((firstVisibleItemPosition >= myTotalCount) && firstVisibleItemPosition > 0
-//                            && myTotalCount > 0 && localCalls.size <= totalItemCount)
-////                        githubResultsPresenter.fetchNextPage()
-//                }
+                if (dy > 0) { //dy scrolling down
+                    if ((firstVisibleItemPosition >= myTotalCount) && firstVisibleItemPosition > 0
+                            && myTotalCount > 0 && localMessages.size <= totalItemCount)
+                        messagesPresenter.fetchNextPage()
+                }
             }
         })
 
@@ -145,22 +136,22 @@ class MessagesFragment : BaseFragment(), MessagesView, OnMessagesItemClicked {
     }
 
     override fun onMessageClicked(pos: Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        Toast.makeText(context, "Clicked: " + pos, Toast.LENGTH_SHORT).show()
     }
 
     override fun showLoadingFooter() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        if (messagesAdapter != null && localMessages.size > 0)
+            messagesAdapter?.addLoadingFooter()
     }
 
     override fun hideLoadingFooter() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        if (messagesAdapter != null && localMessages.size > 0)
+            messagesAdapter?.removeLoadingFooter()
     }
 
     override fun showRefreshLoading() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun hideRefreshLoading() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }

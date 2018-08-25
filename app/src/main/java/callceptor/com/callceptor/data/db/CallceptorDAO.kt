@@ -19,8 +19,8 @@ interface CallceptorDAO {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun saveIncomingCall(call: Call): Long
 
-    @Query("SELECT * FROM calls LIMIT :page, :per_page ORDER BY timestamp") //" ORDER BY repoName ASC
-    fun getCalls(page: Int, per_page: Int): ArrayList<Call>
+    @Query("SELECT * FROM calls ORDER BY timestamp DESC LIMIT :page , :per_page") //" ORDER BY repoName ASC
+    fun getCalls(page: Int, per_page: Int): List<Call>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun saveIncomingMessages(messages: ArrayList<Message>): LongArray
@@ -28,8 +28,8 @@ interface CallceptorDAO {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun saveIncomingMessage(message: Message): Long
 
-    @Query("SELECT * FROM messages LIMIT :page, :per_page ORDER BY timestamp ASC") // ORDER BY userName ASC LIMIT (:page * :per_page) , :per_page")
-    fun getMessages(page: Int, per_page: Int): ArrayList<Message>
+    @Query("SELECT * FROM messages ORDER BY timestamp DESC LIMIT :page , :per_page") // ORDER BY userName ASC LIMIT (:page * :per_page) , :per_page")
+    fun getMessages(page: Int, per_page: Int): List<Message>
 
 
 }

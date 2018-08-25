@@ -9,4 +9,9 @@ import callceptor.com.callceptor.domain.listeners.OnMessagesFetched
 interface MessageInteractor{
 
     fun getMessages(onMessagesFetched: OnMessagesFetched)
+
+    fun fetchNextPage()
+
+    fun destroyDisposable()
+
 }

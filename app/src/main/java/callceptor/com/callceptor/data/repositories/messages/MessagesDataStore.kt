@@ -9,13 +9,13 @@ import io.reactivex.Single
  */
 interface MessagesDataStore {
 
-    fun saveAllMessages(Messages: ArrayList<Message>): Single<LongArray>
+    fun saveAllMessages(messages: ArrayList<Message>): Single<LongArray>
 
     fun saveLastMessage(message: Message): Single<Long>
 
-    fun fetchAllMessagesFromSystem() : Single<Message>
+    fun fetchAllMessagesFromSystem() : Single<ArrayList<Message>>
 
-    fun getMessages(page: Int, per_page: Int): Flowable<Message>
+    fun getMessages(page: Int, per_page: Int): Flowable<ArrayList<Message>>
 
 
 }

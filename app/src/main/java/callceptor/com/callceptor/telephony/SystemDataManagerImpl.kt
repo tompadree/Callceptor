@@ -45,6 +45,53 @@ class SystemDataManagerImpl(private val context: Context) : SystemDataManager {
     }
 
 
+    override fun getLastCall(): Call {
+         var call: Call? = null
+
+        try {
+            val cr = context.contentResolver
+            val strOrder = CallLog.Calls.DATE + " DESC"
+            if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CALL_LOG) == PackageManager.PERMISSION_GRANTED) {
+                val cur: Cursor = cr.query(CallLog.Calls.CONTENT_URI, null, null, null, strOrder)
+                cur.moveToFirst()
+
+                if (call?.type != 2) {
+
+                    val cal = Calendar.getInstance()
+
+                    val currentDay = SimpleDateFormat("ddMMyyyy", Locale.ITALY).format(cal.time)
+                    val callDay = SimpleDateFormat("ddMMyyyy", Locale.ITALY).format(Timestamp(cur.getLong(cur.getColumnIndex(CallLog.Calls.DATE))))
+                    if (currentDay != callDay)
+                        call?.date = SimpleDateFormat("HH:mm dd.MM.yyyy.", Locale.ITALY).format(Timestamp(cur.getLong(cur.getColumnIndex(CallLog.Calls.DATE))))
+                    else
+                        call?.date = SimpleDateFormat("HH:mm", Locale.ITALY).format(Timestamp(cur.getLong(cur.getColumnIndex(CallLog.Calls.DATE))))
+
+                    call?.timestamp = cur.getLong(cur.getColumnIndex(CallLog.Calls.DATE))
+                    call?.name = cur.getString(cur.getColumnIndex(CallLog.Calls.CACHED_NAME))
+                    call?.number = cur.getString(cur.getColumnIndex(CallLog.Calls.NUMBER))
+                    call?.type = cur.getInt(cur.getColumnIndex(CallLog.Calls.TYPE))
+                    call?.photo_uri = cur.getString(cur.getColumnIndex(CallLog.Calls.CACHED_PHOTO_URI))
+
+//                    if (call.type != 2) // 1 for Incoming(1), Outgoing(2) and Missed(3), 4 (VoiceMail), 5 (Rejected) and 6 (Refused List)
+//                        call.add(call)
+
+
+                    cur.close()
+                    return call!!
+                }
+            }
+
+
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+            //onCallContactsFetched.onFetchingError(e)
+        }
+
+        return call!!
+    }
+
+
     override fun getCallLogs(): ArrayList<Call> {
 
         var list: ArrayList<Call> = ArrayList()
@@ -68,6 +115,7 @@ class SystemDataManagerImpl(private val context: Context) : SystemDataManager {
                     else
                         call.date = SimpleDateFormat("HH:mm", Locale.ITALY).format(Timestamp(cur.getLong(cur.getColumnIndex(CallLog.Calls.DATE))))
 
+                    call.timestamp = cur.getLong(cur.getColumnIndex(CallLog.Calls.DATE))
                     call.name = cur.getString(cur.getColumnIndex(CallLog.Calls.CACHED_NAME))
                     call.number = cur.getString(cur.getColumnIndex(CallLog.Calls.NUMBER))
                     call.type = cur.getInt(cur.getColumnIndex(CallLog.Calls.TYPE))
@@ -100,7 +148,7 @@ class SystemDataManagerImpl(private val context: Context) : SystemDataManager {
             val cur = cr.query(Telephony.Sms.CONTENT_URI, null, null, null, null)
             if (cur != null) {
                 cur.moveToFirst()
-                cur.moveToFirst()
+
                 val cal = Calendar.getInstance()
                 while (cur.moveToNext()) {
 
@@ -114,7 +162,7 @@ class SystemDataManagerImpl(private val context: Context) : SystemDataManager {
                         message.date = SimpleDateFormat("HH:mm", Locale.ITALY).format(Timestamp(cur.getLong(cur.getColumnIndexOrThrow(Telephony.Sms.DATE))))
 
 
-//                    message.date = cur.getString(cur.getColumnIndexOrThrow(Telephony.Sms.DATE))
+                    message.timestamp = cur.getString(cur.getColumnIndexOrThrow(Telephony.Sms.DATE))
                     message.number = cur.getString(cur.getColumnIndexOrThrow(Telephony.Sms.ADDRESS))
                     message.body = cur.getString(cur.getColumnIndexOrThrow(Telephony.Sms.BODY))
 
@@ -137,6 +185,10 @@ class SystemDataManagerImpl(private val context: Context) : SystemDataManager {
 
         return list
 
+    }
+
+    override fun getLastMessage(): Message {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
 }

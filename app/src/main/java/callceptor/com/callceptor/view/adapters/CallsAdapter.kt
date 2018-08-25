@@ -16,6 +16,8 @@ import callceptor.com.callceptor.data.models.Call
 import com.makeramen.roundedimageview.RoundedImageView
 import com.squareup.picasso.Picasso
 import callceptor.com.callceptor.R
+import callceptor.com.callceptor.utils.AppConstants.Companion.ITEM
+import callceptor.com.callceptor.utils.AppConstants.Companion.LOADING
 import java.io.File
 
 /**
@@ -25,7 +27,7 @@ class CallsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     lateinit var context: Context
     lateinit var calls: ArrayList<Call>
-//    private var isLoadingAdded: Boolean = false
+    private var isLoadingAdded: Boolean = false
 //    private lateinit var onListItemClicked: OnResultItemClicked
 
     constructor()
@@ -37,57 +39,58 @@ class CallsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): RecyclerView.ViewHolder {
-//        return if (viewType == ITEM) {
-        return ResultItemHolder(LayoutInflater.from(context).inflate(R.layout.item_calls, parent, false))
-//        } else {
-//            LoadingViewHolder(LayoutInflater.from(context).inflate(R.layout.item_git_result_loading, parent, false))
-//        }
+        return if (viewType == ITEM) {
+            return ResultItemHolder(LayoutInflater.from(context).inflate(R.layout.item_calls, parent, false))
+        } else {
+            LoadingViewHolder(LayoutInflater.from(context).inflate(R.layout.item_list_loading, parent, false))
+        }
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-//        var viewType = getItemViewType(position)
+        var viewType = getItemViewType(position)
 //
-//        if (viewType == ITEM) {
-        holder as ResultItemHolder
+        if (viewType == ITEM) {
+            holder as ResultItemHolder
 
 
-        holder.itemCallsTvName.text = calls[position].name
-        holder.itemCallsTvNumber.text = calls[position].number
-        holder.itemCallsTvTime.text = calls[position].date
+            holder.itemCallsTvName.text = calls[position].name
+            holder.itemCallsTvNumber.text = calls[position].number
+            holder.itemCallsTvTime.text = calls[position].date
 
-        when(calls[position].type){
+            when (calls[position].type) {
 
-            1 -> holder.itemCallsType.setImageResource(R.mipmap.ic_call_incoming)
-            3 -> holder.itemCallsType.setImageResource(R.mipmap.ic_call_missed)
-            4,5,6 -> holder.itemCallsType.setImageResource(R.mipmap.ic_call_blocked)
+                1 -> holder.itemCallsType.setImageResource(R.mipmap.ic_call_incoming)
+                3 -> holder.itemCallsType.setImageResource(R.mipmap.ic_call_missed)
+                4, 5, 6 -> holder.itemCallsType.setImageResource(R.mipmap.ic_call_blocked)
 
 
-        }
+            }
 
 //            holder.callsItem.setOnClickListener { onListItemClicked.onItemClicked(position) }
 
 
-        if (calls[position].photo_uri != null)
-            Picasso.get()
-                    .load(Uri.parse(calls[position].photo_uri))
-                    .placeholder(R.mipmap.ic_contact_placeholder)
-                    .tag(context)
-                    .resize(200, 200)
+            if (calls[position].photo_uri != null)
+                Picasso.get()
+                        .load(Uri.parse(calls[position].photo_uri))
+                        .placeholder(R.mipmap.ic_contact_placeholder)
+                        .tag(context)
+                        .resize(200, 200)
 //                    .fit()
-                    .centerCrop()
-                    .into(holder.itemCallsImageView)
-        else
-            holder.itemCallsImageView.setImageResource(R.mipmap.ic_contact_placeholder)
+                        .centerCrop()
+                        .into(holder.itemCallsImageView)
+            else
+                holder.itemCallsImageView.setImageResource(R.mipmap.ic_contact_placeholder)
 
+        }
     }
 
-//    override fun getItemViewType(position: Int): Int {
-//        return if (repos[position].createdAt != null) {
-//            ITEM
-//        } else {
-//            LOADING
-//        }
-//    }
+    override fun getItemViewType(position: Int): Int {
+        return if (calls[position].number != null) {
+            ITEM
+        } else {
+            LOADING
+        }
+    }
 
     override fun getItemCount(): Int {
         return calls.size
@@ -119,55 +122,54 @@ class CallsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     }
 
-//    protected inner class LoadingViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
-//
-//    fun add(repo: RepoObject) {
-//        repos.add(repo)
-//        notifyItemInserted(repos.size - 1)
-//    }
-//
-//    fun addAll(repoList: List<RepoObject>) {
-//        for (rl in repoList) {
-//            add(rl)
-//        }
-//    }
-//
-//    fun remove(repo: RepoObject) {
-//        val position = repos.indexOf(repo)
-//        if (position > -1) {
-//            repos.removeAt(position)
-//            notifyItemRemoved(position)
-//        }
-//    }
-//
-//    fun clear() {
-//        isLoadingAdded = false
-//        while (itemCount > 0) {
-//            remove(getItem(0))
-//        }
-//    }
-//
-//    fun isEmpty(): Boolean {
-//        return itemCount == 0
-//    }
-//
-//    fun addLoadingFooter() {
-//        isLoadingAdded = true
-//        add(RepoObject())
-//    }
-//
-//    fun removeLoadingFooter() {
-//        isLoadingAdded = false
-//
-//        val position = if (repos.size > 0) repos.size - 1 else 0
-//
-//        repos.removeAt(position)
-//        notifyItemRemoved(position)
-//
-//    }
-//
-//    fun getItem(position: Int): RepoObject {
-//        return repos[position]
-//    }
+    protected inner class LoadingViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 
+    fun add(call: Call) {
+        calls.add(call)
+        notifyItemInserted(calls.size - 1)
+    }
+
+    fun addAll(repoList: List<Call>) {
+        for (rl in repoList) {
+            add(rl)
+        }
+    }
+
+    fun remove(call: Call) {
+        val position = calls.indexOf(call)
+        if (position > -1) {
+            calls.removeAt(position)
+            notifyItemRemoved(position)
+        }
+    }
+
+    fun clear() {
+        isLoadingAdded = false
+        while (itemCount > 0) {
+            remove(getItem(0))
+        }
+    }
+
+    fun isEmpty(): Boolean {
+        return itemCount == 0
+    }
+
+    fun addLoadingFooter() {
+        isLoadingAdded = true
+        add(Call())
+    }
+
+    fun removeLoadingFooter() {
+        isLoadingAdded = false
+
+        val position = if (calls.size > 0) calls.size - 1 else 0
+
+        calls.removeAt(position)
+        notifyItemRemoved(position)
+
+    }
+
+    fun getItem(position: Int): Call {
+        return calls[position]
+    }
 }

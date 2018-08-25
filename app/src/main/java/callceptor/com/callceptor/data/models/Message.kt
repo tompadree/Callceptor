@@ -1,8 +1,10 @@
 package callceptor.com.callceptor.data.models
 
 import android.arch.persistence.room.Entity
+import android.arch.persistence.room.PrimaryKey
 import android.os.Parcel
 import android.os.Parcelable
+import android.support.annotation.NonNull
 import java.io.Serializable
 
 /**
@@ -16,6 +18,9 @@ class Message() : Parcelable, Serializable {
     var number : String? =null
     var body : String? = null
     var name : String? = null
+    @PrimaryKey
+    @NonNull
+    var timestamp : String? = null
 
     constructor(parcel: Parcel) : this() {
         date = parcel.readString()
