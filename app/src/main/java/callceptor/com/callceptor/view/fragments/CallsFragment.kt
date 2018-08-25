@@ -52,6 +52,24 @@ class CallsFragment : BaseFragment(), CallsView {
 
     }
 
+//    override fun onSaveInstanceState(outState: Bundle?) {
+//        super.onSaveInstanceState(outState)
+//
+//        outState?.putParcelableArrayList("list", localCalls)
+//    }
+
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+    }
+
+    override fun onPause() {
+        super.onPause()
+    }
+
+    override fun onResume() {
+        super.onResume()
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_calls, container, false)
@@ -64,7 +82,10 @@ class CallsFragment : BaseFragment(), CallsView {
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        callsPresenter.fetchCallLogs()
+//        if(savedInstanceState != null)
+//            localCalls = savedInstanceState.getParcelableArrayList("list")
+//        else
+            callsPresenter.fetchCallLogs()
     }
 
 
@@ -115,6 +136,8 @@ class CallsFragment : BaseFragment(), CallsView {
 
         hideLoading()
     }
+
+
 
     override fun showLoading() {
         fragmentCallsProgressBar.visibility = View.VISIBLE

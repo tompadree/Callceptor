@@ -24,7 +24,7 @@ import callceptor.com.callceptor.utils.CheckNumberContacts
 /**
  * Created by Tomislav on 21,August,2018
  */
-class MyPhoneStateManager : BroadcastReceiver(), OnCallContactsFetched {
+class MyPhoneStateReceiver : BroadcastReceiver(), OnCallContactsFetched {
 
     var LOG_TAG = "PHONE_TAG"
 

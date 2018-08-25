@@ -9,7 +9,7 @@ import android.support.v4.app.Fragment
 import android.widget.Toast
 import callceptor.com.callceptor.R
 import callceptor.com.callceptor.common.enums.FragmentTag
-import callceptor.com.callceptor.telephony.MyPhoneStateManager
+import callceptor.com.callceptor.telephony.MyPhoneStateReceiver
 import callceptor.com.callceptor.view.BaseActivity
 import callceptor.com.callceptor.view.fragments.CallsFragment
 import callceptor.com.callceptor.view.fragments.MessagesFragment
@@ -18,11 +18,16 @@ import kotlinx.android.synthetic.main.activity_home.*
 import android.content.Intent
 import android.net.Uri
 import android.provider.Settings
+import android.support.annotation.RequiresApi
 
 
 class HomeActivity : BaseActivity() {
 
-    lateinit var phoneStateManager: MyPhoneStateManager
+    lateinit var phoneStateManager: MyPhoneStateReceiver
+    private var callsFragmentInstance = CallsFragment()
+    private var messagesFragmentInstance = MessagesFragment()
+    private var settingsFragmentInstance = SettingsFragment()
+    private var activeFrag: Fragment = callsFragmentInstance
 
     val PERMISSION_REQ_CODE = 1234
     val PERMISSIONS_PHONE_BEFORE_P = arrayOf(Manifest.permission.READ_PHONE_STATE, Manifest.permission.CALL_PHONE, Manifest.permission.READ_CALL_LOG, Manifest.permission.READ_CONTACTS, Manifest.permission.RECEIVE_SMS, Manifest.permission.READ_SMS) //, Manifest.permission.SEND_SMS, Manifest.permission.READ_SMS, Manifest.permission.SYSTEM_ALERT_WINDOW)
@@ -32,10 +37,7 @@ class HomeActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
-
-
         setBottomMenu()
-
 
     }
 
@@ -56,11 +58,11 @@ class HomeActivity : BaseActivity() {
         this.unregisterReceiver()
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        //Clear the Activity's bundle of the subsidiary fragments' bundles.
-        outState.clear()
-    }
+//    override fun onSaveInstanceState(outState: Bundle) {
+//        super.onSaveInstanceState(outState)
+//        //Clear the Activity's bundle of the subsidiary fragments' bundles.
+//        outState.clear()
+//    }
 
     private fun setBottomMenu() {
 
@@ -69,52 +71,98 @@ class HomeActivity : BaseActivity() {
         homeActivityBottomNavigation.enableItemShiftingMode(false)
         homeActivityBottomNavigation.setTextVisibility(false)
 
+//        addFragment(messagesFragmentInstance, FragmentTag.MessagesFragment.getTag())
+//        supportFragmentManager.beginTransaction().hide(messagesFragmentInstance).commit()
+
+        addFragment(callsFragmentInstance, FragmentTag.CallsFragment.getTag())
+        homeActivityBottomNavigation.selectedItemId = R.id.action_calls
+
+//        addFragment(settingsFragmentInstance, FragmentTag.SettingsFragment.getTag())
+//        supportFragmentManager.beginTransaction().hide(settingsFragmentInstance).commit()
+
+
         homeActivityBottomNavigation.setOnNavigationItemSelectedListener { item ->
             // lastItem = homeActivityBottomNavigation.currentItem
             when (item.itemId) {
-                R.id.action_messages -> messagesClicked()
-                R.id.action_calls -> callsClicked()
-                R.id.action_settings -> settingsClicked()
+                R.id.action_messages -> {
+
+                    if (!messagesFragmentInstance.isAdded)
+                        addFragment(messagesFragmentInstance, FragmentTag.MessagesFragment.getTag())
+
+                    supportFragmentManager.beginTransaction().hide(activeFrag).show(messagesFragmentInstance).commit()
+                    activeFrag = messagesFragmentInstance
+
+                }// messagesClicked()
+                R.id.action_calls -> {
+
+                    if (activeFrag != callsFragmentInstance)
+                        supportFragmentManager.beginTransaction().show(callsFragmentInstance).hide(activeFrag).commit()
+                    else {
+//                        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M)
+//                            supportFragmentManager.beginTransaction().hide(activeFrag).show(callsFragmentInstance).commit()
+//                        else
+                            supportFragmentManager.beginTransaction().hide(activeFrag).show(callsFragmentInstance).commitAllowingStateLoss()
+                    }
+                    activeFrag = callsFragmentInstance
+
+                }//callsClicked()
+                R.id.action_settings -> {
+
+                    if (!settingsFragmentInstance.isAdded)
+                        addFragment(settingsFragmentInstance, FragmentTag.SettingsFragment.getTag())
+
+                    supportFragmentManager.beginTransaction().hide(activeFrag).show(settingsFragmentInstance).commit()
+                    activeFrag = settingsFragmentInstance
+
+                } //settingsClicked()
             }
             true
         }
 
-        homeActivityBottomNavigation.selectedItemId = R.id.action_calls
         checkPermissions()
 
     }
 
-    private fun messagesClicked() {
-        setFragment(MessagesFragment.newInstance(), FragmentTag.MessagesFragment.getTag())
-    }
+//    private fun messagesClicked() {
+//        setFragment(messagesFragmentInstance, FragmentTag.MessagesFragment.getTag())
+//    }
+//
+//    private fun callsClicked() {
+//        setFragment(callsFragmentInstance, FragmentTag.CallsFragment.getTag())
+//    }
+//
+//    private fun settingsClicked() {
+//        setFragment(settingsFragmentInstance, FragmentTag.SettingsFragment.getTag())
+//    }
+//
+//
+//    private fun setFragment(currentFragment: Fragment, fragmentTag: String) {
+//
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+//            supportFragmentManager
+//                    .beginTransaction()
+//                    .replace(R.id.homeActivityContainer, currentFragment, fragmentTag)
+//                    .commitAllowingStateLoss()
+//        else
+//            supportFragmentManager
+//                    .beginTransaction()
+//                    .replace(R.id.homeActivityContainer, currentFragment, fragmentTag)
+//                    .commit()
+//
+//    }
 
-    private fun callsClicked() {
-        setFragment(CallsFragment.newInstance(), FragmentTag.CallsFragment.getTag())
-    }
+    private fun addFragment(currentFragment: Fragment, fragmentTag: String) {
 
-    private fun settingsClicked() {
-        setFragment(SettingsFragment.newInstance(), FragmentTag.SettingsFragment.getTag())
-    }
-
-
-    private fun setFragment(currentFragment: Fragment, fragmentTag: String) {
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-            supportFragmentManager
-                    .beginTransaction()
-                    .replace(R.id.homeActivityContainer, currentFragment, fragmentTag)
-                    .commitAllowingStateLoss()
-        else
-            supportFragmentManager
-                    .beginTransaction()
-                    .replace(R.id.homeActivityContainer, currentFragment, fragmentTag)
-                    .commit()
+        supportFragmentManager
+                .beginTransaction()
+                .add(R.id.homeActivityContainer, currentFragment, fragmentTag)
+                .commit()
 
     }
 
     private fun registerReceiver() {
 
-        phoneStateManager = MyPhoneStateManager()
+        phoneStateManager = MyPhoneStateReceiver()
         this.registerReceiver(phoneStateManager, IntentFilter("android.intent.action.PHONE_STATE"))
 
 //        val mySMSStateManager = MySMSStateManager()
@@ -158,6 +206,7 @@ class HomeActivity : BaseActivity() {
 
     }
 
+    @RequiresApi(Build.VERSION_CODES.M)
     fun checkDrawOverlayPermission() {
         if (!Settings.canDrawOverlays(this)) {
             val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
@@ -166,6 +215,7 @@ class HomeActivity : BaseActivity() {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.M)
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 

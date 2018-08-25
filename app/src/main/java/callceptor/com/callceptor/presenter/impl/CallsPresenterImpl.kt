@@ -18,7 +18,7 @@ class CallsPresenterImpl
 
     override fun fetchCallLogs() {
         callsView.showLoading()
-        callsInteractor.getCallLogs(this)
+       // callsInteractor.getCallLogs(this)
     }
 
     override fun callLogsFetched(list : ArrayList<Call>) {

@@ -7,6 +7,7 @@ import callceptor.com.callceptor.di.module.DataModule
 import callceptor.com.callceptor.di.module.ThreadModule
 import callceptor.com.callceptor.di.module.ThreadModule.Companion.OBSERVE_SCHEDULER
 import callceptor.com.callceptor.di.module.ThreadModule.Companion.SUBSCRIBE_SCHEDULER
+import callceptor.com.callceptor.domain.listeners.SystemDataManager
 import callceptor.com.callceptor.view.BaseActivity
 import callceptor.com.callceptor.view.BaseFragment
 import dagger.Component
@@ -24,6 +25,8 @@ interface AppComponent {
     fun context(): Context
 
 //    fun networkApi(): NetworkApi
+
+    fun systemDataManager() : SystemDataManager
 
     fun callceptorDatabase(): CallceptorDatabase
 

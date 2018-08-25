@@ -1,6 +1,9 @@
 package callceptor.com.callceptor.di.module
 
 import android.telecom.Call
+import callceptor.com.callceptor.data.repositories.calls.CallsDataStore
+import callceptor.com.callceptor.data.repositories.calls.LocalCallsDataStore
+import callceptor.com.callceptor.data.repositories.calls.SystemCallsDataStore
 import callceptor.com.callceptor.di.HomeScope
 import callceptor.com.callceptor.domain.interactors.CallsInteractor
 import callceptor.com.callceptor.domain.interactors.impl.CallsInteractorImpl
@@ -27,5 +30,13 @@ class CallsModule(private val callsView: CallsView) {
     @Provides
     @HomeScope
     fun providesCallsInteractor(callsInteractor: CallsInteractorImpl): CallsInteractor = callsInteractor
+
+    @Provides
+    @HomeScope
+    fun providesLocalCallsDataStore(localCallsDataStore: LocalCallsDataStore): CallsDataStore = localCallsDataStore
+
+    @Provides
+    @HomeScope
+    fun providesSystemCallsDataStore(systemCallsDataStore: SystemCallsDataStore): CallsDataStore = systemCallsDataStore
 
 }

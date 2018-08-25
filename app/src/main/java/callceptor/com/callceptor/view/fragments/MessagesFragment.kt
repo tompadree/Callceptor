@@ -45,17 +45,40 @@ class MessagesFragment : BaseFragment(), MessagesView, OnMessagesItemClicked {
 
     }
 
+//    override fun onSaveInstanceState(outState: Bundle?) {
+//        super.onSaveInstanceState(outState)
+//
+//        fragmentManager.putFragment(outState, "myFragmentName", this);
+//        outState?.putParcelableArrayList("list", localMessages)
+//    }
+
+    override fun onPause() {
+        super.onPause()
+    }
+
+    override fun onResume() {
+        super.onResume()
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
 
-        var view = inflater.inflate(R.layout.fragment_messages, container, false)
-        return view
+        localMessages = ArrayList()
+//        lateinit var view : View
+//        if (savedInstanceState != null)
+//            localMessages = savedInstanceState.getParcelableArrayList("list")
+//        view = fragmentManager.getFragment(savedInstanceState, "myFragmentName")
+//        else {
+//            messagesPresenter.fetchMessages()
+//
+//            view = inflater.inflate(R.layout.fragment_messages, container, false)
+//        }
+
+        return inflater.inflate(R.layout.fragment_messages, container, false)
     }
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        localMessages = ArrayList()
 
         messagesPresenter.fetchMessages()
 

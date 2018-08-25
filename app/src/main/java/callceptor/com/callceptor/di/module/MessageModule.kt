@@ -1,5 +1,8 @@
 package callceptor.com.callceptor.di.module
 
+import callceptor.com.callceptor.data.repositories.messages.LocalMessagesDataStore
+import callceptor.com.callceptor.data.repositories.messages.MessagesDataStore
+import callceptor.com.callceptor.data.repositories.messages.SystemMessagesDataStore
 import callceptor.com.callceptor.di.HomeScope
 import callceptor.com.callceptor.domain.interactors.MessageInteractor
 import callceptor.com.callceptor.domain.interactors.impl.MessageInteractorImpl
@@ -26,5 +29,13 @@ class MessageModule(private val messagesView: MessagesView) {
     @HomeScope
     @Provides
     fun providesMessageInteractor(interactor : MessageInteractorImpl) : MessageInteractor = interactor
+
+    @Provides
+    @HomeScope
+    fun providesLocalMessagesDataStore(localMessagesDataStore: LocalMessagesDataStore): MessagesDataStore = localMessagesDataStore
+
+    @Provides
+    @HomeScope
+    fun providesSystemMessagesDataStore(systemMessagesDataStore: SystemMessagesDataStore): MessagesDataStore = systemMessagesDataStore
 
 }

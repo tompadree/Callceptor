@@ -17,7 +17,8 @@ class MessagesPresenterImpl
     : MessagesPresenter, OnMessagesFetched {
 
     override fun fetchMessages() {
-        messagesInteractor.getMessages(this)
+        messagesView.showLoading()
+//        messagesInteractor.getMessages(this)
     }
 
     override fun fetchNextPage() {
