@@ -87,25 +87,27 @@ class CallsInteractorImpl
                         currentPage++
 
                     } else {
+
+                        if (currentPage == 1)
+                            systemCallsDataStore.fetchAllCallsFromSystem()
+                                    .subscribeOn(subscribeScheduler)
+                                    .observeOn(observeScheduler)
+                                    .unsubscribeOn(subscribeScheduler)
+                                    .subscribe(object : SingleObserver<ArrayList<Call>> {
+
+                                        override fun onSubscribe(d: Disposable) {
+                                        }
+
+                                        override fun onSuccess(t: ArrayList<Call>) {
+                                            saveLocalResults(t, onCallContactsFetched)
+                                        }
+
+                                        override fun onError(e: Throwable) {
+                                            onCallContactsFetched.onFetchingError(e)
+                                        }
+                                    })
+
                         currentPage = -1
-
-                        systemCallsDataStore.fetchAllCallsFromSystem()
-                                .subscribeOn(subscribeScheduler)
-                                .observeOn(observeScheduler)
-                                .unsubscribeOn(subscribeScheduler)
-                                .subscribe(object : SingleObserver<ArrayList<Call>> {
-
-                                    override fun onSubscribe(d: Disposable) {
-                                    }
-
-                                    override fun onSuccess(t: ArrayList<Call>) {
-                                        saveLocalResults(t, onCallContactsFetched)
-                                    }
-
-                                    override fun onError(e: Throwable) {
-                                        onCallContactsFetched.onFetchingError(e)
-                                    }
-                                })
                     }
                 }, {
                     onCallContactsFetched.onFetchingError(it as Throwable)

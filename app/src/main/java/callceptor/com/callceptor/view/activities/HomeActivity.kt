@@ -113,7 +113,7 @@ class HomeActivity
 
                     supportFragmentManager.beginTransaction().hide(activeFrag).show(messagesFragmentInstance).commit()
                     activeFrag = messagesFragmentInstance
-
+                    supportActionBar?.title = getString(R.string.messages_no_contacts)
                 }// messagesClicked()
                 R.id.action_calls -> {
 
@@ -129,6 +129,7 @@ class HomeActivity
                         supportFragmentManager.beginTransaction().hide(activeFrag).show(callsFragmentInstance).commitAllowingStateLoss()
                     }
                     activeFrag = callsFragmentInstance
+                    supportActionBar?.title = getString(R.string.incoming_calls)
 
                 }//callsClicked()
                 R.id.action_settings -> {
@@ -138,6 +139,8 @@ class HomeActivity
 
                     supportFragmentManager.beginTransaction().hide(activeFrag).show(settingsFragmentInstance).commit()
                     activeFrag = settingsFragmentInstance
+                    supportActionBar?.title = getString(R.string.settings)
+
 
                 } //settingsClicked()
             }

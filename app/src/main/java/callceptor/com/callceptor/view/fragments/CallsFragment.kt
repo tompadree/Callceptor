@@ -131,7 +131,7 @@ class CallsFragment : BaseFragment(), CallsView {
                 val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
 
                 if (dy > 0) { //dy scrolling down
-                    if ((firstVisibleItemPosition >= myTotalCount) && firstVisibleItemPosition > 0
+                    if ((firstVisibleItemPosition >= myTotalCount) && firstVisibleItemPosition > totalItemCount - 30
                             && myTotalCount > 0 && localCalls.size <= totalItemCount)
                         callsPresenter.fetchNextPage()
                 }

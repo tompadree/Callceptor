@@ -90,25 +90,27 @@ class MessageInteractorImpl
                         currentPage++
 
                     } else {
+
+                        if (currentPage == 1)
+                            systemMessagesDataStore.fetchAllMessagesFromSystem()
+                                    .subscribeOn(subscribeScheduler)
+                                    .observeOn(observeScheduler)
+                                    .unsubscribeOn(subscribeScheduler)
+                                    .subscribe(object : SingleObserver<ArrayList<Message>> {
+
+                                        override fun onSubscribe(d: Disposable) {
+                                        }
+
+                                        override fun onSuccess(t: ArrayList<Message>) {
+                                            saveLocalResults(t, onMessagesFetched)
+                                        }
+
+                                        override fun onError(e: Throwable) {
+                                            onMessagesFetched.onFetchingError(e)
+                                        }
+                                    })
+
                         currentPage = -1
-
-                        systemMessagesDataStore.fetchAllMessagesFromSystem()
-                                .subscribeOn(subscribeScheduler)
-                                .observeOn(observeScheduler)
-                                .unsubscribeOn(subscribeScheduler)
-                                .subscribe(object : SingleObserver<ArrayList<Message>> {
-
-                                    override fun onSubscribe(d: Disposable) {
-                                    }
-
-                                    override fun onSuccess(t: ArrayList<Message>) {
-                                        saveLocalResults(t, onMessagesFetched)
-                                    }
-
-                                    override fun onError(e: Throwable) {
-                                        onMessagesFetched.onFetchingError(e)
-                                    }
-                                })
                     }
                 }, {
                     onMessagesFetched.onFetchingError(it as Throwable)
