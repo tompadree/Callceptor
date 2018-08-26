@@ -10,6 +10,7 @@ import callceptor.com.callceptor.di.module.ThreadModule.Companion.SUBSCRIBE_SCHE
 import callceptor.com.callceptor.domain.listeners.SystemDataManager
 import callceptor.com.callceptor.view.BaseActivity
 import callceptor.com.callceptor.view.BaseFragment
+import callceptor.com.callceptor.view.activities.HomeActivity
 import dagger.Component
 import io.reactivex.Scheduler
 import javax.inject.Named
@@ -39,6 +40,8 @@ interface AppComponent {
     fun inject(baseActivity: BaseActivity)
 
     fun inject(baseFragment: BaseFragment)
+
+    fun inject(homeActivity: HomeActivity)
 
 
 }

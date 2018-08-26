@@ -1,6 +1,7 @@
 package callceptor.com.callceptor.view.activities
 
 import android.Manifest
+import android.content.Context
 import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.os.Build
@@ -17,11 +18,26 @@ import callceptor.com.callceptor.view.fragments.SettingsFragment
 import kotlinx.android.synthetic.main.activity_home.*
 import android.content.Intent
 import android.net.Uri
+import android.os.Handler
 import android.provider.Settings
 import android.support.annotation.RequiresApi
+import callceptor.com.callceptor.data.models.Call
+import callceptor.com.callceptor.data.models.Message
+import callceptor.com.callceptor.di.component.DaggerAppComponent
+import callceptor.com.callceptor.di.module.AppModule
+import callceptor.com.callceptor.di.module.ThreadModule
+import callceptor.com.callceptor.domain.listeners.LastCallSMSCheck
+import callceptor.com.callceptor.domain.listeners.SystemDataManager
+import io.reactivex.Scheduler
+import java.util.*
+import javax.inject.Inject
+import javax.inject.Named
+import kotlin.concurrent.schedule
 
 
-class HomeActivity : BaseActivity() {
+class HomeActivity
+//    @Inject constructor(private var context: Context)
+    : BaseActivity(), LastCallSMSCheck {
 
     lateinit var phoneStateManager: MyPhoneStateReceiver
     private var callsFragmentInstance = CallsFragment()
@@ -29,13 +45,20 @@ class HomeActivity : BaseActivity() {
     private var settingsFragmentInstance = SettingsFragment()
     private var activeFrag: Fragment = callsFragmentInstance
 
+    @Inject
+    lateinit var systemDataManager: SystemDataManager
+
     val PERMISSION_REQ_CODE = 1234
     val PERMISSIONS_PHONE_BEFORE_P = arrayOf(Manifest.permission.READ_PHONE_STATE, Manifest.permission.CALL_PHONE, Manifest.permission.READ_CALL_LOG, Manifest.permission.READ_CONTACTS, Manifest.permission.RECEIVE_SMS, Manifest.permission.READ_SMS) //, Manifest.permission.SEND_SMS, Manifest.permission.READ_SMS, Manifest.permission.SYSTEM_ALERT_WINDOW)
-    val PERMISSIONS_AFTER_P = arrayOf(Manifest.permission.ANSWER_PHONE_CALLS, Manifest.permission.READ_PHONE_STATE, Manifest.permission.READ_CALL_LOG, Manifest.permission.CALL_PHONE, Manifest.permission.READ_CONTACTS, Manifest.permission.SYSTEM_ALERT_WINDOW, Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Manifest.permission.RECEIVE_SMS, Manifest.permission.READ_SMS) // Manifest.permission.RECEIVE_SMS, Manifest.permission.SEND_SMS,
+    val PERMISSIONS_AFTER_P = arrayOf(Manifest.permission.ANSWER_PHONE_CALLS, Manifest.permission.READ_PHONE_STATE, Manifest.permission.READ_CALL_LOG, Manifest.permission.CALL_PHONE, Manifest.permission.READ_CONTACTS, Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Manifest.permission.RECEIVE_SMS, Manifest.permission.READ_SMS) // Manifest.permission.SYSTEM_ALERT_WINDOW, Manifest.permission.RECEIVE_SMS, Manifest.permission.SEND_SMS,
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
+
+        DaggerAppComponent.builder()
+                .appModule(AppModule(application))
+                .build().inject(this)
 
         setBottomMenu()
 
@@ -71,11 +94,12 @@ class HomeActivity : BaseActivity() {
         homeActivityBottomNavigation.enableItemShiftingMode(false)
         homeActivityBottomNavigation.setTextVisibility(false)
 
-//        addFragment(messagesFragmentInstance, FragmentTag.MessagesFragment.getTag())
-//        supportFragmentManager.beginTransaction().hide(messagesFragmentInstance).commit()
-
-
-//        addFragment(settingsFragmentInstance, FragmentTag.SettingsFragment.getTag())
+//        if (!callsFragmentInstance.isAdded)
+//            addFragment(callsFragmentInstance, FragmentTag.CallsFragment.getTag())
+//        if (!messagesFragmentInstance.isAdded)
+//            addFragment(messagesFragmentInstance, FragmentTag.MessagesFragment.getTag())
+//        if (!settingsFragmentInstance.isAdded)
+//            addFragment(settingsFragmentInstance, FragmentTag.SettingsFragment.getTag())
 //        supportFragmentManager.beginTransaction().hide(settingsFragmentInstance).commit()
 
 
@@ -135,13 +159,37 @@ class HomeActivity : BaseActivity() {
 
     private fun registerReceiver() {
 
-        phoneStateManager = MyPhoneStateReceiver()
+        phoneStateManager = MyPhoneStateReceiver(this)
         this.registerReceiver(phoneStateManager, IntentFilter("android.intent.action.PHONE_STATE"))
 
 //        val mySMSStateManager = MySMSStateManager()
         val intFilter = IntentFilter("android.provider.Telephony.SMS_RECEIVED")
         intFilter.priority = 100
         this.registerReceiver(phoneStateManager, intFilter)
+    }
+
+    override fun refreshCallList() {
+        callsFragmentInstance.callsInteractor.saveLastCall(systemDataManager.getLastCall())
+        callsFragmentInstance.localCalls = ArrayList()
+        callsFragmentInstance.callsPresenter.fetchCallLogs()
+    }
+
+    override fun refreshSMSList() {
+        if (!messagesFragmentInstance.isAdded) {
+            addFragment(messagesFragmentInstance, FragmentTag.MessagesFragment.getTag())
+            supportFragmentManager.beginTransaction().hide(messagesFragmentInstance).commit()
+        }
+
+        Handler().postDelayed({
+
+        if (messagesFragmentInstance.isAdded) {
+            messagesFragmentInstance.messageInteractor.saveLastMessage(systemDataManager.getLastMessage())
+            messagesFragmentInstance.localMessages = ArrayList()
+            messagesFragmentInstance.messagesPresenter.fetchMessages()
+        }
+
+        }, 500)
+
     }
 
     private fun checkPermissions() {
@@ -159,8 +207,8 @@ class HomeActivity : BaseActivity() {
                     || checkSelfPermission(Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_DENIED
                     || checkSelfPermission(Manifest.permission.READ_SMS) == PackageManager.PERMISSION_DENIED)
                 requestPermissions(PERMISSIONS_PHONE_BEFORE_P, PERMISSION_REQ_CODE)
-            else if ((checkSelfPermission(Manifest.permission.SYSTEM_ALERT_WINDOW) == PackageManager.PERMISSION_DENIED)
-                    || (!Settings.canDrawOverlays(this)))
+//            else if ((checkSelfPermission(Manifest.permission.SYSTEM_ALERT_WINDOW) == PackageManager.PERMISSION_DENIED)
+            else if (!Settings.canDrawOverlays(this))
                 checkDrawOverlayPermission()
             // addFragment(callsFragmentInstance, FragmentTag.CallsFragment.getTag())
             else {
@@ -178,10 +226,10 @@ class HomeActivity : BaseActivity() {
                     || checkSelfPermission(Manifest.permission.READ_SMS) == PackageManager.PERMISSION_DENIED
                     || checkSelfPermission(Manifest.permission.RECEIVE_SMS) == PackageManager.PERMISSION_DENIED)
                 requestPermissions(PERMISSIONS_AFTER_P, PERMISSION_REQ_CODE)
-            else if ((checkSelfPermission(Manifest.permission.SYSTEM_ALERT_WINDOW) == PackageManager.PERMISSION_DENIED)
-                    || (!Settings.canDrawOverlays(this)))
+//            else if ((checkSelfPermission(Manifest.permission.SYSTEM_ALERT_WINDOW) == PackageManager.PERMISSION_DENIED)
+            else if (!Settings.canDrawOverlays(this))
                 checkDrawOverlayPermission()
-                // addFragment(callsFragmentInstance, FragmentTag.CallsFragment.getTag())
+            // addFragment(callsFragmentInstance, FragmentTag.CallsFragment.getTag())
             else {
                 homeActivityBottomNavigation.selectedItemId = R.id.action_calls
                 registerReceiver()

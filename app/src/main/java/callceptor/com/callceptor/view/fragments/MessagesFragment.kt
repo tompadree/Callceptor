@@ -12,6 +12,7 @@ import callceptor.com.callceptor.R
 import callceptor.com.callceptor.data.models.Message
 import callceptor.com.callceptor.di.component.DaggerMessagesComponent
 import callceptor.com.callceptor.di.module.MessageModule
+import callceptor.com.callceptor.domain.interactors.MessageInteractor
 import callceptor.com.callceptor.domain.listeners.OnMessagesItemClicked
 import callceptor.com.callceptor.presenter.MessagesPresenter
 import callceptor.com.callceptor.view.BaseFragment
@@ -23,6 +24,8 @@ import javax.inject.Inject
 
 class MessagesFragment : BaseFragment(), MessagesView, OnMessagesItemClicked {
 
+    @Inject
+    lateinit var messageInteractor: MessageInteractor
 
     @Inject
     lateinit var messagesPresenter: MessagesPresenter

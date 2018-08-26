@@ -25,12 +25,16 @@ import java.util.ArrayList
 import javax.inject.Inject
 import android.app.Activity
 import android.widget.TextView
+import callceptor.com.callceptor.domain.interactors.CallsInteractor
 
 
 class CallsFragment : BaseFragment(), CallsView {
 
     @Inject
     lateinit var callsPresenter: CallsPresenter
+
+    @Inject
+    lateinit var callsInteractor: CallsInteractor
 
     lateinit var localCalls: ArrayList<Call>
     var callsAdapter: CallsAdapter? = null

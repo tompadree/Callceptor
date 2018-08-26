@@ -1,6 +1,10 @@
 package callceptor.com.callceptor.domain.interactors
 
+import android.support.annotation.Nullable
+import callceptor.com.callceptor.data.models.Call
+import callceptor.com.callceptor.data.models.Message
 import callceptor.com.callceptor.domain.listeners.OnMessagesFetched
+import java.util.ArrayList
 
 
 /**
@@ -9,6 +13,10 @@ import callceptor.com.callceptor.domain.listeners.OnMessagesFetched
 interface MessageInteractor{
 
     fun getMessages(onMessagesFetched: OnMessagesFetched)
+
+    fun saveLocalResults(messages: ArrayList<Message>, onMessagesFetched: OnMessagesFetched)
+
+    fun saveLastMessage(message: Message)
 
     fun fetchNextPage()
 

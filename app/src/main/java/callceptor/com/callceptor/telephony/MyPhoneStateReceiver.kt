@@ -10,34 +10,30 @@ import android.telecom.TelecomManager
 import callceptor.com.callceptor.data.models.Call
 import callceptor.com.callceptor.domain.listeners.OnCallContactsFetched
 import com.android.internal.telephony.ITelephony
-import java.util.ArrayList
 import android.provider.ContactsContract.CommonDataKinds
 import android.provider.ContactsContract.PhoneLookup
 import android.net.Uri
+import android.os.Handler
 import android.provider.BlockedNumberContract
 import android.provider.Settings
 import android.provider.Telephony
 import android.widget.Toast
 import callceptor.com.callceptor.data.repositories.calls.LocalCallsDataStore
 import callceptor.com.callceptor.domain.interactors.CallsInteractor
+import callceptor.com.callceptor.domain.interactors.MessageInteractor
 import callceptor.com.callceptor.domain.interactors.impl.CallsInteractorImpl
+import callceptor.com.callceptor.domain.listeners.LastCallSMSCheck
 import callceptor.com.callceptor.domain.listeners.SystemDataManager
 import callceptor.com.callceptor.utils.CheckNumberContacts
+import java.util.*
+import kotlin.concurrent.schedule
 import javax.inject.Inject
 
 
 /**
  * Created by Tomislav on 21,August,2018
  */
-class MyPhoneStateReceiver
-    : BroadcastReceiver(), OnCallContactsFetched {
-
-
-    @Inject
-    lateinit var interactor: CallsInteractor
-
-    @Inject
-    lateinit var systemDataManager: SystemDataManager
+class MyPhoneStateReceiver(private var lastCallSMSCheck : LastCallSMSCheck) : BroadcastReceiver(), OnCallContactsFetched {
 
     var LOG_TAG = "PHONE_TAG"
     var call = false
@@ -63,7 +59,13 @@ class MyPhoneStateReceiver
 //                    if (!isFromContacts(context!!, message.displayOriginatingAddress))
 //                        abortBroadcast()
 //                    else
-                        Toast.makeText(context, message.displayMessageBody, Toast.LENGTH_SHORT).show()
+
+//                        Handler().postDelayed({
+                            lastCallSMSCheck.refreshSMSList()
+//                        }, 500)
+
+
+//                        Toast.makeText(context, message.displayMessageBody, Toast.LENGTH_SHORT).show()
                 }
 
                 abortBroadcast()
@@ -87,11 +89,11 @@ class MyPhoneStateReceiver
                     if (Settings.canDrawOverlays(context))
                         context?.stopService(Intent(context, HarmfulCallAlertService::class.java))
 
-//                    if(call) {
-//                        call = false
-//
-//                        interactor.saveLocalResults()
-//                    }
+                    if(call) {
+                        call = false
+
+                        Handler().postDelayed({ lastCallSMSCheck.refreshCallList() }, 500)
+                    }
                 }
             }
 
@@ -107,7 +109,12 @@ class MyPhoneStateReceiver
 
             if (Build.VERSION.SDK_INT >= 28) {
                 val telecomManager = context?.getSystemService(Context.TELECOM_SERVICE) as TelecomManager
-                if (telecomManager != null && number != null) {
+                if (number.equals("4259501212") || number.equals("+38516043663") || number.equals("+385989436165")) {
+                    if (Settings.canDrawOverlays(context))
+                        context.startService(Intent(context, HarmfulCallAlertService::class.java))
+
+                } else if (telecomManager != null && number != null && !CheckNumberContacts.isFromContacts(context, number)) {
+               // if (telecomManager != null && number != null) {
                     telecomManager.endCall()
 //                    Log.i(LOG_TAG, "onCallStateChanged: CALL_ENDED PIE")
                 }
@@ -128,19 +135,9 @@ class MyPhoneStateReceiver
                 } else if (telephonyService != null && number != null && !CheckNumberContacts.isFromContacts(context, number)) {
                     telephonyService.endCall()
 
-                    var calls : ArrayList<Call> = ArrayList()
-                    calls.add(systemDataManager.getLastCall())
-                    interactor.saveLastCall(calls)
-
 //                    Log.i(LOG_TAG, "onCallStateChanged: CALL_ENDED OTHERS")
                 }
-
             }
-
-            var calls : ArrayList<Call> = ArrayList()
-            calls.add(systemDataManager.getLastCall())
-            interactor.saveLastCall(calls)
-
 
         } catch (e: Exception) {
             e.printStackTrace()

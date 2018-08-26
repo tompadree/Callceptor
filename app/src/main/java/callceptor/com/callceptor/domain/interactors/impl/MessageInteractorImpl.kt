@@ -44,8 +44,11 @@ class MessageInteractorImpl
     private val disposables: CompositeDisposable? = null
     private lateinit var paginator: PublishProcessor<Int>
     private var loading: Boolean = false
+    private lateinit var listener: OnMessagesFetched
 
     override fun getMessages(onMessagesFetched: OnMessagesFetched) {
+
+        listener = onMessagesFetched
 
         currentPage = 1
         paginator = PublishProcessor.create()
@@ -126,9 +129,9 @@ class MessageInteractorImpl
             paginator.onNext(currentPage)
     }
 
-    fun saveLocalResults(calls: ArrayList<Message>, listener: OnMessagesFetched) {
+    override fun saveLocalResults(messages: ArrayList<Message>, onMessagesFetched: OnMessagesFetched) {
 
-        localMessagesDataStore.saveAllMessages(calls)
+        localMessagesDataStore.saveAllMessages(messages)
                 .subscribeOn(subscribeScheduler)
                 .observeOn(observeScheduler)
                 .unsubscribeOn(subscribeScheduler)
@@ -149,5 +152,30 @@ class MessageInteractorImpl
                     }
                 })
 
+    }
+
+    override fun saveLastMessage(message: Message) {
+
+        if (message.number == null)
+            return
+        localMessagesDataStore.saveLastMessage(message)
+                .subscribeOn(subscribeScheduler)
+                .observeOn(observeScheduler)
+                .unsubscribeOn(subscribeScheduler)
+                .subscribe(object : SingleObserver<Long> {
+
+                    override fun onSuccess(t: Long) {
+                        var test: Long = t
+                        test = t
+                    }
+
+                    override fun onSubscribe(d: Disposable) {
+
+                    }
+
+                    override fun onError(e: Throwable) {
+                        listener.onFetchingError(e)
+                    }
+                })
     }
 }

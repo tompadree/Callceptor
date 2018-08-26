@@ -9,11 +9,11 @@ import callceptor.com.callceptor.domain.listeners.OnCallContactsFetched
  */
 interface CallsInteractor {
 
-    fun getCallLogs(initonCallContactsFetched: OnCallContactsFetched)
+    fun getCallLogs(onCallContactsFetched: OnCallContactsFetched)
 
     fun getContacts(onCallContactsFetched: OnCallContactsFetched)
 
-    fun saveLastCall(calls: ArrayList<Call>)
+    fun saveLastCall(call: Call)
 
     fun fetchNextPage()
 

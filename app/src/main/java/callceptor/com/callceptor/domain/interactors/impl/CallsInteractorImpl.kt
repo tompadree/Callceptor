@@ -1,15 +1,8 @@
 package callceptor.com.callceptor.domain.interactors.impl
 
-import android.Manifest
-import android.annotation.SuppressLint
 import android.content.Context
-import android.content.pm.PackageManager
-import android.database.Cursor
 import callceptor.com.callceptor.domain.interactors.CallsInteractor
 import javax.inject.Inject
-import android.provider.CallLog
-import android.provider.ContactsContract
-import android.support.v4.content.ContextCompat.checkSelfPermission
 import callceptor.com.callceptor.data.models.Call
 import callceptor.com.callceptor.data.repositories.calls.LocalCallsDataStore
 import callceptor.com.callceptor.data.repositories.calls.SystemCallsDataStore
@@ -22,9 +15,6 @@ import io.reactivex.SingleObserver
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.processors.PublishProcessor
-import java.sql.Timestamp
-import java.text.SimpleDateFormat
-import java.util.*
 import javax.inject.Named
 import kotlin.collections.ArrayList
 
@@ -47,7 +37,7 @@ class CallsInteractorImpl
     private val disposables: CompositeDisposable? = null
     private lateinit var paginator: PublishProcessor<Int>
     private var loading: Boolean = false
-    private lateinit  var onCallContactsFetched: OnCallContactsFetched
+    private lateinit var listener: OnCallContactsFetched
 
     override fun getContacts(onCallContactsFetched: OnCallContactsFetched) {
 
@@ -55,7 +45,7 @@ class CallsInteractorImpl
 
     override fun getCallLogs(onCallContactsFetched: OnCallContactsFetched) {
 
-        this.onCallContactsFetched = onCallContactsFetched
+        this.listener = onCallContactsFetched
 
         currentPage = 1
         paginator = PublishProcessor.create()
@@ -161,17 +151,20 @@ class CallsInteractorImpl
 
     }
 
-    override fun saveLastCall(calls: ArrayList<Call>) {
-        localCallsDataStore.saveAllCalls(calls)
+    override fun saveLastCall(call: Call) {
+
+        if (call.number == null)
+            return
+
+        localCallsDataStore.saveLastCall(call)
                 .subscribeOn(subscribeScheduler)
                 .observeOn(observeScheduler)
                 .unsubscribeOn(subscribeScheduler)
-                .subscribe(object : SingleObserver<LongArray> {
+                .subscribe(object : SingleObserver<Long> {
 
-                    override fun onSuccess(t: LongArray) {
-                        var test: LongArray = t
+                    override fun onSuccess(t: Long) {
+                        var test: Long = t
                         test = t
-                        getCallLogs(onCallContactsFetched)
                     }
 
                     override fun onSubscribe(d: Disposable) {
@@ -179,7 +172,7 @@ class CallsInteractorImpl
                     }
 
                     override fun onError(e: Throwable) {
-                        onCallContactsFetched.onFetchingError(e)
+                        listener.onFetchingError(e)
                     }
                 })
 
