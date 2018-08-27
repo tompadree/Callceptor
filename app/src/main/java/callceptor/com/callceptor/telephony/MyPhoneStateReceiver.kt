@@ -24,19 +24,23 @@ import callceptor.com.callceptor.domain.interactors.MessageInteractor
 import callceptor.com.callceptor.domain.interactors.impl.CallsInteractorImpl
 import callceptor.com.callceptor.domain.listeners.LastCallSMSCheck
 import callceptor.com.callceptor.domain.listeners.SystemDataManager
+import callceptor.com.callceptor.utils.AppConstants.Companion.BLOCK_LIST
 import callceptor.com.callceptor.utils.CheckNumberContacts
+import com.cinnamon.utils.storage.CinnamonPreferences
 import java.util.*
 import kotlin.concurrent.schedule
 import javax.inject.Inject
+import kotlin.collections.ArrayList
 
 
 /**
  * Created by Tomislav on 21,August,2018
  */
-class MyPhoneStateReceiver(private var lastCallSMSCheck : LastCallSMSCheck) : BroadcastReceiver(), OnCallContactsFetched {
+class MyPhoneStateReceiver(private var lastCallSMSCheck: LastCallSMSCheck) : BroadcastReceiver(), OnCallContactsFetched {
 
     var LOG_TAG = "PHONE_TAG"
     var call = false
+    private var blocklist: ArrayList<String>? = null
 
     var contactNumbers: ArrayList<String> = ArrayList()
     override fun callLogsFetched(list: ArrayList<Call>) {}
@@ -48,6 +52,11 @@ class MyPhoneStateReceiver(private var lastCallSMSCheck : LastCallSMSCheck) : Br
 
 
     override fun onReceive(context: Context?, intent: Intent?) {
+
+//        if (blocklist == null)
+        blocklist = ArrayList()
+        blocklist = (CinnamonPreferences.getInstance(context).getObject(BLOCK_LIST, List::class.java, ArrayList<String>())) as ArrayList<String>
+
 
         try {
             if (intent?.action.equals(Telephony.Sms.Intents.SMS_RECEIVED_ACTION)) {
@@ -61,7 +70,7 @@ class MyPhoneStateReceiver(private var lastCallSMSCheck : LastCallSMSCheck) : Br
 //                    else
 
 //                        Handler().postDelayed({
-                            lastCallSMSCheck.refreshSMSList()
+                    lastCallSMSCheck.refreshSMSList()
 //                        }, 500)
 
 
@@ -89,7 +98,7 @@ class MyPhoneStateReceiver(private var lastCallSMSCheck : LastCallSMSCheck) : Br
                     if (Settings.canDrawOverlays(context))
                         context?.stopService(Intent(context, HarmfulCallAlertService::class.java))
 
-                    if(call) {
+                    if (call) {
                         call = false
 
                         Handler().postDelayed({ lastCallSMSCheck.refreshCallList() }, 500)
@@ -109,12 +118,12 @@ class MyPhoneStateReceiver(private var lastCallSMSCheck : LastCallSMSCheck) : Br
 
             if (Build.VERSION.SDK_INT >= 28) {
                 val telecomManager = context?.getSystemService(Context.TELECOM_SERVICE) as TelecomManager
-                if (number.equals("4259501212") || number.equals("+38516043663") || number.equals("+385989436165")) {
+                if (number.equals("4259501212") || blocklist!!.contains(number)) { // || number.equals("+38516043663") || number.equals("+385989436165")) {
                     if (Settings.canDrawOverlays(context))
                         context.startService(Intent(context, HarmfulCallAlertService::class.java))
 
                 } else if (telecomManager != null && number != null && !CheckNumberContacts.isFromContacts(context, number)) {
-               // if (telecomManager != null && number != null) {
+                    // if (telecomManager != null && number != null) {
                     telecomManager.endCall()
 //                    Log.i(LOG_TAG, "onCallStateChanged: CALL_ENDED PIE")
                 }
@@ -128,7 +137,7 @@ class MyPhoneStateReceiver(private var lastCallSMSCheck : LastCallSMSCheck) : Br
                 val telephonyService = iTelephony.invoke(tm) as ITelephony
 
 
-                if (number.equals("4259501212") || number.equals("+38516043663") || number.equals("+385989436165")) {
+                if (number.equals("4259501212") || blocklist!!.contains(number)) { // || number.equals("+38516043663") || number.equals("+385989436165")) {
                     if (Settings.canDrawOverlays(context))
                         context.startService(Intent(context, HarmfulCallAlertService::class.java))
 

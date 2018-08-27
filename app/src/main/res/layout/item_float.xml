@@ -12,12 +12,14 @@
         android:layout_marginEnd="20dp"
         android:layout_marginStart="20dp"
         android:background="@drawable/item_harmful_shape"
-        android:drawableStart="@mipmap/ic_contact_placeholder"
+
         android:gravity="center"
         android:padding="10dp"
         android:text="@string/harmful_call"
         android:textColor="@color/white"
         android:textSize="16sp"
         android:textStyle="bold"/>
+
+    <!--android:drawableStart="@mipmap/ic_contact_placeholder"-->
 
 </RelativeLayout>

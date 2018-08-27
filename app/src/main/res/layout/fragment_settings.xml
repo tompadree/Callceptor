@@ -1,48 +1,94 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".view.fragments.SettingsFragment">
 
-   <TextView
-       android:id="@+id/settingsFragmentAddNumberTitle"
-       android:layout_width="match_parent"
-       android:layout_height="wrap_content"
-       android:textStyle="bold"
-       android:padding="15dp"
-       android:textSize="16sp"
+    <ProgressBar
+        android:id="@+id/settingsFragmentProgress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:theme="@style/BlackAcccent"
+        android:visibility="invisible" />
 
-       android:text="@string/add_number_blocklist"/>
+    <TextView
+        android:id="@+id/settingsFragmentAddNumberTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="15dp"
+        android:text="@string/add_number_blocklist"
+        android:textSize="16sp"
+        android:textStyle="bold" />
 
-    <EditText
-        android:id="@+id/new_bill_fragment3_new_tag"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/settingsFragmentAddNumberTitle"
-        android:backgroundTint="@android:color/transparent"
-        android:hint="@string/enter_a_number"
-        android:inputType="text"
-        android:padding="15dp"
-        android:textColor="@color/app_black"
-        android:textSize="16sp"
-        app:backgroundTint="@android:color/transparent"
-        tools:ignore="MissingPrefix"/>
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/settingsFragmentAddPreNumberTv"
+            style="@style/EditTextAccent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_weight="5"
+            android:backgroundTint="@android:color/transparent"
+            android:inputType="phone"
+            android:text="+1"
+            android:textColor="@color/app_black"
+            android:textSize="16sp"
+            app:backgroundTint="@android:color/transparent"
+            tools:ignore="MissingPrefix" />
+
+        <!--<com.rilixtech.CountryCodePicker-->
+        <!--android:id="@+id/settingsFragmentAddCodeNumberTv"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:padding="15dp"-->
+
+        <!--android:layout_weight="5" />-->
+
+        <EditText
+            android:id="@+id/settingsFragmentAddNumberTv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:backgroundTint="@color/app_black"
+            android:hint="@string/enter_a_number"
+            android:inputType="phone"
+            android:padding="15dp"
+            android:textColor="@color/app_black"
+            android:textSize="16sp"
+            app:backgroundTint="@android:color/transparent"
+            tools:ignore="MissingPrefix" />
+    </LinearLayout>
 
     <ImageView
-        android:layout_below="@+id/settingsFragmentAddNumberTitle"
-        android:id="@+id/new_bill_fragment3_new_tag_icon"
+        android:id="@+id/settingsFragmentAddNumberIv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
+        android:layout_below="@+id/settingsFragmentAddNumberTitle"
         android:layout_margin="15dp"
-        android:background="@drawable/ic_add_number"/>
+        android:background="@drawable/ic_add_number" />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_below="@+id/new_bill_fragment3_new_tag_icon"
-        android:background="@color/separator_grey"/>
+        android:layout_below="@+id/settingsFragmentAddNumberIv"
+        android:background="@color/separator_grey" />
+
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/settingsFragmentRv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/settingsFragmentAddNumberIv"
+        android:layout_marginTop="1dp" />
 
 </RelativeLayout>

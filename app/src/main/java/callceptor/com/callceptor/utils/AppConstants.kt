@@ -7,6 +7,8 @@ interface AppConstants {
 
     companion object {
 
+        const val BLOCK_LIST: String = "blocklist"
+
         const val SPLASH_DISPLAY_LENGTH: Long = 2000
 
         const val PAGE_ENTRIES = 100

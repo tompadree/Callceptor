@@ -5,18 +5,23 @@
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/app_black</item>
         <item name="colorPrimaryDark">@color/app_black</item>
-        <item name="colorAccent">@color/white</item>
+        <item name="colorAccent">@color/app_black</item>
     </style>
 
 
     <style name="AppThemeNoActionBar" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/app_black</item>
         <item name="colorPrimaryDark">@color/app_black</item>
-        <item name="colorAccent">@color/white</item>
+        <item name="colorAccent">@color/app_black</item>
     </style>
 
     <style name="HintColor" parent="TextAppearance.AppCompat">
         <item name="android:textColor">@color/app_black</item>
+    </style>
+
+    <style name="EditTextAccent" parent="Base.V7.Widget.AppCompat.EditText">
+        <item name="android:textColor">@color/app_black</item>
+        <item name="android:colorAccent">@color/app_black</item>
     </style>
 
     <style name="BlackAcccent" parent="ThemeOverlay.AppCompat.Light">
