@@ -1,2 +1,2 @@
 # Callceptor
-Android application that processes incoming phone calls.
+Android application for incoming phone calls processing.
