@@ -61,39 +61,26 @@ class MyPhoneStateReceiver(private var lastCallSMSCheck: LastCallSMSCheck) : Bro
         try {
             if (intent?.action.equals(Telephony.Sms.Intents.SMS_RECEIVED_ACTION)) {
 
-
                 val smsMessages = Telephony.Sms.Intents.getMessagesFromIntent(intent)
                 for (message in smsMessages) {
 
-//                    if (!isFromContacts(context!!, message.displayOriginatingAddress))
-//                        abortBroadcast()
-//                    else
-
-//                        Handler().postDelayed({
                     lastCallSMSCheck.refreshSMSList()
-//                        }, 500)
 
-
-//                        Toast.makeText(context, message.displayMessageBody, Toast.LENGTH_SHORT).show()
                 }
-
                 abortBroadcast()
             }
 
             when (intent?.getStringExtra(TelephonyManager.EXTRA_STATE)) {
                 TelephonyManager.EXTRA_STATE_RINGING -> {
-                    Log.i(LOG_TAG, "onCallStateChanged: RINGING");
                     processNumber(context, intent?.extras?.getString(TelephonyManager.EXTRA_INCOMING_NUMBER))
                     call = true
                 }
                 TelephonyManager.EXTRA_STATE_OFFHOOK -> {
-                    Log.i(LOG_TAG, "onCallStateChanged: ANSWERED");
                     if (Settings.canDrawOverlays(context))
                         context?.stopService(Intent(context, HarmfulCallAlertService::class.java))
                     call = true
                 }
                 TelephonyManager.EXTRA_STATE_IDLE -> {
-                    Log.i(LOG_TAG, "onCallStateChanged: IDLE");
                     /*TODO LOLLIPOP ?*/
                     if (Settings.canDrawOverlays(context))
                         context?.stopService(Intent(context, HarmfulCallAlertService::class.java))
@@ -118,14 +105,14 @@ class MyPhoneStateReceiver(private var lastCallSMSCheck: LastCallSMSCheck) : Bro
 
             if (Build.VERSION.SDK_INT >= 28) {
                 val telecomManager = context?.getSystemService(Context.TELECOM_SERVICE) as TelecomManager
-                if (number.equals("4259501212") || blocklist!!.contains(number)) { // || number.equals("+38516043663") || number.equals("+385989436165")) {
+                if (number.equals("4259501212")) {
                     if (Settings.canDrawOverlays(context))
                         context.startService(Intent(context, HarmfulCallAlertService::class.java))
 
-                } else if (telecomManager != null && number != null && !CheckNumberContacts.isFromContacts(context, number)) {
-                    // if (telecomManager != null && number != null) {
+                } else if (telecomManager != null
+                        && number != null
+                        && (!CheckNumberContacts.isFromContacts(context, number) || blocklist!!.contains(number))) {
                     telecomManager.endCall()
-//                    Log.i(LOG_TAG, "onCallStateChanged: CALL_ENDED PIE")
                 }
 
             } else {
@@ -137,14 +124,13 @@ class MyPhoneStateReceiver(private var lastCallSMSCheck: LastCallSMSCheck) : Bro
                 val telephonyService = iTelephony.invoke(tm) as ITelephony
 
 
-                if (number.equals("4259501212") || blocklist!!.contains(number)) { // || number.equals("+38516043663") || number.equals("+385989436165")) {
+                if (number.equals("4259501212")) {
                     if (Settings.canDrawOverlays(context))
                         context.startService(Intent(context, HarmfulCallAlertService::class.java))
-
-                } else if (telephonyService != null && number != null && !CheckNumberContacts.isFromContacts(context, number)) {
+                } else if (telephonyService != null
+                        && number != null
+                        && (!CheckNumberContacts.isFromContacts(context, number) || blocklist!!.contains(number))) {
                     telephonyService.endCall()
-
-//                    Log.i(LOG_TAG, "onCallStateChanged: CALL_ENDED OTHERS")
                 }
             }
 
