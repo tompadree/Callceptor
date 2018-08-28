@@ -93,7 +93,7 @@ class SettingsFragment : BaseFragment(), OnRemoveNumberClicked {
         CinnamonPreferences.getInstance(context).setObject(BLOCK_LIST, blocklist)
 
         settingsAdapter?.notifyDataSetChanged()
-        settingsFragmentAddNumberTv.setText(getString(R.string.enter_a_number))
+        settingsFragmentAddNumberTv.setHint(getString(R.string.enter_a_number))
         settingsFragmentAddPreNumberTv.setText("+1")
 
         if (activity.currentFocus != null) {
