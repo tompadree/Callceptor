@@ -21,7 +21,7 @@ import java.util.ArrayList
  * Created by Tom on 28.8.2018..
  */
 @RunWith(MockitoJUnitRunner::class)
-class MessagesPresenterTest() : MessagesPresenter, OnMessagesFetched, Parcelable {
+class MessagesPresenterTest() : MessagesPresenter, OnMessagesFetched {
 
     @Mock
     private var context: Context? = null
@@ -31,11 +31,6 @@ class MessagesPresenterTest() : MessagesPresenter, OnMessagesFetched, Parcelable
 
     @Mock
     lateinit var messagesView: MessagesView
-
-    constructor(parcel: Parcel) : this() {
-
-    }
-
 
 
     @Before
@@ -95,21 +90,4 @@ class MessagesPresenterTest() : MessagesPresenter, OnMessagesFetched, Parcelable
     override fun destroy() {
     }
 
-    override fun writeToParcel(parcel: Parcel, flags: Int) {
-
-    }
-
-    override fun describeContents(): Int {
-        return 0
-    }
-
-    companion object CREATOR : Parcelable.Creator<MessagesPresenterTest> {
-        override fun createFromParcel(parcel: Parcel): MessagesPresenterTest {
-            return MessagesPresenterTest(parcel)
-        }
-
-        override fun newArray(size: Int): Array<MessagesPresenterTest?> {
-            return arrayOfNulls(size)
-        }
-    }
 }
