@@ -11,19 +11,19 @@ import java.io.Serializable
  * Created by Tom on 22.8.2018..
  */
 @Entity(tableName = "calls")
-class Call() : Parcelable, Serializable {
+class Call : Parcelable, Serializable {
 
     var date: String? = null
-    var type : Int? = null
-    var duration : String? = null
+    var type: Int? = null
+    var duration: String? = null
 
-    var number : String? =null
-    var photo_uri : String? = null
-    var name : String? = null
+    var number: String? = null
+    var photo_uri: String? = null
+    var name: String? = null
 
     @PrimaryKey
     @NonNull
-    var timestamp : Long? = null
+    var timestamp: Long? = null
 
     constructor(parcel: Parcel) : this() {
         date = parcel.readString()
@@ -33,6 +33,20 @@ class Call() : Parcelable, Serializable {
         photo_uri = parcel.readString()
         name = parcel.readString()
     }
+
+    constructor()
+
+
+    constructor(date: String?, type: Int?, duration: String?, number: String?, photo_uri: String?, name: String?, timestamp: Long?) {
+        this.date = date
+        this.type = type
+        this.duration = duration
+        this.number = number
+        this.photo_uri = photo_uri
+        this.name = name
+        this.timestamp = timestamp
+    }
+
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(date)

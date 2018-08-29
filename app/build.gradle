@@ -30,26 +30,27 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
-
-//        kotlinOptions {
-//            languageVersion = "1.2"
-//        }
-//        sourceSets {
-//            test.java.srcDirs += 'src/test/kotlin'
-//            androidTest.java.srcDirs += 'src/androidTest/kotlin'
-//        }
-//        testOptions {
-//            unitTests {
-//                includeAndroidResources = true
-//            }
-//
-//            unitTests.returnDefaultValues = true
-//
-//        }
-//        kapt {
-//            generateStubs = true
-//        }
     }
+
+    kotlinOptions {
+        languageVersion = "1.2"
+    }
+    sourceSets {
+        test.java.srcDirs += 'src/test/kotlin'
+        androidTest.java.srcDirs += 'src/androidTest/kotlin'
+    }
+    testOptions {
+        unitTests {
+            includeAndroidResources = true
+        }
+
+        unitTests.returnDefaultValues = true
+
+    }
+    kapt {
+        generateStubs = true
+    }
+    buildToolsVersion '27.0.3'
 }
 
 dependencies {

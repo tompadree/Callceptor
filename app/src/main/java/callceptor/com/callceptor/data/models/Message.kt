@@ -11,10 +11,9 @@ import java.io.Serializable
  * Created by Tom on 24.8.2018..
  */
 @Entity(tableName = "messages")
-class Message() : Parcelable, Serializable {
+class Message : Parcelable, Serializable {
 
     var date: String? = null
-    var type : Int? = null
     var number : String? =null
     var body : String? = null
     var name : String? = null
@@ -22,9 +21,20 @@ class Message() : Parcelable, Serializable {
     @NonNull
     var timestamp : String? = null
 
+
+    constructor()
+
+    constructor(date: String?, number: String?, body: String?, name: String?, timestamp: String?) {
+        this.date = date
+        this.number = number
+        this.body = body
+        this.name = name
+        this.timestamp = timestamp
+    }
+
+
     constructor(parcel: Parcel) : this() {
         date = parcel.readString()
-        type = parcel.readValue(Int::class.java.classLoader) as? Int
         number = parcel.readString()
         body = parcel.readString()
         name = parcel.readString()
@@ -32,7 +42,6 @@ class Message() : Parcelable, Serializable {
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(date)
-        parcel.writeValue(type)
         parcel.writeString(number)
         parcel.writeString(body)
         parcel.writeString(name)
