@@ -50,13 +50,13 @@ class MessagesPresenterTest() : MessagesPresenter, OnMessagesFetched {
         messagesInteractor.fetchNextPage()
     }
 
-    @Test
+
     override fun messagesFetched(list: ArrayList<Message>) {
         messagesView.callMessagesFetched(list)
         hideLoading()
     }
 
-    @Test
+
     override fun onFetchingError(e: Throwable) {
         messagesView.showError(e.localizedMessage)
         hideLoading()

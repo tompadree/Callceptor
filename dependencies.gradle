@@ -18,7 +18,7 @@ ext {
 
     //Libraries
     constraintLayoutVersion = '1.0.2'
-    daggerVersion = '2.5'
+    daggerVersion = '2.13'
     butterKnifeVersion = '8.4.0'
     kotterKnifeVersion = '0.1.0-SNAPSHOT'
     androidSupportVersion = '26.1.0'
