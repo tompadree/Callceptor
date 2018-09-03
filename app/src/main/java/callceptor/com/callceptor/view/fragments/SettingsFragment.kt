@@ -11,9 +11,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
-import butterknife.ButterKnife
-import butterknife.OnClick
-import butterknife.Unbinder
 import java.lang.Class
 import callceptor.com.callceptor.R
 import callceptor.com.callceptor.domain.listeners.OnRemoveNumberClicked
@@ -25,7 +22,6 @@ import kotlinx.android.synthetic.main.fragment_settings.*
 
 class SettingsFragment : BaseFragment(), OnRemoveNumberClicked {
 
-    lateinit var unbinder: Unbinder
     private var settingsAdapter: SettingsAdapter? = null
     private lateinit var blocklist: ArrayList<String>
     private var countryCode : String = ""
@@ -53,19 +49,38 @@ class SettingsFragment : BaseFragment(), OnRemoveNumberClicked {
     override fun onDestroy() {
         super.onDestroy()
 
-        unbinder.unbind()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         var view = inflater.inflate(R.layout.fragment_settings, container, false)
 
-        unbinder = ButterKnife.bind(this, view)
         return view
     }
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        settingsFragmentAddNumberIv.setOnClickListener{
+            if (settingsFragmentAddNumberTv.text.toString() == "") {
+                Toast.makeText(activity, R.string.enter_a_number, Toast.LENGTH_SHORT).show()
+
+            }else {
+
+                blocklist.add(settingsFragmentAddPreNumberTv.text.toString() + settingsFragmentAddNumberTv.text.toString())
+                CinnamonPreferences.getInstance(context).setObject(BLOCK_LIST, blocklist)
+
+                settingsAdapter?.notifyDataSetChanged()
+                settingsFragmentAddNumberTv.setHint(getString(R.string.enter_a_number))
+                settingsFragmentAddPreNumberTv.setText("+1")
+            }
+
+
+            if (activity.currentFocus != null) {
+                val imm = activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.hideSoftInputFromWindow(view!!.getWindowToken(), 0)
+            }
+        }
 
         blocklist = (CinnamonPreferences.getInstance(context).getObject("blocklist", List::class.java, ArrayList<String>())) as ArrayList<String>
         setupRecyclerView()
@@ -78,28 +93,6 @@ class SettingsFragment : BaseFragment(), OnRemoveNumberClicked {
 
     override fun onDetach() {
         super.onDetach()
-    }
-
-
-    @OnClick(R.id.settingsFragmentAddNumberIv)
-    fun enterTagClicked() {
-
-        if (settingsFragmentAddNumberTv.text.toString() == "") {
-            Toast.makeText(activity, R.string.enter_a_number, Toast.LENGTH_SHORT).show()
-            return
-        }
-
-        blocklist .add(settingsFragmentAddPreNumberTv.text.toString() + settingsFragmentAddNumberTv.text.toString())
-        CinnamonPreferences.getInstance(context).setObject(BLOCK_LIST, blocklist)
-
-        settingsAdapter?.notifyDataSetChanged()
-        settingsFragmentAddNumberTv.setHint(getString(R.string.enter_a_number))
-        settingsFragmentAddPreNumberTv.setText("+1")
-
-        if (activity.currentFocus != null) {
-            val imm = activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            imm.hideSoftInputFromWindow(view!!.getWindowToken(), 0)
-        }
     }
 
     override fun onRemoveNumberClicked(number: String) {

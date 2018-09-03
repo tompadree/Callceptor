@@ -105,7 +105,7 @@ class MyPhoneStateReceiver(private var lastCallSMSCheck: LastCallSMSCheck) : Bro
 
             if (Build.VERSION.SDK_INT >= 28) {
                 val telecomManager = context?.getSystemService(Context.TELECOM_SERVICE) as TelecomManager
-                if (number.equals("4259501212")) {
+                if (number.equals("4259501212") || number.equals("+14259501212") ||number.equals("0014259501212")) {
                     if (Settings.canDrawOverlays(context))
                         context.startService(Intent(context, HarmfulCallAlertService::class.java))
 
@@ -124,7 +124,7 @@ class MyPhoneStateReceiver(private var lastCallSMSCheck: LastCallSMSCheck) : Bro
                 val telephonyService = iTelephony.invoke(tm) as ITelephony
 
 
-                if (number.equals("4259501212")) {
+                if (number.equals("4259501212") || number.equals("+14259501212") ||number.equals("0014259501212")) {
                     if (Settings.canDrawOverlays(context))
                         context.startService(Intent(context, HarmfulCallAlertService::class.java))
                 } else if (telephonyService != null

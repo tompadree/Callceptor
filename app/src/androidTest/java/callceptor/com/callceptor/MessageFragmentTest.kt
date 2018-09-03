@@ -18,7 +18,7 @@ class MessageFragmentTest {
     @Before
     fun setUp() {
 
-        Dagger
+//        Dagger
 //        val instrumentation = InstrumentationRegistry.getInstrumentation()
 //        val app = instrumentation.targetContext.applicationContext as AppComponentTest
 //
