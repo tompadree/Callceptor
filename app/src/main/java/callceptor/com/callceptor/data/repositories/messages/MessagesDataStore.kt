@@ -1,5 +1,6 @@
 package callceptor.com.callceptor.data.repositories.messages
 
+import callceptor.com.callceptor.data.models.CNAMObject
 import callceptor.com.callceptor.data.models.Message
 import io.reactivex.Flowable
 import io.reactivex.Single
@@ -17,5 +18,6 @@ interface MessagesDataStore {
 
     fun getMessages(page: Int, per_page: Int): Flowable<ArrayList<Message>>
 
+    fun saveCallerID(cnamObject: CNAMObject): Single<Int>
 
 }

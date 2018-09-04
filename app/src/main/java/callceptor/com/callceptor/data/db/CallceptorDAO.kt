@@ -22,6 +22,12 @@ interface CallceptorDAO {
     @Query("SELECT * FROM calls ORDER BY timestamp DESC LIMIT :page , :per_page") //" ORDER BY repoName ASC
     fun getCalls(page: Int, per_page: Int): List<Call>
 
+    @Query("UPDATE calls SET callerID = :callerID WHERE number = :phoneNumber")
+    fun saveCallerIDCalls(phoneNumber: String, callerID: String): Int
+
+    @Query("UPDATE messages SET callerID = :callerID WHERE number = :phoneNumber")
+    fun saveCallerIDMessages(phoneNumber: String, callerID: String): Int
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun saveIncomingMessages(messages: ArrayList<Message>): LongArray
 

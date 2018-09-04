@@ -9,6 +9,7 @@ import android.content.Context
 import android.provider.ContactsContract
 import android.provider.Telephony
 import android.support.v4.content.ContextCompat
+import android.widget.Toast
 import callceptor.com.callceptor.data.models.Call
 import callceptor.com.callceptor.data.models.Message
 import callceptor.com.callceptor.domain.listeners.OnCallContactsFetched
@@ -77,6 +78,8 @@ class SystemDataManagerImpl(private val context: Context) : SystemDataManager {
 
                     cur.close()
                 }
+                Toast.makeText(context, "type: " + call?.type, Toast.LENGTH_SHORT).show()
+
                 return call!!
                 // }
             }

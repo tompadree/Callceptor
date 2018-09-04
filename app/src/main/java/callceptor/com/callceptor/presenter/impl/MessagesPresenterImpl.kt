@@ -16,13 +16,20 @@ class MessagesPresenterImpl
 @Inject constructor(private val context: Context, private val messagesInteractor: MessageInteractor,
                     private val messagesView: MessagesView) : MessagesPresenter, OnMessagesFetched {
 
-    override fun fetchMessages() {
+    override fun fetchMessages(lastNumber: String) {
         showLoading()
-        messagesInteractor.getMessages(this)
+        if (lastNumber == "")
+            messagesInteractor.getMessages(this)
+        else
+            messagesInteractor.idLastNumber(this, lastNumber)
     }
 
     override fun fetchNextPage() {
         messagesInteractor.fetchNextPage()
+    }
+
+    override fun lastNumberCallIDed() {
+        messagesInteractor.getMessages(this)
     }
 
     override fun messagesFetched(list: ArrayList<Message>) {
@@ -40,7 +47,8 @@ class MessagesPresenterImpl
     }
 
     override fun hideLoadingFooter() {
-        messagesView.hideLoadingFooter()}
+        messagesView.hideLoadingFooter()
+    }
 
     override fun showLoading() {
         messagesView.showLoading()

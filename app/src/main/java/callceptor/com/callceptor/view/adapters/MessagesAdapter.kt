@@ -50,6 +50,11 @@ class MessagesAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder> {
         if (viewType == ITEM) {
             holder as ResultItemHolder
 
+            if (messages[position].callerID != null) {
+                holder.itemMessagesTvCallerID.visibility = View.VISIBLE
+                holder.itemMessagesTvCallerID.text = messages[position].callerID
+            } else
+                holder.itemMessagesTvCallerID.visibility = View.GONE
 
             holder.itemMessagesTvTime.text = messages[position].date
             holder.itemMessagesTvNumber.text = messages[position].number
@@ -76,6 +81,9 @@ class MessagesAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         @BindView(R.id.itemMessagesMainRelativeLayout)
         lateinit var messagesItem: RelativeLayout
+
+        @BindView(R.id.itemMessagesTvCallerID)
+        lateinit var itemMessagesTvCallerID: TextView
 
         @BindView(R.id.itemMessagesTvMessage)
         lateinit var itemMessagesTvMessage: TextView

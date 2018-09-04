@@ -171,28 +171,27 @@ class HomeActivity
         this.registerReceiver(phoneStateManager, intFilter)
     }
 
-    override fun refreshCallList() {
+    override fun refreshCallList(lastNumber: String) {
         callsFragmentInstance.callsInteractor.saveLastCall(systemDataManager.getLastCall())
         callsFragmentInstance.localCalls = ArrayList()
-        callsFragmentInstance.callsPresenter.fetchCallLogs()
+        callsFragmentInstance.callsPresenter.fetchCallLogs(lastNumber)
     }
 
-    override fun refreshSMSList() {
+    override fun refreshSMSList(lastNumber: String) {
         if (!messagesFragmentInstance.isAdded) {
             addFragment(messagesFragmentInstance, FragmentTag.MessagesFragment.getTag())
             supportFragmentManager.beginTransaction().hide(messagesFragmentInstance).commit()
         }
-
-        Handler().postDelayed({
-
         if (messagesFragmentInstance.isAdded) {
-            messagesFragmentInstance.messageInteractor.saveLastMessage(systemDataManager.getLastMessage())
-            messagesFragmentInstance.localMessages = ArrayList()
-            messagesFragmentInstance.messagesPresenter.fetchMessages()
+
+            Handler().postDelayed({
+                messagesFragmentInstance.messageInteractor.saveLastMessage(systemDataManager.getLastMessage())
+                messagesFragmentInstance.localMessages = ArrayList()
+                messagesFragmentInstance.messagesPresenter.fetchMessages(lastNumber)
+
+            }, 500)
+
         }
-
-        }, 500)
-
     }
 
     private fun checkPermissions() {

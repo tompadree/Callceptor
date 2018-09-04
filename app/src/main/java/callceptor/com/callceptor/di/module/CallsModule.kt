@@ -4,6 +4,8 @@ import android.telecom.Call
 import callceptor.com.callceptor.data.repositories.calls.CallsDataStore
 import callceptor.com.callceptor.data.repositories.calls.LocalCallsDataStore
 import callceptor.com.callceptor.data.repositories.calls.SystemCallsDataStore
+import callceptor.com.callceptor.data.repositories.cnam.CNAMDataStore
+import callceptor.com.callceptor.data.repositories.cnam.RemoteCNAMDataStore
 import callceptor.com.callceptor.di.HomeScope
 import callceptor.com.callceptor.domain.interactors.CallsInteractor
 import callceptor.com.callceptor.domain.interactors.impl.CallsInteractorImpl
@@ -39,6 +41,10 @@ class CallsModule(private val callsView: CallsView) {
     @Provides
     @HomeScope
     fun providesSystemCallsDataStore(systemCallsDataStore: SystemCallsDataStore): CallsDataStore = systemCallsDataStore
+
+    @Provides
+    @HomeScope
+    fun providesRemoteCNAMDataStore(remoteCNAMDataStore: RemoteCNAMDataStore) : CNAMDataStore = remoteCNAMDataStore
 
 //    @Provides
 //    @HomeScope

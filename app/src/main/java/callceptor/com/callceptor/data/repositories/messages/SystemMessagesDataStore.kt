@@ -1,5 +1,6 @@
 package callceptor.com.callceptor.data.repositories.messages
 
+import callceptor.com.callceptor.data.models.CNAMObject
 import callceptor.com.callceptor.data.models.Message
 import callceptor.com.callceptor.domain.listeners.SystemDataManager
 import io.reactivex.Flowable
@@ -17,6 +18,10 @@ class SystemMessagesDataStore
     }
 
     override fun saveLastMessage(message: Message): Single<Long> {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun saveCallerID(cnamObject: CNAMObject): Single<Int> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 

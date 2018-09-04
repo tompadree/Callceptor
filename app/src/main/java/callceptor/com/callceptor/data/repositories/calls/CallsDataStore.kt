@@ -1,5 +1,6 @@
 package callceptor.com.callceptor.data.repositories.calls
 
+import callceptor.com.callceptor.data.models.CNAMObject
 import callceptor.com.callceptor.data.models.Call
 import io.reactivex.Flowable
 import io.reactivex.Single
@@ -16,5 +17,7 @@ interface CallsDataStore {
     fun fetchAllCallsFromSystem() : Single<ArrayList<Call>>
 
     fun getCalls(page: Int, per_page: Int): Flowable<ArrayList<Call>>
+
+    fun saveCallerID(cnamObject: CNAMObject): Single<Int>
 
 }

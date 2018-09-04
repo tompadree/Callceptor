@@ -74,7 +74,7 @@ class MessagesFragment : BaseFragment(), MessagesView, OnMessagesItemClicked {
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        messagesPresenter.fetchMessages()
+        messagesPresenter.fetchMessages("")
 
     }
 

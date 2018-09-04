@@ -2,6 +2,7 @@ package callceptor.com.callceptor.data.repositories.calls
 
 import callceptor.com.callceptor.data.db.CallceptorDAO
 import callceptor.com.callceptor.data.db.CallceptorDatabase
+import callceptor.com.callceptor.data.models.CNAMObject
 import callceptor.com.callceptor.data.models.Call
 import io.reactivex.Flowable
 import io.reactivex.Single
@@ -21,6 +22,10 @@ class LocalCallsDataStore
 
     override fun saveLastCall(call: Call): Single<Long> {
         return Single.fromCallable { dao.saveIncomingCall(call) }
+    }
+
+    override fun saveCallerID(cnamObject: CNAMObject): Single<Int> {
+        return Single.fromCallable { dao.saveCallerIDCalls(cnamObject.number!!, cnamObject.name!!) }
     }
 
     override fun fetchAllCallsFromSystem(): Single<ArrayList<Call>> {

@@ -13,6 +13,7 @@
 
     <!--Messages-->
     <string name="messages_no_contacts">Messages by unknown numbers</string>
+    <string name="caller_id_placeholder">CallerID placeholder</string>
     <string name="phone_number_placeholder">Phone number placeholder</string>
     <string name="message_placeholder">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</string>
 

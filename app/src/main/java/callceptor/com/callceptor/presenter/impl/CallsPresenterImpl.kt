@@ -16,13 +16,20 @@ class CallsPresenterImpl
 @Inject constructor(private val context: Context, private val callsInteractor: CallsInteractor,
                     private val callsView: CallsView) : CallsPresenter, OnCallContactsFetched {
 
-    override fun fetchCallLogs() {
+    override fun fetchCallLogs(lastNumber: String) {
         showLoading()
-        callsInteractor.getCallLogs(this)
+        if (lastNumber == "")
+            callsInteractor.getCallLogs(this)
+        else
+            callsInteractor.idLastNumber(this, lastNumber)
     }
 
     override fun fetchNextPage() {
         callsInteractor.fetchNextPage()
+    }
+
+    override fun lastNumberCallIDed() {
+        callsInteractor.getCallLogs(this)
     }
 
     override fun callLogsFetched(list: ArrayList<Call>) {

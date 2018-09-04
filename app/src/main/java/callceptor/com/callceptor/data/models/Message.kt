@@ -22,36 +22,34 @@ class Message : Parcelable, Serializable {
     var number : String? =null
     var body : String? = null
     var name : String? = null
+    var callerID : String? = null
+
     @PrimaryKey
     @NonNull
     var timestamp : String? = null
 
-    @TypeConverters(CNAMObjectConverter::class)
-    var localCNAMObject : CNAMObject? = CNAMObject()
-
-    class CNAMObjectConverter {
-
-        @TypeConverter
-        fun stringToCNAMObject(value: String): CNAMObject {
-
-            val listType = object : TypeToken<ArrayList<String>>() {}.type
-            return Gson().fromJson(value, listType)
-        }
-
-        @TypeConverter
-        fun fromCNAMObjectToString(list: CNAMObject): String = Gson().toJson(list)
-
-    }
+//    @TypeConverters(CNAMObjectConverter::class)
+//    var localCNAMObject : CNAMObject? = CNAMObject()
+//
+//    class CNAMObjectConverter {
+//
+//        @TypeConverter
+//        fun stringToCNAMObject(cnam: String): CNAMObject? = Gson().fromJson(cnam, CNAMObject::class.java)
+//
+//        @TypeConverter
+//        fun fromCNAMObjectToString(cnam: CNAMObject): String? = Gson().toJson(cnam)
+//
+//    }
 
     constructor()
 
-    constructor(date: String?, number: String?, body: String?, name: String?, timestamp: String?, localCNAMObject: CNAMObject?) {
+    constructor(date: String?, number: String?, body: String?, name: String?, timestamp: String?, callerID : String?) {
         this.date = date
         this.number = number
         this.body = body
         this.name = name
         this.timestamp = timestamp
-        this.localCNAMObject = localCNAMObject
+        this.callerID = callerID
     }
 
 

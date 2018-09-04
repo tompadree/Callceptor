@@ -1,6 +1,7 @@
 package callceptor.com.callceptor.data.repositories.messages
 
 import callceptor.com.callceptor.data.db.CallceptorDatabase
+import callceptor.com.callceptor.data.models.CNAMObject
 import callceptor.com.callceptor.data.models.Message
 import io.reactivex.Flowable
 import io.reactivex.Single
@@ -15,11 +16,15 @@ class LocalMessagesDataStore
     private val callceptorDAO = callceptorDatabase.getCallceptorDao()
 
     override fun saveAllMessages(messages: ArrayList<Message>): Single<LongArray> {
-        return Single.fromCallable { callceptorDAO.saveIncomingMessages(messages)}
+        return Single.fromCallable { callceptorDAO.saveIncomingMessages(messages) }
     }
 
     override fun saveLastMessage(message: Message): Single<Long> {
-        return Single.fromCallable { callceptorDAO.saveIncomingMessage(message)}
+        return Single.fromCallable { callceptorDAO.saveIncomingMessage(message) }
+    }
+
+    override fun saveCallerID(cnamObject: CNAMObject): Single<Int> {
+        return Single.fromCallable { callceptorDAO.saveCallerIDMessages(cnamObject.number!!, cnamObject.name!!) }
     }
 
     override fun fetchAllMessagesFromSystem(): Single<ArrayList<Message>> {

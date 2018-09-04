@@ -5,7 +5,7 @@ package callceptor.com.callceptor.presenter
  */
 interface MessagesPresenter : BasePresenter{
 
-    fun fetchMessages()
+    fun fetchMessages(lastNumber : String)
 
     fun fetchNextPage()
 }

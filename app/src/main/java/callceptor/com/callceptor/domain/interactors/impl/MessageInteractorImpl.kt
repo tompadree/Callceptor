@@ -8,7 +8,9 @@ import android.provider.Telephony
 import android.content.ContentResolver
 import android.content.Context
 import android.provider.CallLog
+import callceptor.com.callceptor.data.models.CNAMObject
 import callceptor.com.callceptor.data.models.Message
+import callceptor.com.callceptor.data.repositories.cnam.RemoteCNAMDataStore
 import callceptor.com.callceptor.data.repositories.messages.LocalMessagesDataStore
 import callceptor.com.callceptor.data.repositories.messages.SystemMessagesDataStore
 import callceptor.com.callceptor.di.module.ThreadModule
@@ -30,7 +32,7 @@ import javax.inject.Named
  */
 class MessageInteractorImpl
 @Inject constructor(private val context: Context, private val systemMessagesDataStore: SystemMessagesDataStore,
-                    private val localMessagesDataStore: LocalMessagesDataStore) : MessageInteractor {
+                    private val localMessagesDataStore: LocalMessagesDataStore, private val remoteCNAMDataStore: RemoteCNAMDataStore) : MessageInteractor {
 
     @Inject
     @field:Named(ThreadModule.SUBSCRIBE_SCHEDULER)
@@ -45,6 +47,56 @@ class MessageInteractorImpl
     private lateinit var paginator: PublishProcessor<Int>
     private var loading: Boolean = false
     private lateinit var listener: OnMessagesFetched
+
+    override fun idLastNumber(onMessagesFetched: OnMessagesFetched, lastNumber: String) {
+        remoteCNAMDataStore.getCNAM(lastNumber)
+                .subscribeOn(subscribeScheduler)
+                .observeOn(observeScheduler)
+                .unsubscribeOn(subscribeScheduler)
+                .subscribe(object : SingleObserver<CNAMObject> {
+
+                    override fun onSubscribe(d: Disposable) {
+
+                    }
+
+                    override fun onSuccess(t: CNAMObject) {
+                        saveCNAM(t)
+                    }
+
+
+                    override fun onError(e: Throwable) {
+                        e.printStackTrace()
+                        listener.lastNumberCallIDed()
+//                        listener.onFetchingError(e)
+                    }
+                })
+    }
+
+    fun saveCNAM(cnamObject: CNAMObject) {
+
+        localMessagesDataStore.saveCallerID(cnamObject)
+                .subscribeOn(subscribeScheduler)
+                .observeOn(observeScheduler)
+                .unsubscribeOn(subscribeScheduler)
+                .subscribe(object : SingleObserver<Int> {
+
+                    override fun onSubscribe(d: Disposable) {
+
+                    }
+
+                    override fun onSuccess(t: Int) {
+                        listener.lastNumberCallIDed()
+                    }
+
+
+                    override fun onError(e: Throwable) {
+                        e.printStackTrace()
+                        listener.lastNumberCallIDed()
+//                        listener.onFetchingError(e)
+                    }
+                })
+
+    }
 
     override fun getMessages(onMessagesFetched: OnMessagesFetched) {
 
@@ -102,7 +154,10 @@ class MessageInteractorImpl
                                         }
 
                                         override fun onSuccess(t: ArrayList<Message>) {
-                                            saveLocalResults(t, onMessagesFetched)
+                                            if (t.size == 0)
+                                                onMessagesFetched.messagesFetched(t)
+                                            else
+                                                saveLocalResults(t, onMessagesFetched)
                                         }
 
                                         override fun onError(e: Throwable) {
@@ -113,6 +168,7 @@ class MessageInteractorImpl
                         currentPage = -1
                     }
                 }, {
+                    it.printStackTrace()
                     onMessagesFetched.onFetchingError(it as Throwable)
                     loading = false
                 })
@@ -150,6 +206,7 @@ class MessageInteractorImpl
                     }
 
                     override fun onError(e: Throwable) {
+                        e.printStackTrace()
                         listener.onFetchingError(e)
                     }
                 })
@@ -176,6 +233,7 @@ class MessageInteractorImpl
                     }
 
                     override fun onError(e: Throwable) {
+                        e.printStackTrace()
                         listener.onFetchingError(e)
                     }
                 })

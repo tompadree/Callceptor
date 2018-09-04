@@ -12,6 +12,8 @@ interface OnCallContactsFetched {
 
     fun contactsFetched(list : ArrayList<String>)
 
+    fun lastNumberCallIDed()
+
     fun onFetchingError(e : Throwable)
 
     fun showLoadingFooter()

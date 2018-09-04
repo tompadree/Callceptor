@@ -13,6 +13,8 @@ interface OnMessagesFetched {
 
     fun onFetchingError(e : Throwable)
 
+    fun lastNumberCallIDed()
+
     fun showLoadingFooter()
 
     fun hideLoadingFooter()

@@ -52,8 +52,10 @@ class CallsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder> {
         if (viewType == ITEM) {
             holder as ResultItemHolder
 
-
-            holder.itemCallsTvName.text = calls[position].name
+            if (calls[position].name == null || calls[position].name == "")
+                holder.itemCallsTvName.text = calls[position].callerID
+            else
+                holder.itemCallsTvName.text = calls[position].name
             holder.itemCallsTvNumber.text = calls[position].number
             holder.itemCallsTvTime.text = calls[position].date
 

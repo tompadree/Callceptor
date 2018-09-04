@@ -7,7 +7,7 @@ import callceptor.com.callceptor.data.models.Call
  */
 interface LastCallSMSCheck {
 
-    fun refreshCallList()
+    fun refreshCallList(lastNumber : String)
 
-    fun refreshSMSList()
+    fun refreshSMSList(lastNumber : String)
 }

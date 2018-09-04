@@ -9,6 +9,6 @@ import io.reactivex.Single
  */
 interface NetworkApi {
 
-    fun getCNAM( phoneNumber: String, authToken: String): Single<CNAMObject>
+    fun getCNAM( phoneNumber: String): Single<CNAMObject>
 
 }

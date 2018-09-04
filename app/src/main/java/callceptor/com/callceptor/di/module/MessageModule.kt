@@ -1,5 +1,7 @@
 package callceptor.com.callceptor.di.module
 
+import callceptor.com.callceptor.data.repositories.cnam.CNAMDataStore
+import callceptor.com.callceptor.data.repositories.cnam.RemoteCNAMDataStore
 import callceptor.com.callceptor.data.repositories.messages.LocalMessagesDataStore
 import callceptor.com.callceptor.data.repositories.messages.MessagesDataStore
 import callceptor.com.callceptor.data.repositories.messages.SystemMessagesDataStore
@@ -37,5 +39,9 @@ class MessageModule(private val messagesView: MessagesView) {
     @Provides
     @HomeScope
     fun providesSystemMessagesDataStore(systemMessagesDataStore: SystemMessagesDataStore): MessagesDataStore = systemMessagesDataStore
+
+    @Provides
+    @HomeScope
+    fun providesRemoteCNAMDataStore(remoteCNAMDataStore: RemoteCNAMDataStore) : CNAMDataStore = remoteCNAMDataStore
 
 }

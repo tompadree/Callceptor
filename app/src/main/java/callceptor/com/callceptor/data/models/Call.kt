@@ -25,30 +25,18 @@ class Call : Parcelable, Serializable {
     var photo_uri: String? = null
     var name: String? = null
 
+    var callerID : String? = null
+
     @PrimaryKey
     @NonNull
     var timestamp: Long? = null
 
-    @TypeConverters(Message.CNAMObjectConverter::class)
-    var localCNAMObject : CNAMObject? = CNAMObject()
-
-    class CNAMObjectConverter {
-
-        @TypeConverter
-        fun stringToCNAMObject(value: String): CNAMObject {
-
-            val listType = object : TypeToken<ArrayList<String>>() {}.type
-            return Gson().fromJson(value, listType)
-        }
-
-        @TypeConverter
-        fun fromCNAMObjectToString(list: CNAMObject): String = Gson().toJson(list)
-
-    }
+//    @TypeConverters(Message.CNAMObjectConverter::class)
+//    var localCNAMObject : CNAMObject? = CNAMObject()
 
     constructor()
 
-    constructor(date: String?, type: Int?, duration: String?, number: String?, photo_uri: String?, name: String?, timestamp: Long?, localCNAMObject: CNAMObject?) {
+    constructor(date: String?, type: Int?, duration: String?, number: String?, photo_uri: String?, name: String?, timestamp: Long?, callerID : String?) {
         this.date = date
         this.type = type
         this.duration = duration
@@ -56,7 +44,7 @@ class Call : Parcelable, Serializable {
         this.photo_uri = photo_uri
         this.name = name
         this.timestamp = timestamp
-        this.localCNAMObject = localCNAMObject
+        this.callerID = callerID
     }
 
 

@@ -88,7 +88,7 @@ class CallsFragment : BaseFragment(), CallsView {
 //        if(savedInstanceState != null)
 //            localCalls = savedInstanceState.getParcelableArrayList("list")
 //        else
-        callsPresenter.fetchCallLogs()
+        callsPresenter.fetchCallLogs("")
     }
 
 

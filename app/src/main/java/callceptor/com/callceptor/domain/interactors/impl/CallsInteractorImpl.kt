@@ -1,11 +1,13 @@
 package callceptor.com.callceptor.domain.interactors.impl
 
 import android.content.Context
+import callceptor.com.callceptor.data.models.CNAMObject
 import callceptor.com.callceptor.domain.interactors.CallsInteractor
 import javax.inject.Inject
 import callceptor.com.callceptor.data.models.Call
 import callceptor.com.callceptor.data.repositories.calls.LocalCallsDataStore
 import callceptor.com.callceptor.data.repositories.calls.SystemCallsDataStore
+import callceptor.com.callceptor.data.repositories.cnam.RemoteCNAMDataStore
 import callceptor.com.callceptor.di.module.ThreadModule
 import callceptor.com.callceptor.domain.listeners.OnCallContactsFetched
 import callceptor.com.callceptor.utils.AppConstants.Companion.PAGE_ENTRIES
@@ -23,7 +25,7 @@ import kotlin.collections.ArrayList
  */
 class CallsInteractorImpl
 @Inject constructor(private val context: Context, private val localCallsDataStore: LocalCallsDataStore,
-                    private val systemCallsDataStore: SystemCallsDataStore) : CallsInteractor {
+                    private val systemCallsDataStore: SystemCallsDataStore, private val remoteCNAMDataStore: RemoteCNAMDataStore) : CallsInteractor {
 
     @Inject
     @field:Named(ThreadModule.SUBSCRIBE_SCHEDULER)
@@ -40,6 +42,56 @@ class CallsInteractorImpl
     private lateinit var listener: OnCallContactsFetched
 
     override fun getContacts(onCallContactsFetched: OnCallContactsFetched) {
+
+    }
+
+    override fun idLastNumber(onCallContactsFetched: OnCallContactsFetched, lastNumber: String) {
+        remoteCNAMDataStore.getCNAM(lastNumber)
+                .subscribeOn(subscribeScheduler)
+                .observeOn(observeScheduler)
+                .unsubscribeOn(subscribeScheduler)
+                .subscribe(object : SingleObserver<CNAMObject> {
+
+                    override fun onSubscribe(d: Disposable) {
+
+                    }
+
+                    override fun onSuccess(t: CNAMObject) {
+                        saveCNAM(t)
+                    }
+
+
+                    override fun onError(e: Throwable) {
+                        e.printStackTrace()
+                        listener.lastNumberCallIDed()
+//                        listener.onFetchingError(e)
+                    }
+                })
+    }
+
+    fun saveCNAM(cnamObject: CNAMObject) {
+
+        localCallsDataStore.saveCallerID(cnamObject)
+                .subscribeOn(subscribeScheduler)
+                .observeOn(observeScheduler)
+                .unsubscribeOn(subscribeScheduler)
+                .subscribe(object : SingleObserver<Int> {
+
+                    override fun onSubscribe(d: Disposable) {
+
+                    }
+
+                    override fun onSuccess(t: Int) {
+                        listener.lastNumberCallIDed()
+                    }
+
+
+                    override fun onError(e: Throwable) {
+                        e.printStackTrace()
+                        listener.lastNumberCallIDed()
+//                        listener.onFetchingError(e)
+                    }
+                })
 
     }
 
@@ -99,7 +151,10 @@ class CallsInteractorImpl
                                         }
 
                                         override fun onSuccess(t: ArrayList<Call>) {
-                                            saveLocalResults(t, onCallContactsFetched)
+                                            if (t.size == 0) {
+                                                onCallContactsFetched.callLogsFetched(t)
+                                            } else
+                                                saveLocalResults(t, onCallContactsFetched)
                                         }
 
                                         override fun onError(e: Throwable) {
@@ -110,6 +165,7 @@ class CallsInteractorImpl
                         currentPage = -1
                     }
                 }, {
+                    it.printStackTrace()
                     onCallContactsFetched.onFetchingError(it as Throwable)
                     loading = false
                 })
@@ -147,6 +203,7 @@ class CallsInteractorImpl
                     }
 
                     override fun onError(e: Throwable) {
+                        e.printStackTrace()
                         listener.onFetchingError(e)
                     }
                 })
@@ -167,6 +224,7 @@ class CallsInteractorImpl
                     override fun onSuccess(t: Long) {
                         var test: Long = t
                         test = t
+                        listener.hideLoading()
                     }
 
                     override fun onSubscribe(d: Disposable) {
@@ -174,6 +232,7 @@ class CallsInteractorImpl
                     }
 
                     override fun onError(e: Throwable) {
+                        e.printStackTrace()
                         listener.onFetchingError(e)
                     }
                 })

@@ -1,5 +1,6 @@
 package callceptor.com.callceptor.data.repositories.calls
 
+import callceptor.com.callceptor.data.models.CNAMObject
 import callceptor.com.callceptor.data.models.Call
 import callceptor.com.callceptor.domain.listeners.SystemDataManager
 import io.reactivex.Flowable
@@ -17,6 +18,10 @@ class SystemCallsDataStore
     }
 
     override fun saveLastCall(call: Call): Single<Long> {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun saveCallerID(cnamObject: CNAMObject): Single<Int> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 

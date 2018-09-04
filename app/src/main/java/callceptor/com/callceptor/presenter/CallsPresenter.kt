@@ -5,7 +5,7 @@ package callceptor.com.callceptor.presenter
  */
 interface CallsPresenter : BasePresenter {
 
-    fun fetchCallLogs()
+    fun fetchCallLogs(lastNumber : String)
 
     fun fetchNextPage()
 }

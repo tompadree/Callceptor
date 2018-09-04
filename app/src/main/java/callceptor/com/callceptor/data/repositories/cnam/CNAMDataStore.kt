@@ -12,5 +12,5 @@ interface CNAMDataStore {
 
     fun getCNAM(number : String): Single<CNAMObject>
 
-    fun saveCNAM(cnamObject: CNAMObject): Single<Long>
+//    fun saveCNAM(cnamObject: CNAMObject): Single<Long>
 }

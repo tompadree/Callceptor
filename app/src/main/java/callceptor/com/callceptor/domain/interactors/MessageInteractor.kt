@@ -14,6 +14,8 @@ interface MessageInteractor{
 
     fun getMessages(onMessagesFetched: OnMessagesFetched)
 
+    fun idLastNumber(onMessagesFetched: OnMessagesFetched, lastNumber : String)
+
     fun saveLocalResults(messages: ArrayList<Message>, onMessagesFetched: OnMessagesFetched)
 
     fun saveLastMessage(message: Message)
