@@ -2,9 +2,13 @@ package callceptor.com.callceptor.data.models
 
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
+import android.arch.persistence.room.TypeConverter
+import android.arch.persistence.room.TypeConverters
 import android.os.Parcel
 import android.os.Parcelable
 import android.support.annotation.NonNull
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import java.io.Serializable
 
 /**
@@ -25,19 +29,26 @@ class Call : Parcelable, Serializable {
     @NonNull
     var timestamp: Long? = null
 
-    constructor(parcel: Parcel) : this() {
-        date = parcel.readString()
-        type = parcel.readValue(Int::class.java.classLoader) as? Int
-        duration = parcel.readString()
-        number = parcel.readString()
-        photo_uri = parcel.readString()
-        name = parcel.readString()
+    @TypeConverters(Message.CNAMObjectConverter::class)
+    var localCNAMObject : CNAMObject? = CNAMObject()
+
+    class CNAMObjectConverter {
+
+        @TypeConverter
+        fun stringToCNAMObject(value: String): CNAMObject {
+
+            val listType = object : TypeToken<ArrayList<String>>() {}.type
+            return Gson().fromJson(value, listType)
+        }
+
+        @TypeConverter
+        fun fromCNAMObjectToString(list: CNAMObject): String = Gson().toJson(list)
+
     }
 
     constructor()
 
-
-    constructor(date: String?, type: Int?, duration: String?, number: String?, photo_uri: String?, name: String?, timestamp: Long?) {
+    constructor(date: String?, type: Int?, duration: String?, number: String?, photo_uri: String?, name: String?, timestamp: Long?, localCNAMObject: CNAMObject?) {
         this.date = date
         this.type = type
         this.duration = duration
@@ -45,7 +56,23 @@ class Call : Parcelable, Serializable {
         this.photo_uri = photo_uri
         this.name = name
         this.timestamp = timestamp
+        this.localCNAMObject = localCNAMObject
     }
+
+
+
+    constructor(parcel: Parcel) : this() {
+        date = parcel.readString()
+        type = parcel.readValue(Int::class.java.classLoader) as? Int
+        duration = parcel.readString()
+        number = parcel.readString()
+        photo_uri = parcel.readString()
+        name = parcel.readString()
+        timestamp = parcel.readValue(Long::class.java.classLoader) as? Long
+    }
+
+
+
 
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
@@ -55,6 +82,7 @@ class Call : Parcelable, Serializable {
         parcel.writeString(number)
         parcel.writeString(photo_uri)
         parcel.writeString(name)
+        parcel.writeValue(timestamp)
     }
 
     override fun describeContents(): Int {
@@ -70,8 +98,9 @@ class Call : Parcelable, Serializable {
             return arrayOfNulls(size)
         }
     }
-
 }
+
+
 //
 //transcription,
 //photo_id,
