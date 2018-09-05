@@ -18,6 +18,7 @@ import android.provider.BlockedNumberContract
 import android.provider.Settings
 import android.provider.Telephony
 import android.widget.Toast
+import callceptor.com.callceptor.R
 import callceptor.com.callceptor.data.repositories.calls.LocalCallsDataStore
 import callceptor.com.callceptor.domain.interactors.CallsInteractor
 import callceptor.com.callceptor.domain.interactors.MessageInteractor
@@ -26,6 +27,7 @@ import callceptor.com.callceptor.domain.listeners.LastCallSMSCheck
 import callceptor.com.callceptor.domain.listeners.SystemDataManager
 import callceptor.com.callceptor.utils.AppConstants.Companion.BLOCK_LIST
 import callceptor.com.callceptor.utils.CheckNumberContacts
+import callceptor.com.callceptor.utils.NetworkHelper
 import com.cinnamon.utils.storage.CinnamonPreferences
 import java.util.*
 import kotlin.concurrent.schedule
@@ -36,7 +38,7 @@ import kotlin.collections.ArrayList
 /**
  * Created by Tomislav on 21,August,2018
  */
-class MyPhoneStateReceiver(private var lastCallSMSCheck: LastCallSMSCheck) : BroadcastReceiver(){
+class MyPhoneStateReceiver(private var lastCallSMSCheck: LastCallSMSCheck) : BroadcastReceiver() {
 
     var LOG_TAG = "PHONE_TAG"
     var call = false
@@ -65,6 +67,9 @@ class MyPhoneStateReceiver(private var lastCallSMSCheck: LastCallSMSCheck) : Bro
                 val smsMessages = Telephony.Sms.Intents.getMessagesFromIntent(intent)
                 for (message in smsMessages) {
 
+                    if (!NetworkHelper.isConnectingToInternet(context!!))
+                        Toast.makeText(context, R.string.no_internet, Toast.LENGTH_LONG).show()
+
                     lastCallSMSCheck.refreshSMSList(message.originatingAddress!!)
 
                 }
@@ -91,8 +96,12 @@ class MyPhoneStateReceiver(private var lastCallSMSCheck: LastCallSMSCheck) : Bro
 
                     if (call) {
                         call = false
-                        Handler().postDelayed({ lastCallSMSCheck.refreshCallList(lastNumber!!)
-                            lastNumber = ""}, 500)
+                        Handler().postDelayed({
+                            if (!NetworkHelper.isConnectingToInternet(context!!))
+                                Toast.makeText(context, R.string.no_internet, Toast.LENGTH_LONG).show()
+                            lastCallSMSCheck.refreshCallList(lastNumber!!)
+                            lastNumber = ""
+                        }, 500)
 
                     }
                 }

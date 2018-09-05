@@ -32,6 +32,11 @@ android {
         }
     }
 
+    buildTypes.each {
+        it.buildConfigField 'String', 'ACCOUNT_SID', AccountSID
+        it.buildConfigField 'String', 'AUTH_TOKEN', AuthToken
+    }
+
     kotlinOptions {
         languageVersion = "1.2"
     }

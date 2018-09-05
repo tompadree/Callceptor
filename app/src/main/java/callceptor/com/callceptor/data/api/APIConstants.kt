@@ -17,8 +17,6 @@ interface APIConstants {
         //    String ACCEPT_TYPE = "Accept: application/vnd.oauth.v1+json";
         val ACCEPT_TYPE_V2 = "Accept: application/json, */*"
 
-        val ACCOUNT_SID: String = "AC9ad267cc80fe43a08801ced3d6cca48b"
-        val AUTH_TOKEN: String = "AU937e7f18883e4afa8b52581bc8199c13"
 
         const val RESPONSE_FORMAT = "json"
 

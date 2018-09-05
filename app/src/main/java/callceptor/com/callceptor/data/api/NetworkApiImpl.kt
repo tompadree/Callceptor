@@ -1,8 +1,7 @@
 package callceptor.com.callceptor.data.api;
 
-import android.drm.DrmInfoRequest.ACCOUNT_ID
-import callceptor.com.callceptor.data.api.APIConstants.Companion.ACCOUNT_SID
-import callceptor.com.callceptor.data.api.APIConstants.Companion.AUTH_TOKEN
+import callceptor.com.callceptor.BuildConfig.ACCOUNT_SID
+import callceptor.com.callceptor.BuildConfig.AUTH_TOKEN
 import callceptor.com.callceptor.data.api.APIConstants.Companion.RESPONSE_FORMAT
 import callceptor.com.callceptor.data.models.CNAMObject
 import io.reactivex.Single

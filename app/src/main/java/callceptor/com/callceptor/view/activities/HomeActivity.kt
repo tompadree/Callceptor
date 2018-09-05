@@ -238,8 +238,11 @@ class HomeActivity
 
             }
 
-        }
+        } else {
+            homeActivityBottomNavigation.selectedItemId = R.id.action_calls
+            registerReceiver()
 
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.M)
