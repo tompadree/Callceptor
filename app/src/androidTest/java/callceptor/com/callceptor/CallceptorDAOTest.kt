@@ -43,17 +43,17 @@ class CallceptorDAOTest {
     @Test
     fun testSaveGetCalls() {
         val calls = listOf(
-                Call("12.12.2018.", 1, "12", "+3859112345678", "https://cdn.pixabay.com/photo/2013/04/06/11/50/image-editing-101040_960_720.jpg", "User", 1535527902032),
-                Call("12.11.2018.", 4, "5", "+3859116427582", "https://cdn.pixabay.com/photo/2013/04/06/11/50/image-editing-101040_960_720.jpg", "User2", 1535527902033),
-                Call("1.1.2018.", 3, "3", "+3859112343245", "https://cdn.pixabay.com/photo/2013/04/06/11/50/image-editing-101040_960_720.jpg", "User3", 1535527902034))
+                Call("12.12.2018.", 1, "12", "+3859112345678", "https://cdn.pixabay.com/photo/2013/04/06/11/50/image-editing-101040_960_720.jpg", "User", 1535527902032,"1"),
+                Call("12.11.2018.", 4, "5", "+3859116427582", "https://cdn.pixabay.com/photo/2013/04/06/11/50/image-editing-101040_960_720.jpg", "User2", 1535527902033, "3"),
+                Call("1.1.2018.", 3, "3", "+3859112343245", "https://cdn.pixabay.com/photo/2013/04/06/11/50/image-editing-101040_960_720.jpg", "User3", 1535527902034,"5"))
 
 
         val calls2 = listOf(
-                Call("5.5.2018.", 5, "1", "+3859112345678", "https://cdn.pixabay.com/photo/2013/04/06/11/50/image-editing-101040_960_720.jpg", "User4", 1535527902035),
-                Call("6.6.2018.", 1, "15", "+3859116427582", "https://cdn.pixabay.com/photo/2013/04/06/11/50/image-editing-101040_960_720.jpg", "User5", 1535527902036),
-                Call("1.12.2018.", 6, "13", "+3859112343245", "https://cdn.pixabay.com/photo/2013/04/06/11/50/image-editing-101040_960_720.jpg", "User6", 1535527902037))
+                Call("5.5.2018.", 5, "1", "+3859112345678", "https://cdn.pixabay.com/photo/2013/04/06/11/50/image-editing-101040_960_720.jpg", "User4", 1535527902035,"1"),
+                Call("6.6.2018.", 1, "15", "+3859116427582", "https://cdn.pixabay.com/photo/2013/04/06/11/50/image-editing-101040_960_720.jpg", "User5", 1535527902036,"3"),
+                Call("1.12.2018.", 6, "13", "+3859112343245", "https://cdn.pixabay.com/photo/2013/04/06/11/50/image-editing-101040_960_720.jpg", "User6", 1535527902037,"5"))
 
-        val singleCall = Call("11.6.2018.", 4, "5", "+3859386427582", "https://cdn.pixabay.com/photo/2013/04/06/11/50/image-editing-101040_960_720.jpg", "Jake Wharton", 1535527902038)
+        val singleCall = Call("11.6.2018.", 4, "5", "+3859386427582", "https://cdn.pixabay.com/photo/2013/04/06/11/50/image-editing-101040_960_720.jpg", "Jake Wharton", 1535527902038,"6")
 
 
         callceptorDAO.saveIncomingCalls(ArrayList(calls))
@@ -63,13 +63,13 @@ class CallceptorDAOTest {
         val getResults = callceptorDAO.getCalls(0, PAGE_ENTRIES)
 
         val expectedResult = listOf(
-                Call("11.6.2018.", 4, "5", "+3859386427582", "https://cdn.pixabay.com/photo/2013/04/06/11/50/image-editing-101040_960_720.jpg", "Jake Wharton", 1535527902038),
-                Call("1.12.2018.", 6, "13", "+3859112343245", "https://cdn.pixabay.com/photo/2013/04/06/11/50/image-editing-101040_960_720.jpg", "User6", 1535527902037),
-                Call("6.6.2018.", 1, "15", "+3859116427582", "https://cdn.pixabay.com/photo/2013/04/06/11/50/image-editing-101040_960_720.jpg", "User5", 1535527902036),
-                Call("5.5.2018.", 5, "1", "+3859112345678", "https://cdn.pixabay.com/photo/2013/04/06/11/50/image-editing-101040_960_720.jpg", "User4", 1535527902035),
-                Call("1.1.2018.", 3, "3", "+3859112343245", "https://cdn.pixabay.com/photo/2013/04/06/11/50/image-editing-101040_960_720.jpg", "User3", 1535527902034),
-                Call("12.11.2018.", 4, "5", "+3859116427582", "https://cdn.pixabay.com/photo/2013/04/06/11/50/image-editing-101040_960_720.jpg", "User2", 1535527902033),
-                Call("12.12.2018.", 1, "12", "+3859112345678", "https://cdn.pixabay.com/photo/2013/04/06/11/50/image-editing-101040_960_720.jpg", "User", 1535527902032))
+                Call("11.6.2018.", 4, "5", "+3859386427582", "https://cdn.pixabay.com/photo/2013/04/06/11/50/image-editing-101040_960_720.jpg", "Jake Wharton", 1535527902038,"6"),
+                Call("1.12.2018.", 6, "13", "+3859112343245", "https://cdn.pixabay.com/photo/2013/04/06/11/50/image-editing-101040_960_720.jpg", "User6", 1535527902037,"5"),
+                Call("6.6.2018.", 1, "15", "+3859116427582", "https://cdn.pixabay.com/photo/2013/04/06/11/50/image-editing-101040_960_720.jpg", "User5", 1535527902036,"3"),
+                Call("5.5.2018.", 5, "1", "+3859112345678", "https://cdn.pixabay.com/photo/2013/04/06/11/50/image-editing-101040_960_720.jpg", "User4", 1535527902035,"1"),
+                Call("1.1.2018.", 3, "3", "+3859112343245", "https://cdn.pixabay.com/photo/2013/04/06/11/50/image-editing-101040_960_720.jpg", "User3", 1535527902034,"5"),
+                Call("12.11.2018.", 4, "5", "+3859116427582", "https://cdn.pixabay.com/photo/2013/04/06/11/50/image-editing-101040_960_720.jpg", "User2", 1535527902033,"3"),
+                Call("12.12.2018.", 1, "12", "+3859112345678", "https://cdn.pixabay.com/photo/2013/04/06/11/50/image-editing-101040_960_720.jpg", "User", 1535527902032,"1"))
 
 
         Assert.assertEquals(getResults[0].timestamp, expectedResult[0].timestamp)
@@ -80,17 +80,17 @@ class CallceptorDAOTest {
     @Test
     fun testSaveGetMessages() {
         val messages = listOf(
-                Message("12.12.2018.", "+3859112345678", "Incoming SMS message 1", "User", "1535527902032"),
-                Message("12.11.2018.", "+3859116427582", "Incoming SMS message 2", "User2", "1535527902033"),
-                Message("1.1.2018.", "+3859112343245", "Incoming SMS message 3", "User3", "1535527902034"))
+                Message("12.12.2018.", "+3859112345678", "Incoming SMS message 1", "User", "1535527902032","1"),
+                Message("12.11.2018.", "+3859116427582", "Incoming SMS message 2", "User2", "1535527902033","3"),
+                Message("1.1.2018.", "+3859112343245", "Incoming SMS message 3", "User3", "1535527902034","5"))
 
 
         val messages2 = listOf(
-                Message("5.5.2018.", "+3859112345678", "Incoming SMS message 4", "User4", "1535527902035"),
-                Message("6.6.2018.", "+3859116427582", "Incoming SMS message 5", "User5", "1535527902036"),
-                Message("1.12.2018.", "+3859112343245", "Incoming SMS message 6", "User6", "1535527902037"))
+                Message("5.5.2018.", "+3859112345678", "Incoming SMS message 4", "User4", "1535527902035","1"),
+                Message("6.6.2018.", "+3859116427582", "Incoming SMS message 5", "User5", "1535527902036","3"),
+                Message("1.12.2018.", "+3859112343245", "Incoming SMS message 6", "User6", "1535527902037","5"))
 
-        val singleMessage = Message("11.6.2018.", "+3859386427582", "Incoming SMS message 7", "Jake Wharton", "1535527902038")
+        val singleMessage = Message("11.6.2018.", "+3859386427582", "Incoming SMS message 7", "Jake Wharton", "1535527902038","6")
 
 
         callceptorDAO.saveIncomingMessages(ArrayList(messages))
@@ -100,13 +100,13 @@ class CallceptorDAOTest {
         val getResults = callceptorDAO.getMessages(0, PAGE_ENTRIES)
 
         val expectedResult = listOf(
-                Message("11.6.2018.", "+3859386427582", "Incoming SMS message 7", "Jake Wharton", "1535527902038"),
-                Message("1.12.2018.", "+3859112343245", "Incoming SMS message 6", "User6", "1535527902037"),
-                Message("6.6.2018.", "+3859116427582", "Incoming SMS message 5", "User5", "1535527902036"),
-                Message("5.5.2018.", "+3859112345678", "Incoming SMS message 4", "User4", "1535527902035"),
-                Message("1.1.2018.", "+3859112343245", "Incoming SMS message 3", "User3", "1535527902034"),
-                Message("12.11.2018.", "+3859116427582", "Incoming SMS message 2", "User2", "1535527902033"),
-                Message("12.12.2018.", "+3859112345678", "Incoming SMS message 1", "User", "1535527902032"))
+                Message("11.6.2018.", "+3859386427582", "Incoming SMS message 7", "Jake Wharton", "1535527902038","6"),
+                Message("1.12.2018.", "+3859112343245", "Incoming SMS message 6", "User6", "1535527902037","5"),
+                Message("6.6.2018.", "+3859116427582", "Incoming SMS message 5", "User5", "1535527902036","3"),
+                Message("5.5.2018.", "+3859112345678", "Incoming SMS message 4", "User4", "1535527902035","1"),
+                Message("1.1.2018.", "+3859112343245", "Incoming SMS message 3", "User3", "1535527902034","5"),
+                Message("12.11.2018.", "+3859116427582", "Incoming SMS message 2", "User2", "1535527902033","3"),
+                Message("12.12.2018.", "+3859112345678", "Incoming SMS message 1", "User", "1535527902032","1"))
 
 
         Assert.assertEquals(getResults[0].timestamp, expectedResult[0].timestamp)

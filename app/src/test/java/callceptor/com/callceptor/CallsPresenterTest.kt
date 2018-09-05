@@ -6,6 +6,7 @@ import callceptor.com.callceptor.domain.interactors.CallsInteractor
 import callceptor.com.callceptor.domain.listeners.OnCallContactsFetched
 import callceptor.com.callceptor.presenter.CallsPresenter
 import callceptor.com.callceptor.view.views.CallsView
+import io.reactivex.schedulers.TestScheduler
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -17,7 +18,7 @@ import java.util.ArrayList
 /**
  * Created by Tomislav on 29,August,2018
  */
-@RunWith(MockitoJUnitRunner::class)
+//@RunWith(MockitoJUnitRunner::class)
 class CallsPresenterTest : CallsPresenter, OnCallContactsFetched {
 
     @Mock
@@ -29,14 +30,22 @@ class CallsPresenterTest : CallsPresenter, OnCallContactsFetched {
     @Mock
     lateinit var callsView: CallsView
 
+    lateinit var testScheduler: TestScheduler
+
     @Before
     fun setUp() {
 
         MockitoAnnotations.initMocks(this)
+        testScheduler = TestScheduler()
+//        callsInteractor = CallsInteractor()
+    }
+
+    override fun lastNumberCallIDed() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     @Test
-    override fun fetchCallLogs() {
+    override fun fetchCallLogs(lastNumber: String) {
         showLoading()
         callsInteractor.getCallLogs(this)
     }

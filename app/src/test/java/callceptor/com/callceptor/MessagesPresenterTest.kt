@@ -40,9 +40,13 @@ class MessagesPresenterTest() : MessagesPresenter, OnMessagesFetched {
     }
 
     @Test
-    override fun fetchMessages() {
+    override fun fetchMessages(lastNumber: String) {
         showLoading()
         messagesInteractor.getMessages(this)
+    }
+
+    override fun lastNumberCallIDed() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     @Test

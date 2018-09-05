@@ -95,6 +95,7 @@ dependencies {
 
     kapt dependencies.butterKnifeCompiler
     kapt dependencies.daggerCompiler
+    kapt 'com.google.dagger:dagger-android-processor:2.17'
     kapt dependencies.roomCompiler
     kaptAndroidTest dependencies.daggerCompiler
 
@@ -102,6 +103,7 @@ dependencies {
     kaptTest testDependencies.mockito
     kaptAndroidTest dependencies.butterKnifeCompiler
     kaptTest 'com.google.dagger:dagger-compiler:2.17'
+
     kaptAndroidTest 'com.google.dagger:dagger-compiler:2.17'
 
 
