@@ -82,7 +82,7 @@ class CallsFragment : BaseFragment(), CallsView {
         return view
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
 //        if(savedInstanceState != null)
@@ -115,7 +115,7 @@ class CallsFragment : BaseFragment(), CallsView {
     }
 
     fun setupRecyclerView() {
-        callsAdapter = CallsAdapter(context, localCalls)
+        callsAdapter = CallsAdapter(context!!, localCalls)
 
         val layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         fragmentCallsRv.layoutManager = layoutManager

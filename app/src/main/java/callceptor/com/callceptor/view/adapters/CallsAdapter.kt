@@ -52,10 +52,12 @@ class CallsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder> {
         if (viewType == ITEM) {
             holder as ResultItemHolder
 
-            if (calls[position].name == null || calls[position].name == "")
+            if (calls[position].callerID != null) {
+                holder.itemCallsTvName.visibility = View.VISIBLE
                 holder.itemCallsTvName.text = calls[position].callerID
-            else
-                holder.itemCallsTvName.text = calls[position].name
+            } else
+                holder.itemCallsTvName.visibility = View.GONE
+
             holder.itemCallsTvNumber.text = calls[position].number
             holder.itemCallsTvTime.text = calls[position].date
 

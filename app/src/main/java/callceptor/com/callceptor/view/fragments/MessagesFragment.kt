@@ -71,7 +71,7 @@ class MessagesFragment : BaseFragment(), MessagesView, OnMessagesItemClicked {
         return inflater.inflate(R.layout.fragment_messages, container, false)
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         messagesPresenter.fetchMessages("")
@@ -108,7 +108,7 @@ class MessagesFragment : BaseFragment(), MessagesView, OnMessagesItemClicked {
     }
 
     fun setupRecyclerView() {
-        messagesAdapter = MessagesAdapter(context, localMessages, this)
+        messagesAdapter = MessagesAdapter(context!!, localMessages, this)
 
         val layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         fragmentMessagesRv.layoutManager = layoutManager

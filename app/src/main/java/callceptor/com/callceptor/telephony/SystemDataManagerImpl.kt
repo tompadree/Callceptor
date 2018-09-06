@@ -57,10 +57,10 @@ class SystemDataManagerImpl(private val context: Context) : SystemDataManager {
                 cur.moveToFirst()
 
                 if (cur.getInt(cur.getColumnIndex(CallLog.Calls.TYPE)) != 2) {
-                    val cal = Calendar.getInstance()
+//                    val cal = Calendar.getInstance()
 
-                    val currentDay = SimpleDateFormat("ddMMyyyy", Locale.ITALY).format(cal.time)
-                    val callDay = SimpleDateFormat("ddMMyyyy", Locale.ITALY).format(Timestamp(cur.getLong(cur.getColumnIndex(CallLog.Calls.DATE))))
+//                    val currentDay = SimpleDateFormat("ddMMyyyy", Locale.ITALY).format(cal.time)
+//                    val callDay = SimpleDateFormat("ddMMyyyy", Locale.ITALY).format(Timestamp(cur.getLong(cur.getColumnIndex(CallLog.Calls.DATE))))
 //                    if (currentDay != callDay)
                     call?.date = SimpleDateFormat("HH:mm  dd.MM.yyyy.", Locale.ITALY).format(Timestamp(cur.getLong(cur.getColumnIndex(CallLog.Calls.DATE))))
 //                    else
@@ -109,9 +109,9 @@ class SystemDataManagerImpl(private val context: Context) : SystemDataManager {
                 val cal = Calendar.getInstance()
                 while (cur.moveToNext()) {
 
-                    var call = Call()
-                    val currentDay = SimpleDateFormat("ddMMyyyy", Locale.ITALY).format(cal.time)
-                    val callDay = SimpleDateFormat("ddMMyyyy", Locale.ITALY).format(Timestamp(cur.getLong(cur.getColumnIndex(CallLog.Calls.DATE))))
+                    val call = Call()
+//                    val currentDay = SimpleDateFormat("ddMMyyyy", Locale.ITALY).format(cal.time)
+//                    val callDay = SimpleDateFormat("ddMMyyyy", Locale.ITALY).format(Timestamp(cur.getLong(cur.getColumnIndex(CallLog.Calls.DATE))))
 //                    if (currentDay != callDay)
                     call.date = SimpleDateFormat("HH:mm  dd.MM.yyyy.", Locale.ITALY).format(Timestamp(cur.getLong(cur.getColumnIndex(CallLog.Calls.DATE))))
 //                    else
@@ -151,13 +151,13 @@ class SystemDataManagerImpl(private val context: Context) : SystemDataManager {
             if (cur != null) {
                 cur.moveToFirst()
 
-                val cal = Calendar.getInstance()
+//                val cal = Calendar.getInstance()
                 while (cur.moveToNext()) {
 
                     var message = Message()
 
-                    val currentDay = SimpleDateFormat("ddMMyyyy", Locale.ITALY).format(cal.time)
-                    val callDay = SimpleDateFormat("ddMMyyyy", Locale.ITALY).format(Timestamp(cur.getLong(cur.getColumnIndex(CallLog.Calls.DATE))))
+//                    val currentDay = SimpleDateFormat("ddMMyyyy", Locale.ITALY).format(cal.time)
+//                    val callDay = SimpleDateFormat("ddMMyyyy", Locale.ITALY).format(Timestamp(cur.getLong(cur.getColumnIndex(CallLog.Calls.DATE))))
 //                    if (currentDay != callDay)
                     message.date = SimpleDateFormat("HH:mm  MM.dd.yyyy.", Locale.ITALY).format(Timestamp(cur.getLong(cur.getColumnIndexOrThrow(Telephony.Sms.DATE))))
 //                    else
@@ -197,15 +197,15 @@ class SystemDataManagerImpl(private val context: Context) : SystemDataManager {
             if (cur != null) {
                 cur.moveToFirst()
 
-                val cal = Calendar.getInstance()
+//                val cal = Calendar.getInstance()
 
                 message.number = cur.getString(cur.getColumnIndexOrThrow(Telephony.Sms.ADDRESS))
 
                 if (Integer.parseInt(cur.getString(cur.getColumnIndexOrThrow(Telephony.Sms.TYPE))) == Telephony.Sms.MESSAGE_TYPE_INBOX
                         && !CheckNumberContacts.isFromContacts(context, message.number!!)) {
 
-                    val currentDay = SimpleDateFormat("ddMMyyyy", Locale.ITALY).format(cal.time)
-                    val callDay = SimpleDateFormat("ddMMyyyy", Locale.ITALY).format(Timestamp(cur.getLong(cur.getColumnIndex(CallLog.Calls.DATE))))
+//                    val currentDay = SimpleDateFormat("ddMMyyyy", Locale.ITALY).format(cal.time)
+//                    val callDay = SimpleDateFormat("ddMMyyyy", Locale.ITALY).format(Timestamp(cur.getLong(cur.getColumnIndex(CallLog.Calls.DATE))))
 //                    if (currentDay != callDay)
                     message.date = SimpleDateFormat("HH:mm  MM.dd.yyyy.", Locale.ITALY).format(Timestamp(cur.getLong(cur.getColumnIndexOrThrow(Telephony.Sms.DATE))))
 //                    else

@@ -30,31 +30,36 @@
         android:layout_below="@+id/settingsFragmentAddNumberTitle"
         android:orientation="horizontal">
 
-        <EditText
-            android:id="@+id/settingsFragmentAddPreNumberTv"
+        <!--<EditText-->
+            <!--android:id="@+id/settingsFragmentAddPreNumberTv"-->
 
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginStart="5dp"-->
+            <!--android:layout_weight="5"-->
+            <!--android:backgroundTint="@color/app_black"-->
+            <!--android:imeOptions="actionNext"-->
+            <!--android:inputType="phone"-->
+            <!--android:maxLines="1"-->
+            <!--android:singleLine="true"-->
+            <!--android:text="+1"-->
+            <!--android:textColor="@color/app_black"-->
+            <!--android:textSize="16sp"-->
+            <!--app:backgroundTint="@android:color/transparent"-->
+            <!--tools:ignore="MissingPrefix" />-->
+
+        <com.rilixtech.CountryCodePicker
+            android:id="@+id/settingsFragmentCCP"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:layout_weight="5"
-            android:backgroundTint="@color/app_black"
-            android:imeOptions="actionNext"
-            android:inputType="phone"
-            android:maxLines="1"
-            android:singleLine="true"
-            android:text="+1"
+            app:ccp_defaultNameCode="US"
+
+            android:paddingStart="10dp"
+            app:ccp_showFlag="false"
+            app:ccp_hideNameCode="true"
             android:textColor="@color/app_black"
             android:textSize="16sp"
-            app:backgroundTint="@android:color/transparent"
-            tools:ignore="MissingPrefix" />
-
-        <!--<com.rilixtech.CountryCodePicker-->
-        <!--android:id="@+id/settingsFragmentAddCodeNumberTv"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:padding="15dp"-->
-
-        <!--android:layout_weight="5" />-->
+            android:layout_weight="5"/>
 
         <EditText
             android:id="@+id/settingsFragmentAddNumberTv"
@@ -64,7 +69,7 @@
             android:backgroundTint="@color/app_black"
             android:hint="@string/enter_a_number"
             android:imeOptions="actionDone"
-            android:inputType="phone"
+            android:inputType="number"
             android:maxLines="1"
             android:padding="15dp"
             android:textColor="@color/app_black"

@@ -93,6 +93,8 @@ dependencies {
 //    implementation 'com.android.support.constraint:constraint-layout:1.1.2'
     implementation dependencies.roundedImageView
 
+    implementation 'com.github.joielechong:countrycodepicker:2.1.8'
+
     kapt dependencies.butterKnifeCompiler
     kapt dependencies.daggerCompiler
     kapt 'com.google.dagger:dagger-android-processor:2.17'
