@@ -32,12 +32,14 @@ class CallsPresenterTest : CallsPresenter, OnCallContactsFetched {
 
     lateinit var testScheduler: TestScheduler
 
+
     @Before
     fun setUp() {
-
         MockitoAnnotations.initMocks(this)
         testScheduler = TestScheduler()
-//        callsInteractor = CallsInteractor()
+        val testSchedulerProvider = TestSchedulerProvider(testScheduler)
+
+
     }
 
     override fun lastNumberCallIDed() {

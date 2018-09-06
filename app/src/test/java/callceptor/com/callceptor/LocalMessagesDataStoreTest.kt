@@ -32,20 +32,27 @@ class LocalMessagesDataStoreTest {
 
 
     @Test
-    private fun saveGetMessages() {
+    fun saveGetMessages() {
 
-        val saveMessages = Single.fromCallable {
-            callceptorDAO.saveIncomingMessages(ArrayList(listOf(
-                    Message("12.12.2018.", "+3859112345678", "Incoming SMS message 1", "User", "1535527902032", "1"),
-                    Message("12.11.2018.", "+3859116427582", "Incoming SMS message 2", "User2", "1535527902033", "4"),
-                    Message(),
-                    Message("1.1.2018.", "+3859112343245", "Incoming SMS message 3", "User3", "1535527902034","3"))))
-        }.toFlowable().test()
+        val messages = ArrayList(listOf(
+                Message("12.12.2018.", "+3859112345678", "Incoming SMS message 1", "User", "1535527902032", "1"),
+                Message("12.11.2018.", "+3859116427582", "Incoming SMS message 2", "User2", "1535527902033", "4"),
+                Message(),
+                Message("1.1.2018.", "+3859112343245", "Incoming SMS message 3", "User3", "1535527902034","3")))
+
+
+        val t : LongArray = longArrayOf(0,1,2,3)
+
+        `when`(callceptorDAO.saveIncomingMessages(messages)).thenReturn(t)
+
+        val saveMessages = Single.fromCallable { callceptorDAO.saveIncomingMessages(messages)}.toFlowable().test()
 
         saveMessages.assertNoErrors()
         saveMessages.assertValue { t: LongArray ->
             t.size == 4
         }
+
+        `when`(callceptorDAO.getMessages(0, PAGE_ENTRIES)).thenReturn(messages)
 
         val getMessages = Single.fromCallable { ArrayList(callceptorDAO.getMessages(0, PAGE_ENTRIES)) }.toFlowable().test()
         getMessages.assertNoErrors()
