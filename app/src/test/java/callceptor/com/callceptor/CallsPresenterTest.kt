@@ -37,8 +37,6 @@ class CallsPresenterTest : CallsPresenter, OnCallContactsFetched {
     fun setUp() {
         MockitoAnnotations.initMocks(this)
         testScheduler = TestScheduler()
-        val testSchedulerProvider = TestSchedulerProvider(testScheduler)
-
 
     }
 
