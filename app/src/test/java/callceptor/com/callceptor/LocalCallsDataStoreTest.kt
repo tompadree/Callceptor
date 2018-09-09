@@ -1,17 +1,12 @@
 package callceptor.com.callceptor;
 
-import android.arch.persistence.room.Room
-import android.support.test.InstrumentationRegistry
 import callceptor.com.callceptor.data.db.CallceptorDAO
-import callceptor.com.callceptor.data.db.CallceptorDatabase
 import callceptor.com.callceptor.data.models.Call
 import callceptor.com.callceptor.utils.AppConstants.Companion.PAGE_ENTRIES
-import io.reactivex.Flowable
 import io.reactivex.Single
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
-import org.mockito.Mockito
 import org.mockito.Mockito.`when`
 import org.mockito.MockitoAnnotations
 

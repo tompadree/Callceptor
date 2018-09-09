@@ -6,16 +6,20 @@ import android.content.pm.PackageManager
 import android.database.Cursor
 import android.provider.CallLog
 import android.content.Context
+import android.os.Build
 import android.provider.ContactsContract
 import android.provider.Telephony
 import android.support.v4.content.ContextCompat
+import android.util.Log
 import android.widget.Toast
 import callceptor.com.callceptor.data.models.Call
 import callceptor.com.callceptor.data.models.Message
 import callceptor.com.callceptor.domain.listeners.OnCallContactsFetched
 import callceptor.com.callceptor.domain.listeners.OnMessagesFetched
 import callceptor.com.callceptor.domain.listeners.SystemDataManager
+import callceptor.com.callceptor.utils.AppConstants
 import callceptor.com.callceptor.utils.CheckNumberContacts
+import com.cinnamon.utils.storage.CinnamonPreferences
 import java.sql.Timestamp
 import java.text.SimpleDateFormat
 import java.util.*
@@ -32,7 +36,7 @@ class SystemDataManagerImpl(private val context: Context) : SystemDataManager {
         val cr = context.contentResolver
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CALL_LOG) == PackageManager.PERMISSION_GRANTED) {
             val cur: Cursor = cr.query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null)
-            cur.moveToFirst()
+           // cur.moveToFirst()
             while (cur.moveToNext()) {
 
                 val number = cur.getString(cur.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME))
@@ -70,7 +74,8 @@ class SystemDataManagerImpl(private val context: Context) : SystemDataManager {
                     call?.name = cur.getString(cur.getColumnIndex(CallLog.Calls.CACHED_NAME))
                     call?.number = cur.getString(cur.getColumnIndex(CallLog.Calls.NUMBER))
                     call?.type = cur.getInt(cur.getColumnIndex(CallLog.Calls.TYPE))
-                    call?.photo_uri = cur.getString(cur.getColumnIndex(CallLog.Calls.CACHED_PHOTO_URI))
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+                        call?.photo_uri = cur.getString(cur.getColumnIndex(CallLog.Calls.CACHED_PHOTO_URI))
 
 //                    if (call.type != 2) // 1 for Incoming(1), Outgoing(2) and Missed(3), 4 (VoiceMail), 5 (Rejected) and 6 (Refused List)
 //                        call.add(call)
@@ -78,7 +83,7 @@ class SystemDataManagerImpl(private val context: Context) : SystemDataManager {
 
                     cur.close()
                 }
-                Toast.makeText(context, "type: " + call?.type, Toast.LENGTH_SHORT).show()
+//                Toast.makeText(context, "type: " + call?.type, Toast.LENGTH_SHORT).show()
 
                 return call!!
                 // }
@@ -98,14 +103,14 @@ class SystemDataManagerImpl(private val context: Context) : SystemDataManager {
 
         var list: ArrayList<Call> = ArrayList()
 
-
+        Log.e("ERR", "getCallLogs")
         try {
             val cr = context.contentResolver
             val strOrder = CallLog.Calls.DATE + " DESC"
             if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CALL_LOG) == PackageManager.PERMISSION_GRANTED) {
                 val cur: Cursor = cr.query(CallLog.Calls.CONTENT_URI, null, null, null, strOrder)
-                cur.moveToFirst()
-
+                //cur.moveToFirst()
+                Log.e("ERR", "getCallLogs2")
                 val cal = Calendar.getInstance()
                 while (cur.moveToNext()) {
 
@@ -121,9 +126,12 @@ class SystemDataManagerImpl(private val context: Context) : SystemDataManager {
                     call.name = cur.getString(cur.getColumnIndex(CallLog.Calls.CACHED_NAME))
                     call.number = cur.getString(cur.getColumnIndex(CallLog.Calls.NUMBER))
                     call.type = cur.getInt(cur.getColumnIndex(CallLog.Calls.TYPE))
-                    call.photo_uri = cur.getString(cur.getColumnIndex(CallLog.Calls.CACHED_PHOTO_URI))
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+                        call.photo_uri = cur.getString(cur.getColumnIndex(CallLog.Calls.CACHED_PHOTO_URI))
 
-                    if (call.type != 2) // 1 for Incoming(1), Outgoing(2) and Missed(3), 4 (VoiceMail), 5 (Rejected) and 6 (Refused List)
+                    val blockList = (CinnamonPreferences.getInstance(context).getObject(AppConstants.BLOCK_LIST, List::class.java, java.util.ArrayList<String>())) as java.util.ArrayList<String>
+                    if (call.type != 2 && (!CheckNumberContacts.isFromContacts(context, call.number!!) || blockList.contains(call.number!!)))
+                    // 1 for Incoming(1), Outgoing(2) and Missed(3), 4 (VoiceMail), 5 (Rejected) and 6 (Refused List)
                         list.add(call)
                 }
 
@@ -149,9 +157,9 @@ class SystemDataManagerImpl(private val context: Context) : SystemDataManager {
             val cr = context.getContentResolver()
             val cur = cr.query(Telephony.Sms.CONTENT_URI, null, null, null, null)
             if (cur != null) {
-                cur.moveToFirst()
+//                cur.moveToFirst()
 
-//                val cal = Calendar.getInstance()
+                val cal = Calendar.getInstance()
                 while (cur.moveToNext()) {
 
                     var message = Message()
@@ -167,8 +175,9 @@ class SystemDataManagerImpl(private val context: Context) : SystemDataManager {
                     message.number = cur.getString(cur.getColumnIndexOrThrow(Telephony.Sms.ADDRESS))
                     message.body = cur.getString(cur.getColumnIndexOrThrow(Telephony.Sms.BODY))
 
+                    val blockList = (CinnamonPreferences.getInstance(context).getObject(AppConstants.BLOCK_LIST, List::class.java, java.util.ArrayList<String>())) as java.util.ArrayList<String>
                     if (Integer.parseInt(cur.getString(cur.getColumnIndexOrThrow(Telephony.Sms.TYPE))) == Telephony.Sms.MESSAGE_TYPE_INBOX
-                            && !CheckNumberContacts.isFromContacts(context, message.number!!))
+                            && (!CheckNumberContacts.isFromContacts(context, message.number!!) || blockList.contains(message.number!!)))
                         list.add(message)
                 }
             }
@@ -197,12 +206,13 @@ class SystemDataManagerImpl(private val context: Context) : SystemDataManager {
             if (cur != null) {
                 cur.moveToFirst()
 
-//                val cal = Calendar.getInstance()
+                val cal = Calendar.getInstance()
 
                 message.number = cur.getString(cur.getColumnIndexOrThrow(Telephony.Sms.ADDRESS))
+                val blockList = (CinnamonPreferences.getInstance(context).getObject(AppConstants.BLOCK_LIST, List::class.java, java.util.ArrayList<String>())) as java.util.ArrayList<String>
 
                 if (Integer.parseInt(cur.getString(cur.getColumnIndexOrThrow(Telephony.Sms.TYPE))) == Telephony.Sms.MESSAGE_TYPE_INBOX
-                        && !CheckNumberContacts.isFromContacts(context, message.number!!)) {
+                        && (!CheckNumberContacts.isFromContacts(context, message.number!!) || blockList.contains(message.number!!))) {
 
 //                    val currentDay = SimpleDateFormat("ddMMyyyy", Locale.ITALY).format(cal.time)
 //                    val callDay = SimpleDateFormat("ddMMyyyy", Locale.ITALY).format(Timestamp(cur.getLong(cur.getColumnIndex(CallLog.Calls.DATE))))

@@ -16,6 +16,7 @@ import callceptor.com.callceptor.data.repositories.messages.SystemMessagesDataSt
 import callceptor.com.callceptor.di.module.ThreadModule
 import callceptor.com.callceptor.utils.AppConstants
 import callceptor.com.callceptor.utils.CheckNumberContacts
+import callceptor.com.callceptor.utils.scheduler.SchedulerProvider
 import io.reactivex.Scheduler
 import io.reactivex.SingleObserver
 import io.reactivex.disposables.CompositeDisposable
@@ -32,15 +33,16 @@ import javax.inject.Named
  */
 class MessageInteractorImpl
 @Inject constructor(private val context: Context, private val systemMessagesDataStore: SystemMessagesDataStore,
-                    private val localMessagesDataStore: LocalMessagesDataStore, private val remoteCNAMDataStore: RemoteCNAMDataStore) : MessageInteractor {
+                    private val localMessagesDataStore: LocalMessagesDataStore, private val remoteCNAMDataStore: RemoteCNAMDataStore,
+                    private val schedulerProvider: SchedulerProvider) : MessageInteractor {
 
-    @Inject
-    @field:Named(ThreadModule.SUBSCRIBE_SCHEDULER)
-    lateinit var subscribeScheduler: Scheduler
-
-    @Inject
-    @field:Named(ThreadModule.OBSERVE_SCHEDULER)
-    lateinit var observeScheduler: Scheduler
+//    @Inject
+//    @field:Named(ThreadModule.SUBSCRIBE_SCHEDULER)
+//    lateinit var subscribeScheduler: Scheduler
+//
+//    @Inject
+//    @field:Named(ThreadModule.OBSERVE_SCHEDULER)
+//    lateinit var observeScheduler: Scheduler
 
     private var currentPage: Int = 0
     private val disposables: CompositeDisposable? = null
@@ -50,9 +52,9 @@ class MessageInteractorImpl
 
     override fun idLastNumber(onMessagesFetched: OnMessagesFetched, lastNumber: String) {
         remoteCNAMDataStore.getCNAM(lastNumber)
-                .subscribeOn(subscribeScheduler)
-                .observeOn(observeScheduler)
-                .unsubscribeOn(subscribeScheduler)
+                .subscribeOn(schedulerProvider.ioScheduler())
+                .observeOn(schedulerProvider.uiScheduler())
+                .unsubscribeOn(schedulerProvider.ioScheduler())
                 .subscribe(object : SingleObserver<CNAMObject> {
 
                     override fun onSubscribe(d: Disposable) {
@@ -75,9 +77,9 @@ class MessageInteractorImpl
     fun saveCNAM(cnamObject: CNAMObject) {
 
         localMessagesDataStore.saveCallerID(cnamObject)
-                .subscribeOn(subscribeScheduler)
-                .observeOn(observeScheduler)
-                .unsubscribeOn(subscribeScheduler)
+                .subscribeOn(schedulerProvider.ioScheduler())
+                .observeOn(schedulerProvider.uiScheduler())
+                .unsubscribeOn(schedulerProvider.ioScheduler())
                 .subscribe(object : SingleObserver<Int> {
 
                     override fun onSubscribe(d: Disposable) {
@@ -115,21 +117,21 @@ class MessageInteractorImpl
                 }
                 .concatMap {
                     localMessagesDataStore.getMessages(currentPage, AppConstants.PAGE_ENTRIES)
-                            .subscribeOn(subscribeScheduler)
-                            .observeOn(observeScheduler)
-                            .unsubscribeOn(subscribeScheduler)
+                            .subscribeOn(schedulerProvider.ioScheduler())
+                            .observeOn(schedulerProvider.uiScheduler())
+                            .unsubscribeOn(schedulerProvider.ioScheduler())
                 }
 //                .concatMap {
 //                    if (it.size <= 0)
 //                        systemCallsDataStore.fetchAllCallsFromSystem()
-//                                .subscribeOn(subscribeScheduler)
-//                                .observeOn(observeScheduler)
-//                                .unsubscribeOn(subscribeScheduler)
+//                                .subscribeOn(schedulerProvider.ioScheduler())
+//                                .observeOn(schedulerProvider.uiScheduler())
+//                                .unsubscribeOn(schedulerProvider.ioScheduler())
 //                                .toFlowable()
 //                    else
 //                        Flowable.just(it)
 //                }
-                .observeOn(observeScheduler, true)
+                .observeOn(schedulerProvider.uiScheduler(), true)
                 .subscribe({
                     if (currentPage == 0) {
                         // gitResultsView.hideLoading()
@@ -145,9 +147,9 @@ class MessageInteractorImpl
 
                         if (currentPage == 1)
                             systemMessagesDataStore.fetchAllMessagesFromSystem()
-                                    .subscribeOn(subscribeScheduler)
-                                    .observeOn(observeScheduler)
-                                    .unsubscribeOn(subscribeScheduler)
+                                    .subscribeOn(schedulerProvider.ioScheduler())
+                                    .observeOn(schedulerProvider.uiScheduler())
+                                    .unsubscribeOn(schedulerProvider.ioScheduler())
                                     .subscribe(object : SingleObserver<ArrayList<Message>> {
 
                                         override fun onSubscribe(d: Disposable) {
@@ -190,9 +192,9 @@ class MessageInteractorImpl
     override fun saveLocalResults(messages: ArrayList<Message>, onMessagesFetched: OnMessagesFetched) {
 
         localMessagesDataStore.saveAllMessages(messages)
-                .subscribeOn(subscribeScheduler)
-                .observeOn(observeScheduler)
-                .unsubscribeOn(subscribeScheduler)
+                .subscribeOn(schedulerProvider.ioScheduler())
+                .observeOn(schedulerProvider.uiScheduler())
+                .unsubscribeOn(schedulerProvider.ioScheduler())
                 .subscribe(object : SingleObserver<LongArray> {
 
                     override fun onSuccess(t: LongArray) {
@@ -218,9 +220,9 @@ class MessageInteractorImpl
         if (message.number == null)
             return
         localMessagesDataStore.saveLastMessage(message)
-                .subscribeOn(subscribeScheduler)
-                .observeOn(observeScheduler)
-                .unsubscribeOn(subscribeScheduler)
+                .subscribeOn(schedulerProvider.ioScheduler())
+                .observeOn(schedulerProvider.uiScheduler())
+                .unsubscribeOn(schedulerProvider.ioScheduler())
                 .subscribe(object : SingleObserver<Long> {
 
                     override fun onSuccess(t: Long) {

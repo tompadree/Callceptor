@@ -1,5 +1,7 @@
 package callceptor.com.callceptor.di.module
 
+import callceptor.com.callceptor.utils.scheduler.SchedulerProvider
+import callceptor.com.callceptor.utils.scheduler.SchedulerProviderImpl
 import dagger.Module
 import dagger.Provides
 import io.reactivex.Scheduler
@@ -14,22 +16,26 @@ import javax.inject.Singleton
 @Module
 class ThreadModule {
 
-    @Provides
-    @Singleton
-    @Named(OBSERVE_SCHEDULER)
-    fun provideAndroidSchedulersMainThread(): Scheduler = AndroidSchedulers.mainThread()
+//    @Provides
+//    @Singleton
+//    @Named(OBSERVE_SCHEDULER)
+//    fun provideObservableScheduler(): Scheduler = AndroidSchedulers.mainThread()
+//
+//    @Provides
+//    @Singleton
+//    @Named(SUBSCRIBE_SCHEDULER)
+//    fun provideSubscribeScheduler(): Scheduler = Schedulers.io()
 
 
     @Provides
     @Singleton
-    @Named(SUBSCRIBE_SCHEDULER)
-    fun provideSchedulersIo(): Scheduler = Schedulers.io()
+    fun providesSchedulerProvider(): SchedulerProvider = SchedulerProviderImpl()
 
+//    companion object {
+//
+//        const val OBSERVE_SCHEDULER = "ObserveScheduler"
+//
+//        const val SUBSCRIBE_SCHEDULER = "SubscribeScheduler"
+//    }
 
-    companion object {
-
-        const val OBSERVE_SCHEDULER = "ObserveScheduler"
-
-        const val SUBSCRIBE_SCHEDULER = "SubscribeScheduler"
-    }
 }

@@ -1,8 +1,5 @@
 package callceptor.com.callceptor
 
-import android.arch.persistence.room.Insert
-import android.arch.persistence.room.OnConflictStrategy
-import android.arch.persistence.room.Query
 import android.arch.persistence.room.Room
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
@@ -11,7 +8,6 @@ import callceptor.com.callceptor.data.db.CallceptorDatabase
 import callceptor.com.callceptor.data.models.Call
 import callceptor.com.callceptor.data.models.Message
 import callceptor.com.callceptor.utils.AppConstants.Companion.PAGE_ENTRIES
-import io.reactivex.Single
 import org.junit.After
 import org.junit.Assert
 import org.junit.Before

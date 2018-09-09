@@ -83,16 +83,20 @@ class MyPhoneStateReceiver(private var lastCallSMSCheck: LastCallSMSCheck) : Bro
                     call = true
                 }
                 TelephonyManager.EXTRA_STATE_OFFHOOK -> {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                         if (Settings.canDrawOverlays(context))
                             context?.stopService(Intent(context, HarmfulCallAlertService::class.java))
+                    } else
+                        context?.stopService(Intent(context, HarmfulCallAlertService::class.java))
                     call = true
                 }
                 TelephonyManager.EXTRA_STATE_IDLE -> {
                     /*TODO LOLLIPOP ?*/
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                         if (Settings.canDrawOverlays(context))
                             context?.stopService(Intent(context, HarmfulCallAlertService::class.java))
+                    } else
+                        context?.stopService(Intent(context, HarmfulCallAlertService::class.java))
 
                     if (call) {
                         call = false
@@ -139,9 +143,11 @@ class MyPhoneStateReceiver(private var lastCallSMSCheck: LastCallSMSCheck) : Bro
 
 
                 if (number.equals("4259501212") || number.equals("+14259501212") || number.equals("0014259501212")) {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                         if (Settings.canDrawOverlays(context))
                             context.startService(Intent(context, HarmfulCallAlertService::class.java))
+                    } else
+                        context.startService(Intent(context, HarmfulCallAlertService::class.java))
                 } else if (telephonyService != null
                         && number != null
                         && (!CheckNumberContacts.isFromContacts(context, number) || blocklist!!.contains(number))) {

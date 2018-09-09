@@ -26,7 +26,7 @@ class Message : Parcelable, Serializable {
 
     @PrimaryKey
     @NonNull
-    var timestamp : String? = null
+    var timestamp : String? = ""
 
 //    @TypeConverters(CNAMObjectConverter::class)
 //    var localCNAMObject : CNAMObject? = CNAMObject()

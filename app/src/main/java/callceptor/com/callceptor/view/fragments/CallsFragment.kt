@@ -14,7 +14,6 @@ import android.widget.Toast
 
 import callceptor.com.callceptor.R
 import callceptor.com.callceptor.data.models.Call
-import callceptor.com.callceptor.di.component.DaggerCallsComponent
 import callceptor.com.callceptor.di.module.CallsModule
 import callceptor.com.callceptor.presenter.CallsPresenter
 import callceptor.com.callceptor.view.BaseFragment
@@ -24,7 +23,9 @@ import kotlinx.android.synthetic.main.fragment_calls.*
 import java.util.ArrayList
 import javax.inject.Inject
 import android.app.Activity
+import android.util.Log
 import android.widget.TextView
+import callceptor.com.callceptor.di.component.DaggerCallsComponent
 import callceptor.com.callceptor.domain.interactors.CallsInteractor
 
 
@@ -88,6 +89,7 @@ class CallsFragment : BaseFragment(), CallsView {
 //        if(savedInstanceState != null)
 //            localCalls = savedInstanceState.getParcelableArrayList("list")
 //        else
+        Log.e("ERR", "onViewCreated")
         callsPresenter.fetchCallLogs("")
     }
 

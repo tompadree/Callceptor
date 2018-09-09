@@ -28,6 +28,9 @@ import callceptor.com.callceptor.di.module.AppModule
 import callceptor.com.callceptor.di.module.ThreadModule
 import callceptor.com.callceptor.domain.listeners.LastCallSMSCheck
 import callceptor.com.callceptor.domain.listeners.SystemDataManager
+import callceptor.com.callceptor.utils.AppConstants
+import callceptor.com.callceptor.utils.CheckNumberContacts
+import com.cinnamon.utils.storage.CinnamonPreferences
 import io.reactivex.Scheduler
 import java.util.*
 import javax.inject.Inject
@@ -172,9 +175,12 @@ class HomeActivity
     }
 
     override fun refreshCallList(lastNumber: String) {
-        callsFragmentInstance.callsInteractor.saveLastCall(systemDataManager.getLastCall())
-        callsFragmentInstance.localCalls = ArrayList()
-        callsFragmentInstance.callsPresenter.fetchCallLogs(lastNumber)
+        val blockList = (CinnamonPreferences.getInstance(this).getObject(AppConstants.BLOCK_LIST, List::class.java, ArrayList<String>())) as ArrayList<String>
+        if (!CheckNumberContacts.isFromContacts(this, lastNumber) || blockList.contains(lastNumber)) {
+            callsFragmentInstance.callsInteractor.saveLastCall(systemDataManager.getLastCall())
+            callsFragmentInstance.localCalls = ArrayList()
+            callsFragmentInstance.callsPresenter.fetchCallLogs(lastNumber)
+        }
     }
 
     override fun refreshSMSList(lastNumber: String) {
@@ -182,7 +188,9 @@ class HomeActivity
             addFragment(messagesFragmentInstance, FragmentTag.MessagesFragment.getTag())
             supportFragmentManager.beginTransaction().hide(messagesFragmentInstance).commit()
         }
-        if (messagesFragmentInstance.isAdded) {
+        val blockList = (CinnamonPreferences.getInstance(this).getObject(AppConstants.BLOCK_LIST, List::class.java, ArrayList<String>())) as ArrayList<String>
+
+        if (messagesFragmentInstance.isAdded && (!CheckNumberContacts.isFromContacts(this, lastNumber) || blockList.contains(lastNumber))) {
 
             Handler().postDelayed({
                 messagesFragmentInstance.messageInteractor.saveLastMessage(systemDataManager.getLastMessage())
@@ -201,7 +209,11 @@ class HomeActivity
 //                    || (!Settings.canDrawOverlays(this)))
 //                checkDrawOverlayPermission()
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && Build.VERSION.SDK_INT <= Build.VERSION_CODES.O_MR1) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            homeActivityBottomNavigation.selectedItemId = R.id.action_calls
+            registerReceiver()
+
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && Build.VERSION.SDK_INT <= Build.VERSION_CODES.O_MR1) {
 
             if (checkSelfPermission(Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_DENIED
                     || checkSelfPermission(Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_DENIED
@@ -237,10 +249,6 @@ class HomeActivity
                 registerReceiver()
 
             }
-
-        } else {
-            homeActivityBottomNavigation.selectedItemId = R.id.action_calls
-            registerReceiver()
 
         }
     }

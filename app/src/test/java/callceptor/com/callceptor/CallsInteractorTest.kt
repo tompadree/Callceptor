@@ -1,19 +1,13 @@
 package callceptor.com.callceptor;
 
-import android.arch.persistence.room.Room
-import android.support.test.InstrumentationRegistry
-import callceptor.com.callceptor.data.db.CallceptorDAO
-import callceptor.com.callceptor.data.db.CallceptorDatabase
 import callceptor.com.callceptor.data.models.Call
 import callceptor.com.callceptor.data.repositories.calls.LocalCallsDataStore
 import callceptor.com.callceptor.utils.AppConstants
-import io.reactivex.Flowable
 import io.reactivex.Single
 import io.reactivex.SingleEmitter
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
-import org.mockito.Mockito
 import org.mockito.Mockito.`when`
 import org.mockito.MockitoAnnotations
 
@@ -61,9 +55,9 @@ class CallsInteractorTest {
         val getCallsTestObserver = localCallsDataStore.getCalls(0, AppConstants.PAGE_ENTRIES).test()
 
         getCallsTestObserver.assertNoErrors()
-        getCallsTestObserver.assertValue { calls: ArrayList<Call> -> calls.size == 4 }
-        getCallsTestObserver.assertValue { calls: ArrayList<Call> -> calls[0].name == "User" }
-        getCallsTestObserver.assertValue { calls: ArrayList<Call> -> calls[3].number == "+3859112343245" }
+        getCallsTestObserver.assertValue { callsResponse: ArrayList<Call> -> callsResponse.size == 4 }
+        getCallsTestObserver.assertValue { callsResponse: ArrayList<Call> -> callsResponse[0].name == "User" }
+        getCallsTestObserver.assertValue { callsResponse: ArrayList<Call> -> callsResponse[3].number == "+3859112343245" }
     }
 
 }

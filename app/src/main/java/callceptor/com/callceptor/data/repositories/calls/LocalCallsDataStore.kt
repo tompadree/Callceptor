@@ -12,9 +12,7 @@ import javax.inject.Inject
  * Created by Tom on 25.8.2018..
  */
 class LocalCallsDataStore
-@Inject constructor(private val callceptorDatabase: CallceptorDatabase) : CallsDataStore {
-
-    private val dao: CallceptorDAO = callceptorDatabase.getCallceptorDao()
+@Inject constructor(private val dao: CallceptorDAO) : CallsDataStore {
 
     override fun saveAllCalls(calls: ArrayList<Call>): Single<LongArray> {
         return Single.fromCallable { dao.saveIncomingCalls(calls) }

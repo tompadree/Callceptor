@@ -1,21 +1,17 @@
 package callceptor.com.callceptor
 
-
 import callceptor.com.callceptor.data.db.CallceptorDAO
-import callceptor.com.callceptor.data.models.Call
 import callceptor.com.callceptor.data.models.Message
 import callceptor.com.callceptor.utils.AppConstants.Companion.PAGE_ENTRIES
-import io.reactivex.Flowable
 import io.reactivex.Single
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.mockito.Mockito.`when` as whenever
-import org.mockito.Mockito.verify
 import org.mockito.MockitoAnnotations
-import io.reactivex.SingleEmitter
 import org.mockito.Mockito.`when`
 
+@Suppress("NAME_SHADOWING")
 /**
  * Created by Tom on 28.8.2018..
  */
