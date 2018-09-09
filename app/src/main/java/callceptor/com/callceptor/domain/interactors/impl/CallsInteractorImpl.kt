@@ -11,8 +11,6 @@ import callceptor.com.callceptor.data.repositories.cnam.RemoteCNAMDataStore
 import callceptor.com.callceptor.di.module.ThreadModule
 import callceptor.com.callceptor.domain.listeners.OnCallContactsFetched
 import callceptor.com.callceptor.utils.AppConstants.Companion.PAGE_ENTRIES
-import callceptor.com.callceptor.utils.scheduler.SchedulerProvider
-import io.reactivex.Flowable
 import io.reactivex.Scheduler
 import io.reactivex.SingleObserver
 import io.reactivex.disposables.CompositeDisposable
@@ -26,16 +24,15 @@ import kotlin.collections.ArrayList
  */
 class CallsInteractorImpl
 @Inject constructor(private val context: Context, private val localCallsDataStore: LocalCallsDataStore,
-                    private val systemCallsDataStore: SystemCallsDataStore, private val remoteCNAMDataStore: RemoteCNAMDataStore,
-                    private val schedulerProvider: SchedulerProvider) : CallsInteractor {
+                    private val systemCallsDataStore: SystemCallsDataStore, private val remoteCNAMDataStore: RemoteCNAMDataStore) : CallsInteractor {
 
-//    @Inject
-//    @field:Named(ThreadModule.SUBSCRIBE_SCHEDULER)
-//    lateinit var subscribeScheduler: Scheduler
-//
-//    @Inject
-//    @field:Named(ThreadModule.OBSERVE_SCHEDULER)
-//    lateinit var observeScheduler: Scheduler
+    @Inject
+    @field:Named(ThreadModule.SUBSCRIBE_SCHEDULER)
+    lateinit var subscribeScheduler: Scheduler
+
+    @Inject
+    @field:Named(ThreadModule.OBSERVE_SCHEDULER)
+    lateinit var observeScheduler: Scheduler
 
     private var currentPage: Int = 0
     private val disposables: CompositeDisposable? = null
@@ -49,9 +46,9 @@ class CallsInteractorImpl
 
     override fun idLastNumber(onCallContactsFetched: OnCallContactsFetched, lastNumber: String) {
         remoteCNAMDataStore.getCNAM(lastNumber)
-                .subscribeOn(schedulerProvider.ioScheduler())
-                .observeOn(schedulerProvider.uiScheduler())
-                .unsubscribeOn(schedulerProvider.ioScheduler())
+                .subscribeOn(subscribeScheduler)
+                .observeOn(observeScheduler)
+                .unsubscribeOn(subscribeScheduler)
                 .subscribe(object : SingleObserver<CNAMObject> {
 
                     override fun onSubscribe(d: Disposable) {
@@ -66,7 +63,6 @@ class CallsInteractorImpl
                     override fun onError(e: Throwable) {
                         e.printStackTrace()
                         listener.lastNumberCallIDed()
-//                        listener.onFetchingError(e)
                     }
                 })
     }
@@ -74,9 +70,9 @@ class CallsInteractorImpl
     fun saveCNAM(cnamObject: CNAMObject) {
 
         localCallsDataStore.saveCallerID(cnamObject)
-                .subscribeOn(schedulerProvider.ioScheduler())
-                .observeOn(schedulerProvider.uiScheduler())
-                .unsubscribeOn(schedulerProvider.ioScheduler())
+                .subscribeOn(subscribeScheduler)
+                .observeOn(observeScheduler)
+                .unsubscribeOn(subscribeScheduler)
                 .subscribe(object : SingleObserver<Int> {
 
                     override fun onSubscribe(d: Disposable) {
@@ -91,7 +87,6 @@ class CallsInteractorImpl
                     override fun onError(e: Throwable) {
                         e.printStackTrace()
                         listener.lastNumberCallIDed()
-//                        listener.onFetchingError(e)
                     }
                 })
 
@@ -114,24 +109,13 @@ class CallsInteractorImpl
                 }
                 .concatMap {
                     localCallsDataStore.getCalls(currentPage, PAGE_ENTRIES)
-                            .subscribeOn(schedulerProvider.ioScheduler())
-                            .observeOn(schedulerProvider.uiScheduler())
-                            .unsubscribeOn(schedulerProvider.ioScheduler())
+                            .subscribeOn(subscribeScheduler)
+                            .observeOn(observeScheduler)
+                            .unsubscribeOn(subscribeScheduler)
                 }
-//                .concatMap {
-//                    if (it.size <= 0)
-//                        systemCallsDataStore.fetchAllCallsFromSystem()
-//                                .subscribeOn(schedulerProvider.ioScheduler())
-//                                .observeOn(schedulerProvider.uiScheduler())
-//                                .unsubscribeOn(schedulerProvider.ioScheduler())
-//                                .toFlowable()
-//                    else
-//                        Flowable.just(it)
-//                }
-                .observeOn(schedulerProvider.uiScheduler(), true)
+                .observeOn(observeScheduler, true)
                 .subscribe({
                     if (currentPage == 0) {
-                        // gitResultsView.hideLoading()
                     } else {
                         onCallContactsFetched.hideLoadingFooter()
                     }
@@ -144,9 +128,9 @@ class CallsInteractorImpl
 
                         if (currentPage == 1)
                             systemCallsDataStore.fetchAllCallsFromSystem()
-                                    .subscribeOn(schedulerProvider.ioScheduler())
-                                    .observeOn(schedulerProvider.uiScheduler())
-                                    .unsubscribeOn(schedulerProvider.ioScheduler())
+                                    .subscribeOn(subscribeScheduler)
+                                    .observeOn(observeScheduler)
+                                    .unsubscribeOn(subscribeScheduler)
                                     .subscribe(object : SingleObserver<ArrayList<Call>> {
 
                                         override fun onSubscribe(d: Disposable) {
@@ -189,9 +173,9 @@ class CallsInteractorImpl
     fun saveLocalResults(calls: ArrayList<Call>, listener: OnCallContactsFetched) {
 
         localCallsDataStore.saveAllCalls(calls)
-                .subscribeOn(schedulerProvider.ioScheduler())
-                .observeOn(schedulerProvider.uiScheduler())
-                .unsubscribeOn(schedulerProvider.ioScheduler())
+                .subscribeOn(subscribeScheduler)
+                .observeOn(observeScheduler)
+                .unsubscribeOn(subscribeScheduler)
                 .subscribe(object : SingleObserver<LongArray> {
 
                     override fun onSuccess(t: LongArray) {
@@ -218,9 +202,9 @@ class CallsInteractorImpl
             return
 
         localCallsDataStore.saveLastCall(call)
-                .subscribeOn(schedulerProvider.ioScheduler())
-                .observeOn(schedulerProvider.uiScheduler())
-                .unsubscribeOn(schedulerProvider.ioScheduler())
+                .subscribeOn(subscribeScheduler)
+                .observeOn(observeScheduler)
+                .unsubscribeOn(subscribeScheduler)
                 .subscribe(object : SingleObserver<Long> {
 
                     override fun onSuccess(t: Long) {

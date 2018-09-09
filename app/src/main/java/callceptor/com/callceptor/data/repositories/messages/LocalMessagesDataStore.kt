@@ -1,7 +1,6 @@
 package callceptor.com.callceptor.data.repositories.messages
 
 import callceptor.com.callceptor.data.db.CallceptorDAO
-import callceptor.com.callceptor.data.db.CallceptorDatabase
 import callceptor.com.callceptor.data.models.CNAMObject
 import callceptor.com.callceptor.data.models.Message
 import io.reactivex.Flowable

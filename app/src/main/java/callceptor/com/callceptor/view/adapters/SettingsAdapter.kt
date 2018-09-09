@@ -11,9 +11,7 @@ import android.widget.TextView
 import butterknife.BindView
 import butterknife.ButterKnife
 import callceptor.com.callceptor.R
-import callceptor.com.callceptor.domain.listeners.OnMessagesItemClicked
 import callceptor.com.callceptor.domain.listeners.OnRemoveNumberClicked
-import callceptor.com.callceptor.utils.AppConstants
 
 /**
  * Created by Tom on 27.8.2018..
@@ -24,7 +22,6 @@ class SettingsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder> {
     lateinit var numbers: ArrayList<String>
     lateinit var onRemoveNumberClicked: OnRemoveNumberClicked
     private var isLoadingAdded: Boolean = false
-//    private lateinit var onListItemClicked: OnResultItemClicked
 
     constructor()
 

@@ -1,7 +1,6 @@
 package callceptor.com.callceptor.view.adapters
 
 import android.content.Context
-import android.graphics.BitmapFactory
 import android.net.Uri
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -18,7 +17,6 @@ import com.squareup.picasso.Picasso
 import callceptor.com.callceptor.R
 import callceptor.com.callceptor.utils.AppConstants.Companion.ITEM
 import callceptor.com.callceptor.utils.AppConstants.Companion.LOADING
-import java.io.File
 
 /**
  * Created by Tom on 22.8.2018..
@@ -28,14 +26,12 @@ class CallsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder> {
     lateinit var context: Context
     lateinit var calls: ArrayList<Call>
     private var isLoadingAdded: Boolean = false
-//    private lateinit var onListItemClicked: OnResultItemClicked
 
     constructor()
 
     constructor(context: Context, calls: ArrayList<Call>) : super() { // , onListItemClicked: OnResultItemClicked
         this.context = context
         this.calls = calls
-//        this.onListItemClicked = onListItemClicked
     }
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): RecyclerView.ViewHolder {
@@ -48,7 +44,7 @@ class CallsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         var viewType = getItemViewType(position)
-//
+
         if (viewType == ITEM) {
             holder as ResultItemHolder
 
@@ -67,11 +63,7 @@ class CallsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 3 -> holder.itemCallsType.setImageResource(R.mipmap.ic_call_missed)
                 4, 5, 6 -> holder.itemCallsType.setImageResource(R.mipmap.ic_call_blocked)
 
-
             }
-
-//            holder.callsItem.setOnClickListener { onListItemClicked.onItemClicked(position) }
-
 
             if (calls[position].photo_uri != null)
                 Picasso.get()
@@ -79,7 +71,6 @@ class CallsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         .placeholder(R.mipmap.ic_contact_placeholder)
                         .tag(context)
                         .resize(200, 200)
-//                    .fit()
                         .centerCrop()
                         .into(holder.itemCallsImageView)
             else

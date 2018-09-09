@@ -34,7 +34,6 @@ class SettingsFragment : BaseFragment(), OnRemoveNumberClicked {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-
     }
 
     override fun onPause() {

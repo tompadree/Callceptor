@@ -11,6 +11,4 @@ import io.reactivex.Single
 interface CNAMDataStore {
 
     fun getCNAM(number : String): Single<CNAMObject>
-
-//    fun saveCNAM(cnamObject: CNAMObject): Single<Long>
 }

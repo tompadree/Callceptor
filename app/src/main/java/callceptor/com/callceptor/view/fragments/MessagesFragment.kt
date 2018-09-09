@@ -48,13 +48,6 @@ class MessagesFragment : BaseFragment(), MessagesView, OnMessagesItemClicked {
 
     }
 
-//    override fun onSaveInstanceState(outState: Bundle?) {
-//        super.onSaveInstanceState(outState)
-//
-//        fragmentManager.putFragment(outState, "myFragmentName", this);
-//        outState?.putParcelableArrayList("list", localMessages)
-//    }
-
     override fun onPause() {
         super.onPause()
     }

@@ -1,7 +1,6 @@
 package callceptor.com.callceptor.view.adapters
 
 import android.content.Context
-import android.net.Uri
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -26,7 +25,6 @@ class MessagesAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder> {
     lateinit var messages: ArrayList<Message>
     lateinit var onMessagesItemClicked: OnMessagesItemClicked
     private var isLoadingAdded: Boolean = false
-//    private lateinit var onListItemClicked: OnResultItemClicked
 
     constructor()
 

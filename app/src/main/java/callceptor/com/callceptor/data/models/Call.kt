@@ -31,9 +31,6 @@ class Call : Parcelable, Serializable {
     @NonNull
     var timestamp: Long? = null
 
-//    @TypeConverters(Message.CNAMObjectConverter::class)
-//    var localCNAMObject : CNAMObject? = CNAMObject()
-
     constructor()
 
     constructor(date: String?, type: Int?, duration: String?, number: String?, photo_uri: String?, name: String?, timestamp: Long?, callerID : String?) {
@@ -87,38 +84,3 @@ class Call : Parcelable, Serializable {
         }
     }
 }
-
-
-//
-//transcription,
-//photo_id,
-//subscription_component_name,
-//type,
-//geocoded_location,
-//presentation,
-//duration,
-//subscription_id,
-//is_read,
-//number,
-//features,
-//voicemail_uri,
-//normalized_number,
-//logtype,
-//via_number,
-//matched_number,
-//last_modified,
-//vvm_id,
-//new,
-//numberlabel,
-//lookup_uri,
-//photo_uri,
-//data_usage,
-//phone_account_address,
-//formatted_number,
-//add_for_all_users,
-//numbertype,
-//countryiso,
-//name,
-//post_dial_digits,
-//transcription_state,
-//_id,

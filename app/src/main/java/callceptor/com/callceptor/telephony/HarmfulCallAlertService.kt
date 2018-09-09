@@ -8,7 +8,6 @@ import android.view.WindowManager
 import android.graphics.PixelFormat
 import android.os.Build
 import callceptor.com.callceptor.R
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 

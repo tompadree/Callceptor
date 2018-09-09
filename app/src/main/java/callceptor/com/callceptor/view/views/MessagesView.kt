@@ -1,6 +1,5 @@
 package callceptor.com.callceptor.view.views
 
-import callceptor.com.callceptor.data.models.Call
 import callceptor.com.callceptor.data.models.Message
 import java.util.ArrayList
 

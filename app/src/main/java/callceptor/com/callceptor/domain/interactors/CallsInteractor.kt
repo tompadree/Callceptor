@@ -2,7 +2,6 @@ package callceptor.com.callceptor.domain.interactors
 
 import callceptor.com.callceptor.data.models.Call
 import callceptor.com.callceptor.domain.listeners.OnCallContactsFetched
-import callceptor.com.callceptor.domain.listeners.OnMessagesFetched
 
 
 /**

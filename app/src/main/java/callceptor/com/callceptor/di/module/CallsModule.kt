@@ -1,6 +1,5 @@
 package callceptor.com.callceptor.di.module
 
-import android.telecom.Call
 import callceptor.com.callceptor.data.repositories.calls.CallsDataStore
 import callceptor.com.callceptor.data.repositories.calls.LocalCallsDataStore
 import callceptor.com.callceptor.data.repositories.calls.SystemCallsDataStore

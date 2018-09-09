@@ -1,6 +1,5 @@
 package callceptor.com.callceptor.domain.listeners
 
-import android.support.annotation.Nullable
 import callceptor.com.callceptor.data.models.Message
 import java.util.ArrayList
 

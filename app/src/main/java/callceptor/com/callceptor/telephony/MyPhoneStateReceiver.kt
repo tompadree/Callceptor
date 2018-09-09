@@ -4,34 +4,19 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-import android.util.Log
 import android.telephony.TelephonyManager
 import android.telecom.TelecomManager
-import callceptor.com.callceptor.data.models.Call
-import callceptor.com.callceptor.domain.listeners.OnCallContactsFetched
 import com.android.internal.telephony.ITelephony
-import android.provider.ContactsContract.CommonDataKinds
-import android.provider.ContactsContract.PhoneLookup
-import android.net.Uri
 import android.os.Handler
-import android.provider.BlockedNumberContract
 import android.provider.Settings
 import android.provider.Telephony
 import android.widget.Toast
 import callceptor.com.callceptor.R
-import callceptor.com.callceptor.data.repositories.calls.LocalCallsDataStore
-import callceptor.com.callceptor.domain.interactors.CallsInteractor
-import callceptor.com.callceptor.domain.interactors.MessageInteractor
-import callceptor.com.callceptor.domain.interactors.impl.CallsInteractorImpl
 import callceptor.com.callceptor.domain.listeners.LastCallSMSCheck
-import callceptor.com.callceptor.domain.listeners.SystemDataManager
 import callceptor.com.callceptor.utils.AppConstants.Companion.BLOCK_LIST
 import callceptor.com.callceptor.utils.CheckNumberContacts
 import callceptor.com.callceptor.utils.NetworkHelper
 import com.cinnamon.utils.storage.CinnamonPreferences
-import java.util.*
-import kotlin.concurrent.schedule
-import javax.inject.Inject
 import kotlin.collections.ArrayList
 
 
@@ -40,23 +25,12 @@ import kotlin.collections.ArrayList
  */
 class MyPhoneStateReceiver(private var lastCallSMSCheck: LastCallSMSCheck) : BroadcastReceiver() {
 
-    var LOG_TAG = "PHONE_TAG"
     var call = false
     private var lastNumber: String? = ""
     private var blocklist: ArrayList<String>? = null
 
-//    var contactNumbers: ArrayList<String> = ArrayList()
-//    override fun callLogsFetched(list: ArrayList<Call>) {}
-//    override fun contactsFetched(list: ArrayList<String>) {
-//        contactNumbers = list
-//    }
-//
-//    override fun onFetchingError(e: Throwable) {}
-
-
     override fun onReceive(context: Context?, intent: Intent?) {
 
-//        if (blocklist == null)
         blocklist = ArrayList()
         blocklist = (CinnamonPreferences.getInstance(context).getObject(BLOCK_LIST, List::class.java, ArrayList<String>())) as ArrayList<String>
 
@@ -91,7 +65,7 @@ class MyPhoneStateReceiver(private var lastCallSMSCheck: LastCallSMSCheck) : Bro
                     call = true
                 }
                 TelephonyManager.EXTRA_STATE_IDLE -> {
-                    /*TODO LOLLIPOP ?*/
+
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                         if (Settings.canDrawOverlays(context))
                             context?.stopService(Intent(context, HarmfulCallAlertService::class.java))
@@ -160,25 +134,5 @@ class MyPhoneStateReceiver(private var lastCallSMSCheck: LastCallSMSCheck) : Bro
         }
 
     }
-
-//    override fun lastNumberCallIDed() {
-//        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-//    }
-//
-//    override fun showLoadingFooter() {
-//        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-//    }
-//
-//    override fun hideLoadingFooter() {
-//        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-//    }
-//
-//    override fun showLoading() {
-//        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-//    }
-//
-//    override fun hideLoading() {
-//        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-//    }
 }
 

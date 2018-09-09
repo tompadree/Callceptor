@@ -1,7 +1,6 @@
 package callceptor.com.callceptor.view.activities
 
 import android.Manifest
-import android.content.Context
 import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.os.Build
@@ -21,26 +20,18 @@ import android.net.Uri
 import android.os.Handler
 import android.provider.Settings
 import android.support.annotation.RequiresApi
-import callceptor.com.callceptor.data.models.Call
-import callceptor.com.callceptor.data.models.Message
 import callceptor.com.callceptor.di.component.DaggerAppComponent
 import callceptor.com.callceptor.di.module.AppModule
-import callceptor.com.callceptor.di.module.ThreadModule
 import callceptor.com.callceptor.domain.listeners.LastCallSMSCheck
 import callceptor.com.callceptor.domain.listeners.SystemDataManager
 import callceptor.com.callceptor.utils.AppConstants
 import callceptor.com.callceptor.utils.CheckNumberContacts
 import com.cinnamon.utils.storage.CinnamonPreferences
-import io.reactivex.Scheduler
 import java.util.*
 import javax.inject.Inject
-import javax.inject.Named
-import kotlin.concurrent.schedule
 
 
-class HomeActivity
-//    @Inject constructor(private var context: Context)
-    : BaseActivity(), LastCallSMSCheck {
+class HomeActivity : BaseActivity(), LastCallSMSCheck {
 
     lateinit var phoneStateManager: MyPhoneStateReceiver
     private var callsFragmentInstance = CallsFragment()
@@ -70,7 +61,6 @@ class HomeActivity
     override fun onResume() {
         super.onResume()
 
-
     }
 
     override fun onDestroy() {
@@ -84,12 +74,6 @@ class HomeActivity
         this.unregisterReceiver()
     }
 
-//    override fun onSaveInstanceState(outState: Bundle) {
-//        super.onSaveInstanceState(outState)
-//        //Clear the Activity's bundle of the subsidiary fragments' bundles.
-//        outState.clear()
-//    }
-
     private fun setBottomMenu() {
 
         homeActivityBottomNavigation.enableAnimation(false)
@@ -97,17 +81,8 @@ class HomeActivity
         homeActivityBottomNavigation.enableItemShiftingMode(false)
         homeActivityBottomNavigation.setTextVisibility(false)
 
-//        if (!callsFragmentInstance.isAdded)
-//            addFragment(callsFragmentInstance, FragmentTag.CallsFragment.getTag())
-//        if (!messagesFragmentInstance.isAdded)
-//            addFragment(messagesFragmentInstance, FragmentTag.MessagesFragment.getTag())
-//        if (!settingsFragmentInstance.isAdded)
-//            addFragment(settingsFragmentInstance, FragmentTag.SettingsFragment.getTag())
-//        supportFragmentManager.beginTransaction().hide(settingsFragmentInstance).commit()
-
-
         homeActivityBottomNavigation.setOnNavigationItemSelectedListener { item ->
-            // lastItem = homeActivityBottomNavigation.currentItem
+
             when (item.itemId) {
                 R.id.action_messages -> {
 
@@ -117,7 +92,7 @@ class HomeActivity
                     supportFragmentManager.beginTransaction().hide(activeFrag).show(messagesFragmentInstance).commit()
                     activeFrag = messagesFragmentInstance
                     supportActionBar?.title = getString(R.string.messages_no_contacts)
-                }// messagesClicked()
+                }
                 R.id.action_calls -> {
 
                     if (!callsFragmentInstance.isAdded)
@@ -126,15 +101,12 @@ class HomeActivity
                     if (activeFrag != callsFragmentInstance)
                         supportFragmentManager.beginTransaction().show(callsFragmentInstance).hide(activeFrag).commit()
                     else {
-//                        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M)
-//                            supportFragmentManager.beginTransaction().hide(activeFrag).show(callsFragmentInstance).commit()
-//                        else
+
                         supportFragmentManager.beginTransaction().hide(activeFrag).show(callsFragmentInstance).commitAllowingStateLoss()
                     }
                     activeFrag = callsFragmentInstance
                     supportActionBar?.title = getString(R.string.incoming_calls)
-
-                }//callsClicked()
+                }
                 R.id.action_settings -> {
 
                     if (!settingsFragmentInstance.isAdded)
@@ -144,8 +116,7 @@ class HomeActivity
                     activeFrag = settingsFragmentInstance
                     supportActionBar?.title = getString(R.string.settings)
 
-
-                } //settingsClicked()
+                }
             }
             true
         }
@@ -168,7 +139,6 @@ class HomeActivity
         phoneStateManager = MyPhoneStateReceiver(this)
         this.registerReceiver(phoneStateManager, IntentFilter("android.intent.action.PHONE_STATE"))
 
-//        val mySMSStateManager = MySMSStateManager()
         val intFilter = IntentFilter("android.provider.Telephony.SMS_RECEIVED")
         intFilter.priority = 100
         this.registerReceiver(phoneStateManager, intFilter)
@@ -204,11 +174,6 @@ class HomeActivity
 
     private fun checkPermissions() {
 
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-//            if ((checkSelfPermission(Manifest.permission.SYSTEM_ALERT_WINDOW) == PackageManager.PERMISSION_DENIED)
-//                    || (!Settings.canDrawOverlays(this)))
-//                checkDrawOverlayPermission()
-
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             homeActivityBottomNavigation.selectedItemId = R.id.action_calls
             registerReceiver()
@@ -221,10 +186,10 @@ class HomeActivity
                     || checkSelfPermission(Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_DENIED
                     || checkSelfPermission(Manifest.permission.READ_SMS) == PackageManager.PERMISSION_DENIED)
                 requestPermissions(PERMISSIONS_PHONE_BEFORE_P, PERMISSION_REQ_CODE)
-//            else if ((checkSelfPermission(Manifest.permission.SYSTEM_ALERT_WINDOW) == PackageManager.PERMISSION_DENIED)
+
             else if (!Settings.canDrawOverlays(this))
                 checkDrawOverlayPermission()
-            // addFragment(callsFragmentInstance, FragmentTag.CallsFragment.getTag())
+
             else {
                 homeActivityBottomNavigation.selectedItemId = R.id.action_calls
                 registerReceiver()
@@ -240,10 +205,10 @@ class HomeActivity
                     || checkSelfPermission(Manifest.permission.READ_SMS) == PackageManager.PERMISSION_DENIED
                     || checkSelfPermission(Manifest.permission.RECEIVE_SMS) == PackageManager.PERMISSION_DENIED)
                 requestPermissions(PERMISSIONS_AFTER_P, PERMISSION_REQ_CODE)
-//            else if ((checkSelfPermission(Manifest.permission.SYSTEM_ALERT_WINDOW) == PackageManager.PERMISSION_DENIED)
+
             else if (!Settings.canDrawOverlays(this))
                 checkDrawOverlayPermission()
-            // addFragment(callsFragmentInstance, FragmentTag.CallsFragment.getTag())
+
             else {
                 homeActivityBottomNavigation.selectedItemId = R.id.action_calls
                 registerReceiver()
@@ -290,10 +255,8 @@ class HomeActivity
                                 || (!Settings.canDrawOverlays(this)))
                             checkDrawOverlayPermission()
 
-//                    Toast.makeText(this, "Permission granted" /*+ PERMISSIONS_PHONE*/, Toast.LENGTH_SHORT).show()
-
                 } else {
-                    Toast.makeText(this, "Permission NOT granted"/* + PERMISSIONS_PHONE*/, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, getString(R.string.permission_not_granted), Toast.LENGTH_SHORT).show();
                 }
 
             }

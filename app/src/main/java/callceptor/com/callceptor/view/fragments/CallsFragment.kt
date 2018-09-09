@@ -1,17 +1,13 @@
 package callceptor.com.callceptor.view.fragments
 
 import android.content.Context
-import android.net.Uri
 import android.os.Bundle
-import android.provider.CallLog
-import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-
 import callceptor.com.callceptor.R
 import callceptor.com.callceptor.data.models.Call
 import callceptor.com.callceptor.di.module.CallsModule
@@ -22,9 +18,6 @@ import callceptor.com.callceptor.view.views.CallsView
 import kotlinx.android.synthetic.main.fragment_calls.*
 import java.util.ArrayList
 import javax.inject.Inject
-import android.app.Activity
-import android.util.Log
-import android.widget.TextView
 import callceptor.com.callceptor.di.component.DaggerCallsComponent
 import callceptor.com.callceptor.domain.interactors.CallsInteractor
 
@@ -56,12 +49,6 @@ class CallsFragment : BaseFragment(), CallsView {
 
     }
 
-//    override fun onSaveInstanceState(outState: Bundle?) {
-//        super.onSaveInstanceState(outState)
-//
-//        outState?.putParcelableArrayList("list", localCalls)
-//    }
-
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
         super.onViewStateRestored(savedInstanceState)
     }
@@ -86,10 +73,6 @@ class CallsFragment : BaseFragment(), CallsView {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-//        if(savedInstanceState != null)
-//            localCalls = savedInstanceState.getParcelableArrayList("list")
-//        else
-        Log.e("ERR", "onViewCreated")
         callsPresenter.fetchCallLogs("")
     }
 
@@ -132,7 +115,7 @@ class CallsFragment : BaseFragment(), CallsView {
                 val myTotalCount = totalItemCount - 84
                 val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
 
-                if (dy > 0) { //dy scrolling down
+                if (dy > 0) {
                     if ((firstVisibleItemPosition >= myTotalCount) && firstVisibleItemPosition > totalItemCount - 30
                             && myTotalCount > 0 && localCalls.size <= totalItemCount)
                         callsPresenter.fetchNextPage()
