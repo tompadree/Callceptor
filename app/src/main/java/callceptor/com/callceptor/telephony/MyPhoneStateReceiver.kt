@@ -79,7 +79,7 @@ class MyPhoneStateReceiver(private var lastCallSMSCheck: LastCallSMSCheck) : Bro
                                 Toast.makeText(context, R.string.no_internet, Toast.LENGTH_LONG).show()
                             lastCallSMSCheck.refreshCallList(lastNumber!!)
                             lastNumber = ""
-                        }, 500)
+                        }, 1000)
 
                     }
                 }

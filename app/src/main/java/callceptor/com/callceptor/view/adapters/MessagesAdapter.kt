@@ -48,7 +48,10 @@ class MessagesAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder> {
         if (viewType == ITEM) {
             holder as ResultItemHolder
 
-            if (messages[position].callerID != null) {
+            if (messages[position].name != null) {
+                holder.itemMessagesTvCallerID.visibility = View.VISIBLE
+                holder.itemMessagesTvCallerID.text = messages[position].name
+            } else if (messages[position].callerID != null) {
                 holder.itemMessagesTvCallerID.visibility = View.VISIBLE
                 holder.itemMessagesTvCallerID.text = messages[position].callerID
             } else

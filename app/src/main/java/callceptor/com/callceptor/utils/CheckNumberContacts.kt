@@ -24,13 +24,36 @@ class CheckNumberContacts {
                     if (c.moveToFirst()) {
                         res = c.getString(c.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME))
                     }
-                    c.close()
+                    if (!c.isClosed)
+                        c.close()
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
             }
 
             return res != null
+        }
+
+        fun getNameForNumber(context: Context, number: String): String? {
+
+            var res: String? = null
+            try {
+                val resolver = context.contentResolver
+                val uri = Uri.withAppendedPath(ContactsContract.PhoneLookup.CONTENT_FILTER_URI, Uri.encode(number))
+                val c = resolver.query(uri, arrayOf(ContactsContract.PhoneLookup.DISPLAY_NAME), null, null, null)
+
+                if (c != null) {
+                    if (c.moveToFirst()) {
+                        res = c.getString(c.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME))
+                    }
+                    if (!c.isClosed)
+                        c.close()
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+
+            return res
         }
 
     }

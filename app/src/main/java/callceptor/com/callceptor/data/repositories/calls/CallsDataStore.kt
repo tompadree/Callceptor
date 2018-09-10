@@ -20,4 +20,6 @@ interface CallsDataStore {
 
     fun saveCallerID(cnamObject: CNAMObject): Single<Int>
 
+    fun deleteCalls() : Single<Int>
+
 }

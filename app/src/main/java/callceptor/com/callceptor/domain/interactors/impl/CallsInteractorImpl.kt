@@ -1,6 +1,7 @@
 package callceptor.com.callceptor.domain.interactors.impl
 
 import android.content.Context
+import android.util.Log
 import callceptor.com.callceptor.data.models.CNAMObject
 import callceptor.com.callceptor.domain.interactors.CallsInteractor
 import javax.inject.Inject
@@ -223,5 +224,27 @@ class CallsInteractorImpl
                     }
                 })
 
+    }
+
+    override fun deleteCalls() {
+        localCallsDataStore.deleteCalls()
+                .subscribeOn(subscribeScheduler)
+                .observeOn(observeScheduler)
+                .unsubscribeOn(subscribeScheduler)
+                .subscribe(object : SingleObserver<Int> {
+
+                    override fun onSuccess(t: Int) {
+                        var test: Int = t
+                        test = t
+                    }
+
+                    override fun onSubscribe(d: Disposable) {
+
+                    }
+
+                    override fun onError(e: Throwable) {
+                        e.printStackTrace()
+                    }
+                })
     }
 }

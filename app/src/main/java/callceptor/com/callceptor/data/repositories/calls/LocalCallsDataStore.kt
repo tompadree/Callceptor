@@ -32,4 +32,8 @@ class LocalCallsDataStore
     override fun getCalls(page: Int, per_page: Int): Flowable<ArrayList<Call>> {
         return Single.fromCallable { ArrayList(dao.getCalls(((page - 1) * per_page), per_page)) }.toFlowable()
     }
+
+    override fun deleteCalls(): Single<Int> {
+        return Single.fromCallable { dao.deleteCalls() }
+    }
 }

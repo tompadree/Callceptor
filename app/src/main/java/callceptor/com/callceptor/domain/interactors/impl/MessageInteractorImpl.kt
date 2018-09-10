@@ -4,6 +4,7 @@ import callceptor.com.callceptor.domain.interactors.MessageInteractor
 import callceptor.com.callceptor.domain.listeners.OnMessagesFetched
 import javax.inject.Inject
 import android.content.Context
+import android.util.Log
 import callceptor.com.callceptor.data.models.CNAMObject
 import callceptor.com.callceptor.data.models.Message
 import callceptor.com.callceptor.data.repositories.cnam.RemoteCNAMDataStore
@@ -215,6 +216,28 @@ class MessageInteractorImpl
                     override fun onError(e: Throwable) {
                         e.printStackTrace()
                         listener.onFetchingError(e)
+                    }
+                })
+    }
+
+    override fun deleteMessages() {
+        localMessagesDataStore.deleteMessages()
+                .subscribeOn(subscribeScheduler)
+                .observeOn(observeScheduler)
+                .unsubscribeOn(subscribeScheduler)
+                .subscribe(object : SingleObserver<Int> {
+
+                    override fun onSuccess(t: Int) {
+                        var test: Int = t
+                        test = t
+                    }
+
+                    override fun onSubscribe(d: Disposable) {
+
+                    }
+
+                    override fun onError(e: Throwable) {
+                        e.printStackTrace()
                     }
                 })
     }

@@ -32,4 +32,8 @@ class SystemCallsDataStore
     override fun getCalls(page: Int, per_page: Int): Flowable<ArrayList<Call>> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
+
+    override fun deleteCalls(): Single<Int> {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 }

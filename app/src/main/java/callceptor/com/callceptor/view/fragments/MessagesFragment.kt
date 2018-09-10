@@ -46,15 +46,10 @@ class MessagesFragment : BaseFragment(), MessagesView, OnMessagesItemClicked {
                 .messageModule(MessageModule(this))
                 .build().inject(this)
 
+        messagesPresenter.destroy()
+
     }
 
-    override fun onPause() {
-        super.onPause()
-    }
-
-    override fun onResume() {
-        super.onResume()
-    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -116,7 +111,7 @@ class MessagesFragment : BaseFragment(), MessagesView, OnMessagesItemClicked {
                 val myTotalCount = totalItemCount - 84
                 val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
 
-                if (dy > 0) { //dy scrolling down
+                if (dy > 0) {
                     if ((firstVisibleItemPosition >= myTotalCount) && firstVisibleItemPosition > totalItemCount - 30
                             && myTotalCount > 0 && localMessages.size <= totalItemCount)
                         messagesPresenter.fetchNextPage()

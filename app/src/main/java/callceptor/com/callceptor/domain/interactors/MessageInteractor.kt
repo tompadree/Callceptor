@@ -22,4 +22,6 @@ interface MessageInteractor{
 
     fun destroyDisposable()
 
+    fun deleteMessages()
+
 }

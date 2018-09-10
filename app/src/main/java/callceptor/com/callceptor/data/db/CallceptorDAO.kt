@@ -25,6 +25,9 @@ interface CallceptorDAO {
     @Query("UPDATE calls SET callerID = :callerID WHERE number = :phoneNumber")
     fun saveCallerIDCalls(phoneNumber: String, callerID: String): Int
 
+    @Query("DELETE FROM calls")
+    fun deleteCalls(): Int
+
     @Query("UPDATE messages SET callerID = :callerID WHERE number = :phoneNumber")
     fun saveCallerIDMessages(phoneNumber: String, callerID: String): Int
 
@@ -37,5 +40,6 @@ interface CallceptorDAO {
     @Query("SELECT * FROM messages ORDER BY timestamp DESC LIMIT :page , :per_page") // ORDER BY userName ASC LIMIT (:page * :per_page) , :per_page")
     fun getMessages(page: Int, per_page: Int): List<Message>
 
-
+    @Query("DELETE FROM messages")
+    fun deleteMessages(): Int
 }

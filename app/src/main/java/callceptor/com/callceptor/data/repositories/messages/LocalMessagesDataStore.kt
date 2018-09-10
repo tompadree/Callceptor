@@ -31,6 +31,11 @@ class LocalMessagesDataStore
 
     override fun getMessages(page: Int, per_page: Int): Flowable<ArrayList<Message>> {
         return Single.fromCallable {
-            ArrayList(callceptorDAO.getMessages(((page - 1) * per_page), per_page)) }.toFlowable()
+            ArrayList(callceptorDAO.getMessages(((page - 1) * per_page), per_page))
+        }.toFlowable()
+    }
+
+    override fun deleteMessages(): Single<Int> {
+        return Single.fromCallable { callceptorDAO.deleteMessages() }
     }
 }

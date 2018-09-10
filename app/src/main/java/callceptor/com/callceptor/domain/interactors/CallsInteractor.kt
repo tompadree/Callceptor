@@ -20,4 +20,6 @@ interface CallsInteractor {
     fun fetchNextPage()
 
     fun destroyDisposable()
+
+    fun deleteCalls()
 }

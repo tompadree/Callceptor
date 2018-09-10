@@ -69,5 +69,6 @@ class CallsPresenterImpl
     }
 
     override fun destroy() {
+        callsInteractor.deleteCalls()
     }
 }

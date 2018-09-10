@@ -32,4 +32,8 @@ class SystemMessagesDataStore
     override fun getMessages(page: Int, per_page: Int): Flowable<ArrayList<Message>> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
+
+    override fun deleteMessages(): Single<Int> {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 }

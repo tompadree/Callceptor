@@ -47,18 +47,8 @@ class CallsFragment : BaseFragment(), CallsView {
                 .callsModule(CallsModule(this))
                 .build().inject(this)
 
-    }
+        callsPresenter.destroy()
 
-    override fun onViewStateRestored(savedInstanceState: Bundle?) {
-        super.onViewStateRestored(savedInstanceState)
-    }
-
-    override fun onPause() {
-        super.onPause()
-    }
-
-    override fun onResume() {
-        super.onResume()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
