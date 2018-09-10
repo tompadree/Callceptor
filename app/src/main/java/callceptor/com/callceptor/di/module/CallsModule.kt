@@ -45,8 +45,4 @@ class CallsModule(private val callsView: CallsView) {
     @HomeScope
     fun providesRemoteCNAMDataStore(remoteCNAMDataStore: RemoteCNAMDataStore) : CNAMDataStore = remoteCNAMDataStore
 
-//    @Provides
-//    @HomeScope
-//    fun providesMyPhoneStateReceiver()  = MyPhoneStateReceiver()
-
 }

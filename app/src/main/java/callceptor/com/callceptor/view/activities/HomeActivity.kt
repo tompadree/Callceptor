@@ -43,8 +43,8 @@ class HomeActivity : BaseActivity(), LastCallSMSCheck {
     lateinit var systemDataManager: SystemDataManager
 
     val PERMISSION_REQ_CODE = 1234
-    val PERMISSIONS_PHONE_BEFORE_P = arrayOf(Manifest.permission.READ_PHONE_STATE, Manifest.permission.CALL_PHONE, Manifest.permission.READ_CALL_LOG, Manifest.permission.READ_CONTACTS, Manifest.permission.RECEIVE_SMS, Manifest.permission.READ_SMS) //, Manifest.permission.SEND_SMS, Manifest.permission.READ_SMS, Manifest.permission.SYSTEM_ALERT_WINDOW)
-    val PERMISSIONS_AFTER_P = arrayOf(Manifest.permission.ANSWER_PHONE_CALLS, Manifest.permission.READ_PHONE_STATE, Manifest.permission.READ_CALL_LOG, Manifest.permission.CALL_PHONE, Manifest.permission.READ_CONTACTS, Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Manifest.permission.RECEIVE_SMS, Manifest.permission.READ_SMS) // Manifest.permission.SYSTEM_ALERT_WINDOW, Manifest.permission.RECEIVE_SMS, Manifest.permission.SEND_SMS,
+    val PERMISSIONS_PHONE_BEFORE_P = arrayOf(Manifest.permission.READ_PHONE_STATE, Manifest.permission.CALL_PHONE, Manifest.permission.READ_CALL_LOG, Manifest.permission.READ_CONTACTS, Manifest.permission.RECEIVE_SMS, Manifest.permission.READ_SMS)
+    val PERMISSIONS_AFTER_P = arrayOf(Manifest.permission.ANSWER_PHONE_CALLS, Manifest.permission.READ_PHONE_STATE, Manifest.permission.READ_CALL_LOG, Manifest.permission.CALL_PHONE, Manifest.permission.READ_CONTACTS, Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Manifest.permission.RECEIVE_SMS, Manifest.permission.READ_SMS)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

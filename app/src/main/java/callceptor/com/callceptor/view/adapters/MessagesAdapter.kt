@@ -28,7 +28,7 @@ class MessagesAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     constructor()
 
-    constructor(context: Context, messages: ArrayList<Message>, onMessagesItemClicked: OnMessagesItemClicked) : super() { // , onListItemClicked: OnResultItemClicked
+    constructor(context: Context, messages: ArrayList<Message>, onMessagesItemClicked: OnMessagesItemClicked) : super() {
         this.context = context
         this.messages = messages
         this.onMessagesItemClicked = onMessagesItemClicked

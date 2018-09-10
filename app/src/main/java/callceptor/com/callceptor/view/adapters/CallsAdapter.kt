@@ -29,7 +29,7 @@ class CallsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     constructor()
 
-    constructor(context: Context, calls: ArrayList<Call>) : super() { // , onListItemClicked: OnResultItemClicked
+    constructor(context: Context, calls: ArrayList<Call>) : super() {
         this.context = context
         this.calls = calls
     }

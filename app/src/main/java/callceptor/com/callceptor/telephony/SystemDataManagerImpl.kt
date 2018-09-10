@@ -115,7 +115,7 @@ class SystemDataManagerImpl(private val context: Context) : SystemDataManager {
                         call.photo_uri = cur.getString(cur.getColumnIndex(CallLog.Calls.CACHED_PHOTO_URI))
 
                     val blockList = (CinnamonPreferences.getInstance(context).getObject(AppConstants.BLOCK_LIST, List::class.java, java.util.ArrayList<String>())) as java.util.ArrayList<String>
-                    if (call.type != 2) // && (!CheckNumberContacts.isFromContacts(context, call.number!!) || blockList.contains(call.number!!)))
+                    if (call.type != 2 && (!CheckNumberContacts.isFromContacts(context, call.number!!) || blockList.contains(call.number!!)))
                         list.add(call)
                 }
 

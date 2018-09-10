@@ -10,11 +10,6 @@ interface DefaultView {
 
     fun hideLoading()
 
-    //        void success();
-
     fun showError(message: String)
-
-    //        Context context();
-
 
 }
