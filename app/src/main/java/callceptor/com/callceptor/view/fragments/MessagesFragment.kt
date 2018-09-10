@@ -127,7 +127,7 @@ class MessagesFragment : BaseFragment(), MessagesView, OnMessagesItemClicked {
     }
 
     override fun onMessageClicked(pos: Int) {
-        Toast.makeText(context, "Clicked: " + pos, Toast.LENGTH_SHORT).show()
+//        Toast.makeText(context, "Clicked: " + pos, Toast.LENGTH_SHORT).show()
     }
 
     override fun showLoadingFooter() {

@@ -20,6 +20,14 @@ import org.mockito.Mockito.`when`
  */
 class MessagesInteractorTest {
 
+    val messages =
+            ArrayList(listOf(
+                    Message("12.12.2018.", "+3859112345678", "Incoming SMS message 1", "User", "1535527902032", "1"),
+                    Message("12.11.2018.", "+3859116427582", "Incoming SMS message 2", "User2", "1535527902033", "4"),
+                    Message(),
+                    Message("1.1.2018.", "+3859112343245", "Incoming SMS message 3", "User3", "1535527902034", "3")
+            ))
+
     @Mock
     lateinit var localMessagesDataStore: LocalMessagesDataStore
 
@@ -30,14 +38,6 @@ class MessagesInteractorTest {
 
     @Test
     fun saveGetMessages() {
-
-        val messages =
-                ArrayList(listOf(
-                        Message("12.12.2018.", "+3859112345678", "Incoming SMS message 1", "User", "1535527902032", "1"),
-                        Message("12.11.2018.", "+3859116427582", "Incoming SMS message 2", "User2", "1535527902033", "4"),
-                        Message(),
-                        Message("1.1.2018.", "+3859112343245", "Incoming SMS message 3", "User3", "1535527902034", "3")
-                ))
         val t: LongArray = longArrayOf(0, 1, 2, 3)
 
 
@@ -62,6 +62,22 @@ class MessagesInteractorTest {
         getMessagesTestObserver.assertValue { messagesResponse: ArrayList<Message> -> messagesResponse.size == 4 }
         getMessagesTestObserver.assertValue { messagesResponse: ArrayList<Message> -> messagesResponse[0].name == "User" }
         getMessagesTestObserver.assertValue { messagesResponse: ArrayList<Message> -> messagesResponse[3].timestamp == "1535527902034" }
+    }
+
+    @Test
+    fun deleteMessages(){
+
+        val mockSingleDelete = Single.create {e: SingleEmitter<Int>? -> e?.onSuccess (4)}
+
+        `when`(localMessagesDataStore.deleteMessages()).thenReturn(mockSingleDelete)
+
+        val deleteCallsTestObserver = localMessagesDataStore.deleteMessages().test()
+
+        deleteCallsTestObserver.assertNoErrors()
+        deleteCallsTestObserver.assertValue { t: Int ->
+            t == 4
+        }
+
     }
 
 }

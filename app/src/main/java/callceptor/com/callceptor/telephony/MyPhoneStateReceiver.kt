@@ -75,8 +75,6 @@ class MyPhoneStateReceiver(private var lastCallSMSCheck: LastCallSMSCheck) : Bro
                     if (call) {
                         call = false
                         Handler().postDelayed({
-                            if (!NetworkHelper.isConnectingToInternet(context!!))
-                                Toast.makeText(context, R.string.no_internet, Toast.LENGTH_LONG).show()
                             lastCallSMSCheck.refreshCallList(lastNumber!!)
                             lastNumber = ""
                         }, 1000)
@@ -92,12 +90,14 @@ class MyPhoneStateReceiver(private var lastCallSMSCheck: LastCallSMSCheck) : Bro
     }
 
     private fun processNumber(context: Context?, number: String?) {
-
+        if (!NetworkHelper.isConnectingToInternet(context!!))
+            Toast.makeText(context, R.string.no_internet, Toast.LENGTH_LONG).show()
         try {
 
             if (Build.VERSION.SDK_INT >= 28) {
                 val telecomManager = context?.getSystemService(Context.TELECOM_SERVICE) as TelecomManager
-                if (number.equals("4259501212") || number.equals("+14259501212") || number.equals("0014259501212")) {
+                if (number.equals("4259501212") || number.equals("+14259501212") || number.equals("14259501212")
+                        || number.equals("014259501212") || number.equals("0014259501212")) {
                     if (Settings.canDrawOverlays(context))
                         context.startService(Intent(context, HarmfulCallAlertService::class.java))
 
@@ -116,7 +116,8 @@ class MyPhoneStateReceiver(private var lastCallSMSCheck: LastCallSMSCheck) : Bro
                 val telephonyService = iTelephony.invoke(tm) as ITelephony
 
 
-                if (number.equals("4259501212") || number.equals("+14259501212") || number.equals("0014259501212")) {
+                if (number.equals("4259501212") || number.equals("+14259501212") || number.equals("14259501212")
+                        || number.equals("014259501212") || number.equals("0014259501212")) {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                         if (Settings.canDrawOverlays(context))
                             context.startService(Intent(context, HarmfulCallAlertService::class.java))

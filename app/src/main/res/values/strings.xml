@@ -4,7 +4,7 @@
     <!--General-->
     <string name="no_internet">Please connect to the internet to fetch a caller ID</string>
     <string name="permission_not_granted">"Permission not granted"</string>
-
+    <string name="cnam_expired">"CNAM trial expired"</string>
 
     <!--Calls-->
     <string name="incoming_calls">Incoming calls</string>

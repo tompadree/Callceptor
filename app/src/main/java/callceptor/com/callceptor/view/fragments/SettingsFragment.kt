@@ -17,7 +17,6 @@ import com.cinnamon.utils.storage.CinnamonPreferences
 import kotlinx.android.synthetic.main.fragment_settings.*
 
 
-
 @Suppress("UNCHECKED_CAST")
 class SettingsFragment : BaseFragment(), OnRemoveNumberClicked {
 

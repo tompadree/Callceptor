@@ -231,13 +231,13 @@ class HomeActivity : BaseActivity(), LastCallSMSCheck {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if (requestCode == 12345) {
-            if (Settings.canDrawOverlays(this)) {
+//        if (requestCode == 12345) {
+//            if (Settings.canDrawOverlays(this)) {
 
                 homeActivityBottomNavigation.selectedItemId = R.id.action_calls
                 registerReceiver()
-            }
-        }
+           // }
+//        }
     }
 
 

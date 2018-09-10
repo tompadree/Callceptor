@@ -63,12 +63,16 @@ class SystemDataManagerImpl(private val context: Context) : SystemDataManager {
                     call.timestamp = cur.getLong(cur.getColumnIndex(CallLog.Calls.DATE))
                     call.name = cur.getString(cur.getColumnIndex(CallLog.Calls.CACHED_NAME))
                     call.number = cur.getString(cur.getColumnIndex(CallLog.Calls.NUMBER))
-                    if (call.name == null)
-                        call.name = CheckNumberContacts.getNameForNumber(context, call?.number!!)
-
                     call.type = cur.getInt(cur.getColumnIndex(CallLog.Calls.TYPE))
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                         call.photo_uri = cur.getString(cur.getColumnIndex(CallLog.Calls.CACHED_PHOTO_URI))
+                        if (call.photo_uri == null)
+                            call.photo_uri = CheckNumberContacts.getPhotoURIForNumber(context, call.number!!)
+                    }
+
+                    if (call.name == null)
+                        call.name = CheckNumberContacts.getNameForNumber(context, call.number!!)
 
 //                    Toast.makeText(context, "type: " + call.type + "name: " + cur.getString(cur.getColumnIndex(CallLog.Calls.CACHED_NAME)), Toast.LENGTH_SHORT).show()
 
@@ -107,12 +111,16 @@ class SystemDataManagerImpl(private val context: Context) : SystemDataManager {
                     call.timestamp = cur.getLong(cur.getColumnIndex(CallLog.Calls.DATE))
                     call.name = cur.getString(cur.getColumnIndex(CallLog.Calls.CACHED_NAME))
                     call.number = cur.getString(cur.getColumnIndex(CallLog.Calls.NUMBER))
+                    call.type = cur.getInt(cur.getColumnIndex(CallLog.Calls.TYPE))
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        call.photo_uri = cur.getString(cur.getColumnIndex(CallLog.Calls.CACHED_PHOTO_URI))
+                        if (call.photo_uri == null)
+                            call.photo_uri = CheckNumberContacts.getPhotoURIForNumber(context, call.number!!)
+                    }
+
                     if (call.name == null)
                         call.name = CheckNumberContacts.getNameForNumber(context, call.number!!)
-
-                    call.type = cur.getInt(cur.getColumnIndex(CallLog.Calls.TYPE))
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-                        call.photo_uri = cur.getString(cur.getColumnIndex(CallLog.Calls.CACHED_PHOTO_URI))
 
                     val blockList = (CinnamonPreferences.getInstance(context).getObject(AppConstants.BLOCK_LIST, List::class.java, java.util.ArrayList<String>())) as java.util.ArrayList<String>
                     if (call.type != 2 && (!CheckNumberContacts.isFromContacts(context, call.number!!) || blockList.contains(call.number!!)))

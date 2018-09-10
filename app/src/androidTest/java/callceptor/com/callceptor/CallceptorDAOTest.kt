@@ -37,7 +37,7 @@ class CallceptorDAOTest {
 
 
     @Test
-    fun testSaveGetCalls() {
+    fun testSaveGetDeleteCalls() {
         val calls = listOf(
                 Call("12.12.2018.", 1, "12", "+3859112345678", "https://cdn.pixabay.com/photo/2013/04/06/11/50/image-editing-101040_960_720.jpg", "User", 1535527902032,"1"),
                 Call("12.11.2018.", 4, "5", "+3859116427582", "https://cdn.pixabay.com/photo/2013/04/06/11/50/image-editing-101040_960_720.jpg", "User2", 1535527902033, "3"),
@@ -70,11 +70,14 @@ class CallceptorDAOTest {
 
         Assert.assertEquals(getResults[0].timestamp, expectedResult[0].timestamp)
         Assert.assertEquals(getResults[6].timestamp, expectedResult[6].timestamp)
+
+        val getDeletedRows = callceptorDAO.deleteCalls()
+        Assert.assertEquals(7, getDeletedRows)
     }
 
 
     @Test
-    fun testSaveGetMessages() {
+    fun testSaveGetDeleteMessages() {
         val messages = listOf(
                 Message("12.12.2018.", "+3859112345678", "Incoming SMS message 1", "User", "1535527902032","1"),
                 Message("12.11.2018.", "+3859116427582", "Incoming SMS message 2", "User2", "1535527902033","3"),
@@ -107,7 +110,9 @@ class CallceptorDAOTest {
 
         Assert.assertEquals(getResults[0].timestamp, expectedResult[0].timestamp)
         Assert.assertEquals(getResults[6].timestamp, expectedResult[6].timestamp)
-    }
 
+        val getDeletedRows = callceptorDAO.deleteMessages()
+        Assert.assertEquals(7, getDeletedRows)
+    }
 
 }
